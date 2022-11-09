@@ -97,10 +97,14 @@ def bounds_check(point, max_distance=20):
 
     return False
 
-# Placeholder data
+# Placeholder data for plots
 xVal = [i for i in range(10)]
 yVal = [i*i for i in range(10)]
 data = [[150, True], [280, True], [470, True], [600, False], [700, False]]
+
+# Draggable point variables
+point = None
+pointPos = [50, 500]
 
 dpg.create_context()
 plot_data = PlotData(
