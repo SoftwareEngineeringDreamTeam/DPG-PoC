@@ -14,7 +14,7 @@ def find_circle(px: int):
 
     return -1
 
-def mouse_down():
+def mouse_down(sender, app_data):
     dpg.set_value("is_mouse_down", True)
     current_circle = dpg.get_value("current_circle")
     if current_circle == -1:
@@ -23,6 +23,13 @@ def mouse_down():
             index = find_circle(px)
             if index != -1:
                 dpg.set_value("current_circle", index)
+                if(app_data[0] == 1):
+                    data[index][1] = not data[index][1]
+                    indexStr = str(index)
+                    if data[index][1] == True:
+                        dpg.configure_item(f"circle_{indexStr}", fill=[0, 255, 0], color=(0, 255, 0))
+                    else:
+                        dpg.configure_item(f"circle_{indexStr}", fill=[255, 0, 0], color=(255,0, 0))
 
 def mouse_release():
     dpg.set_value("is_mouse_down", False)
