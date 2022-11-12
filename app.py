@@ -49,7 +49,6 @@ class Threshold(Dragable):
         self.x_pos = x_pos
 
     def draw(self):
-        # dpg.draw_line([400, 490], [400, 510], color=[230, 230, 230], thickness=4) # Threshold
         dpg.draw_line(
             [self.x_pos, self.y_pos-self.half_length],
             [self.x_pos, self.y_pos+self.half_length],
