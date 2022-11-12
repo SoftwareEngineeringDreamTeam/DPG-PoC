@@ -1,13 +1,38 @@
 import dearpygui.dearpygui as dpg
 
-class Point:
+
+class Dragable:
+    @staticmethod
+    def is_dragable():
+        return True
+
+class Point(Dragable):
     def __init__(self, pos, val):
         self.position = pos
         self.value = val
 
-    @staticmethod
-    def is_dragable():
-        return True
+    def draw_red_point(self):
+        pass
+
+    def draw_green_point(self):
+        pass
+
+class Threshold(Dragable):
+    y_pos = 500
+    half_length = 10
+    thickness = 4
+    color = [230, 230, 230]
+    def __init__(self, x_pos):
+        self.x_pos = x_pos
+
+    def draw(self):
+        # dpg.draw_line([400, 490], [400, 510], color=[230, 230, 230], thickness=4) # Threshold
+        dpg.draw_line(
+            [self.x_pos, self.y_pos-self.half_length],
+            [self.x_pos, self.y_pos+self.half_length],
+            color=self.color,
+            thickness = self.thickness
+        )
 
 class PlotData:
     def __init__(self, x_values, y_values):
@@ -15,11 +40,15 @@ class PlotData:
         self.y_axis = y_values
 
 
+
+
 plot_data = PlotData(
     [i for i in range(10)],
     [i*i for i in range(10)]
 )
-data = [[150, True], [280, True], [470, True], [600, False], [750, False]]
+data = {
+    "points": [[150, True], [280, True], [470, True], [600, False], [750, False]],
+    "treshold": {}}
 
 point = None
 pointPos = [50, 500]
@@ -54,9 +83,9 @@ with dpg.window(tag="Primary Window"):
             dpg.add_line_series(plot_data.x_axis, plot_data.y_axis, label='Data2', parent='y_axis2')
 
     # Custom 1D graph
-    dpg.draw_line([50, 500], [800, 500], color=[200, 200, 200], thickness=2)
+    dpg.draw_arrow([50, 500], [800, 500], color=[200, 200, 200], thickness=2)
 
-    dpg.draw_line([400, 490], [400, 510], color=[230, 230, 230], thickness=4) # Threshold
+    data["treshold"].draw() # Threshold
 
     for point in data:
         if point[1] == True:
