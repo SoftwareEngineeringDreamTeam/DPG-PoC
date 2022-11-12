@@ -1,5 +1,6 @@
 import dearpygui.dearpygui as dpg
-
+from math import sin
+from random import randint, choices
 
 class Dragable:
     @staticmethod
@@ -7,15 +8,36 @@ class Dragable:
         return True
 
 class Point(Dragable):
+    y_pos = 500
+    radius = 10
+    _green = (0, 255, 0)
+    _red = (255, 0, 0)
     def __init__(self, pos, val):
-        self.position = pos
+        self.x_pos = pos
         self.value = val
+        self.point = None
+
+    def draw(self):
+        if self.value:
+            self.draw_green_point()
+        else:
+            self.draw_red_point()
 
     def draw_red_point(self):
-        pass
+        self.point = dpg.draw_circle(
+            (self.x_pos, self.y_pos),
+            radius=self.radius,
+            color=self._red,
+            fill=self._red
+        )
 
     def draw_green_point(self):
-        pass
+        self.point = dpg.draw_circle(
+            (self.x_pos, self.y_pos),
+            radius=self.radius,
+            color=self._green,
+            fill=self._green
+        )
 
 class Threshold(Dragable):
     y_pos = 500
@@ -39,16 +61,30 @@ class PlotData:
         self.x_axis = x_values
         self.y_axis = y_values
 
-
-
-
+def generate_example_points(
+        x_range: tuple,
+        nr_of_points: int = 10,
+        true_or_false_prc: float = 0.5
+    ):
+    return [
+        Point(
+            randint(*x_range), 
+            choices(
+                [False, True], 
+                [1-true_or_false_prc, true_or_false_prc]
+            )[0]
+        ) for i in range(nr_of_points)
+    ]
+ 
+dpg.create_context()
 plot_data = PlotData(
-    [i for i in range(10)],
-    [i*i for i in range(10)]
+    [i/10 for i in range(0, 100, 1)],
+    [i*sin(i)/10 for i in range(0, 100, 1)]
 )
 data = {
-    "points": [[150, True], [280, True], [470, True], [600, False], [750, False]],
-    "treshold": {}}
+    "points": generate_example_points((150, 750)),
+    "threshold": Threshold(400)
+}
 
 point = None
 pointPos = [50, 500]
@@ -74,34 +110,38 @@ with dpg.window(tag="Primary Window"):
             dpg.add_plot_legend()
             dpg.add_plot_axis(dpg.mvXAxis, label="x")
             dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
-            dpg.add_line_series(plot_data.x_axis, plot_data.y_axis, label='Data', parent='y_axis')
+            dpg.add_line_series(
+                plot_data.x_axis,
+                plot_data.y_axis,
+                label='Data', 
+                parent='y_axis'
+            )
 
         with dpg.plot(width = 400):
             dpg.add_plot_legend()
             dpg.add_plot_axis(dpg.mvXAxis, label="x")
             dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis2")
-            dpg.add_line_series(plot_data.x_axis, plot_data.y_axis, label='Data2', parent='y_axis2')
+            dpg.add_line_series(
+                plot_data.x_axis,
+                plot_data.y_axis,
+                label='Data2',
+                parent='y_axis2'
+            )
 
     # Custom 1D graph
-    dpg.draw_arrow([50, 500], [800, 500], color=[200, 200, 200], thickness=2)
+    dpg.draw_arrow(
+        [800, 500],
+        [50, 500],
+        color=[200, 200, 200],
+        thickness=2
+    )
 
-    data["treshold"].draw() # Threshold
+    # Threshold
+    data["threshold"].draw()
 
-    for point in data:
-        if point[1] == True:
-            dpg.draw_circle(
-                [point[0], 500],
-                radius=10,
-                color=(0, 255, 0),
-                fill=[0, 255, 0]
-            )
-        else:
-            dpg.draw_circle(
-                [point[0], 500],
-                radius=10,
-                color=(255, 0, 0),
-                fill=[255, 0, 0]
-            )
+    # Drawing points
+    for point in data["points"]:
+        point.draw()
 
     dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
 
@@ -115,11 +155,19 @@ dpg.setup_dearpygui()
 dpg.show_viewport()
 dpg.set_primary_window("Primary Window", True)
 
+holding = False
 while dpg.is_dearpygui_running():
-    if dpg.is_mouse_button_down(0) and abs(dpg.get_mouse_pos()[0] - pointPos[0]) < 50 and abs(dpg.get_mouse_pos()[1] - pointPos[1]) < 50:
-        pointPos[0] = dpg.get_mouse_pos()[0]
-        dpg.configure_item(item=point, center=pointPos)
-
+    if dpg.is_mouse_button_down(0):
+        for point in data["points"]:
+            if abs(dpg.get_mouse_pos()[0] - point.x_pos) < 50 and abs(dpg.get_mouse_pos()[1] - point.y_pos) < 50 and not holding:
+                holding = point
+                point.x_pos = dpg.get_mouse_pos()[0]
+                dpg.configure_item(item=point.point, center=(point.x_pos, point.y_pos))
+            elif holding == point:
+                point.x_pos = dpg.get_mouse_pos()[0]
+                dpg.configure_item(item=point.point, center=(point.x_pos, point.y_pos))
+    else:
+        holding = False
     dpg.render_dearpygui_frame()
 
 # dpg.start_dearpygui() # No need to call when using a render loop
