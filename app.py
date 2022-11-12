@@ -9,15 +9,36 @@ class Dragable:
         return True
 
 class Point(Dragable):
+    y_pos = 500
+    radius = 10
+    _green = (0, 255, 0)
+    _red = (255, 0, 0)
     def __init__(self, pos, val):
-        self.position = pos
+        self.x_pos = pos
         self.value = val
+        self.point = None
+
+    def draw(self):
+        if self.value:
+            self.draw_green_point()
+        else:
+            self.draw_red_point()
 
     def draw_red_point(self):
-        pass
+        self.point = dpg.draw_circle(
+            (self.x_pos, self.y_pos),
+            radius=self.radius,
+            color=self._red,
+            fill=self._red
+        )
 
     def draw_green_point(self):
-        pass
+        self.point = dpg.draw_circle(
+            (self.x_pos, self.y_pos),
+            radius=self.radius,
+            color=self._green,
+            fill=self._green
+        )
 
 class Threshold(Dragable):
     y_pos = 500
@@ -94,17 +115,16 @@ class PlotData:
         self.x_axis = x_values
         self.y_axis = y_values
 
-
 def generate_example_points(
         x_range: tuple,
         nr_of_points: int = 10,
         true_or_false_prc: float = 0.5
-        ):
+    ):
     return [
         Point(
-            randint(*x_range),
+            randint(*x_range), 
             choices(
-                [False, True],
+                [False, True], 
                 [1-true_or_false_prc, true_or_false_prc]
             )[0]
         ) for i in range(nr_of_points)
@@ -224,14 +244,12 @@ with dpg.window(tag="Primary Window",width=800, height=600):
     # It should be relativley trivial to implement.
     dpg.draw_line([50, 500], [750, 500], color=[200, 200, 200], thickness=2)
 
-    data["treshold"].draw() # Threshold
+    # Threshold
+    data["threshold"].draw()
 
-    for index in range(len(data)):
-        indexStr = str(index)
-        if data[index][1] == True:
-            dpg.draw_circle([data[index][0], 500], radius=10, color=(0, 255, 0), fill=[0, 255, 0], tag=f"circle_{indexStr}")
-        else:
-            dpg.draw_circle([data[index][0], 500], radius=10, color=(255, 0, 0), fill=[255, 0, 0], tag=f"circle_{indexStr}")
+    # Drawing points
+    for point in data["points"]:
+        point.draw()
 
     dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
 
