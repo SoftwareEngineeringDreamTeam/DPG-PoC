@@ -8,6 +8,34 @@ class Dragable:
     def is_dragable():
         return True
 
+class Point(Dragable):
+    def __init__(self, pos, val):
+        self.position = pos
+        self.value = val
+
+    def draw_red_point(self):
+        pass
+
+    def draw_green_point(self):
+        pass
+
+class Threshold(Dragable):
+    y_pos = 500
+    half_length = 10
+    thickness = 4
+    color = [230, 230, 230]
+    def __init__(self, x_pos):
+        self.x_pos = x_pos
+
+    def draw(self):
+        # dpg.draw_line([400, 490], [400, 510], color=[230, 230, 230], thickness=4) # Threshold
+        dpg.draw_line(
+            [self.x_pos, self.y_pos-self.half_length],
+            [self.x_pos, self.y_pos+self.half_length],
+            color=self.color,
+            thickness = self.thickness
+        )
+
 
 class Point(Dragable):
     y_pos = 500
@@ -196,7 +224,7 @@ with dpg.window(tag="Primary Window",width=800, height=600):
     # It should be relativley trivial to implement.
     dpg.draw_line([50, 500], [750, 500], color=[200, 200, 200], thickness=2)
 
-    dpg.draw_line([400, 490], [400, 510], color=[230, 230, 230], thickness=4) # Threshold
+    data["treshold"].draw() # Threshold
 
     for index in range(len(data)):
         indexStr = str(index)
