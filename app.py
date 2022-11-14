@@ -42,6 +42,13 @@ class Point(Dragable):
             fill=self._green
         )
 
+    def update_dragged_point(self):
+        self.x_pos = dpg.get_mouse_pos()[0]
+        dpg.configure_item(
+            item=point.point,
+            center=(point.x_pos - point.radius, point.y_pos)
+        )
+
 
 class Threshold(Dragable):
     y_pos = 500
@@ -184,17 +191,9 @@ while dpg.is_dearpygui_running():
         for point in axis_data["points"]:
             if bounds_check(point) and not holding:
                 holding = point
-                point.x_pos = dpg.get_mouse_pos()[0]
-                dpg.configure_item(
-                    item=point.point,
-                    center=(point.x_pos - point.radius, point.y_pos)
-                )
+                point.update_dragged_point()
             elif holding == point:
-                point.x_pos = dpg.get_mouse_pos()[0]
-                dpg.configure_item(
-                    item=point.point,
-                    center=(point.x_pos - point.radius, point.y_pos)
-                )
+                point.update_dragged_point()
     else:
         holding = False
     dpg.render_dearpygui_frame()
