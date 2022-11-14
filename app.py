@@ -1,17 +1,20 @@
 import dearpygui.dearpygui as dpg
-from math import sin
+from math import sin, sqrt
 from random import randint, choices
+
 
 class Dragable:
     @staticmethod
     def is_dragable():
         return True
 
+
 class Point(Dragable):
     y_pos = 500
     radius = 10
     _green = (0, 255, 0)
     _red = (255, 0, 0)
+
     def __init__(self, pos, val):
         self.x_pos = pos
         self.value = val
@@ -39,11 +42,13 @@ class Point(Dragable):
             fill=self._green
         )
 
+
 class Threshold(Dragable):
     y_pos = 500
     half_length = 10
     thickness = 4
     color = [230, 230, 230]
+
     def __init__(self, x_pos):
         self.x_pos = x_pos
 
@@ -52,47 +57,62 @@ class Threshold(Dragable):
             [self.x_pos, self.y_pos-self.half_length],
             [self.x_pos, self.y_pos+self.half_length],
             color=self.color,
-            thickness = self.thickness
+            thickness=self.thickness
         )
+
 
 class PlotData:
     def __init__(self, x_values, y_values):
         self.x_axis = x_values
         self.y_axis = y_values
 
+
 def generate_example_points(
         x_range: tuple,
         nr_of_points: int = 10,
         true_or_false_prc: float = 0.5
-    ):
+        ):
     return [
         Point(
-            randint(*x_range), 
+            randint(*x_range),
             choices(
-                [False, True], 
+                [False, True],
                 [1-true_or_false_prc, true_or_false_prc]
             )[0]
         ) for i in range(nr_of_points)
     ]
- 
+
+
+def circle_distance(a, b):
+    return sqrt((a)**2 + (b)**2)
+
+
+def bounds_check(point, max_distance=20):
+    dist = circle_distance(
+        (dpg.get_mouse_pos()[0] - point.x_pos),
+        (dpg.get_mouse_pos()[1] - point.y_pos)
+    )
+    if dist < max_distance:
+        return True
+
+    return False
+
+
 dpg.create_context()
 plot_data = PlotData(
     [i/10 for i in range(0, 100, 1)],
     [i*sin(i)/10 for i in range(0, 100, 1)]
 )
-data = {
+axis_data = {
     "points": generate_example_points((150, 750)),
     "threshold": Threshold(400)
 }
 
-point = None
-pointPos = [50, 500]
-points = [Point(pointPos, True)]
-
+main_window = dpg.window(tag="Primary Window")
 with dpg.window(tag="Primary Window"):
     dpg.add_file_dialog(
         directory_selector=True,
-        show=False, 
+        show=False,
         tag="file_dialog_id"
     )
     dpg.add_button(
@@ -103,20 +123,20 @@ with dpg.window(tag="Primary Window"):
     )
 
     dpg.add_spacer(height=20)
-    
+
     with dpg.group(horizontal=True):
-        with dpg.plot(width = 400):
+        with dpg.plot(width=400):
             dpg.add_plot_legend()
             dpg.add_plot_axis(dpg.mvXAxis, label="x")
             dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
             dpg.add_line_series(
                 plot_data.x_axis,
                 plot_data.y_axis,
-                label='Data', 
+                label='Data',
                 parent='y_axis'
             )
 
-        with dpg.plot(width = 400):
+        with dpg.plot(width=400):
             dpg.add_plot_legend()
             dpg.add_plot_axis(dpg.mvXAxis, label="x")
             dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis2")
@@ -136,15 +156,19 @@ with dpg.window(tag="Primary Window"):
     )
 
     # Threshold
-    data["threshold"].draw()
+    axis_data["threshold"].draw()
 
     # Drawing points
-    for point in data["points"]:
+    for point in axis_data["points"]:
         point.draw()
 
     dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
 
-dpg.create_viewport(title='Classification Metrics Demonstrator', width=850, resizable=False)
+dpg.create_viewport(
+    title='Classification Metrics Demonstrator',
+    width=850,
+    resizable=False
+)
 dpg.setup_dearpygui()
 
 # dpg.show_style_editor()
@@ -154,14 +178,20 @@ dpg.set_primary_window("Primary Window", True)
 holding = False
 while dpg.is_dearpygui_running():
     if dpg.is_mouse_button_down(0):
-        for point in data["points"]:
-            if abs(dpg.get_mouse_pos()[0] - point.x_pos) < 50 and abs(dpg.get_mouse_pos()[1] - point.y_pos) < 50 and not holding:
+        for point in axis_data["points"]:
+            if bounds_check(point) and not holding:
                 holding = point
                 point.x_pos = dpg.get_mouse_pos()[0]
-                dpg.configure_item(item=point.point, center=(point.x_pos, point.y_pos))
+                dpg.configure_item(
+                    item=point.point,
+                    center=(point.x_pos - point.radius, point.y_pos)
+                )
             elif holding == point:
                 point.x_pos = dpg.get_mouse_pos()[0]
-                dpg.configure_item(item=point.point, center=(point.x_pos, point.y_pos))
+                dpg.configure_item(
+                    item=point.point,
+                    center=(point.x_pos - point.radius, point.y_pos)
+                )
     else:
         holding = False
     dpg.render_dearpygui_frame()
