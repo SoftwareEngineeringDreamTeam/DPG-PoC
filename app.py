@@ -252,7 +252,7 @@ with dpg.window(tag="Primary Window",width=800, height=600):
 
     dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
 
-dpg.create_viewport(title='Custom Title', width=800, height=600, resizable=False)
+dpg.create_viewport(title='Classification Metrics Demonstrator', width=850, resizable=False)
 dpg.setup_dearpygui()
 
 # dpg.show_style_editor()
