@@ -108,6 +108,7 @@ axis_data = {
     "threshold": Threshold(400)
 }
 
+<<<<<<< HEAD
 with dpg.window(tag="Primary Window"):
     dpg.add_file_dialog(
         directory_selector=True,
@@ -120,6 +121,57 @@ with dpg.window(tag="Primary Window"):
         height=50,
         width=200
     )
+=======
+def find_circle(px: int):
+    for i in range(len(data)):
+        if abs(data[i][0] - px) < 10:
+            return i
+
+    return -1
+
+def mouse_down(sender, app_data):
+    dpg.set_value("is_mouse_down", True)
+    current_circle = dpg.get_value("current_circle")
+    if current_circle == -1:
+        px, py = dpg.get_mouse_pos(local=False)
+        if py > 480 and py < 520:
+            index = find_circle(px)
+            if index != -1:
+                dpg.set_value("current_circle", index)
+                if(app_data[0] == 1):
+                    data[index][1] = not data[index][1]
+                    indexStr = str(index)
+                    if data[index][1] == True:
+                        dpg.configure_item(f"circle_{indexStr}", fill=[0, 255, 0], color=(0, 255, 0))
+                    else:
+                        dpg.configure_item(f"circle_{indexStr}", fill=[255, 0, 0], color=(255,0, 0))
+
+def mouse_release():
+    dpg.set_value("is_mouse_down", False)
+    dpg.set_value("current_circle", -1)
+
+
+def move_circle():
+    px, py = dpg.get_mouse_pos(local=False)
+    current_circle = dpg.get_value("current_circle")
+    if current_circle != -1:
+        indexStr = str(current_circle)
+        dpg.configure_item(f"circle_{indexStr}", center=[px, 500])
+        data[current_circle][0] = px
+
+with dpg.value_registry():
+    dpg.add_bool_value(default_value=False, tag="is_mouse_down")
+    dpg.add_int_value(default_value=-1, tag="current_circle")
+
+with dpg.handler_registry():
+    dpg.add_mouse_move_handler(callback=move_circle)
+    dpg.add_mouse_down_handler(callback=mouse_down)
+    dpg.add_mouse_release_handler(callback=mouse_release)
+
+with dpg.window(tag="Primary Window",width=800, height=600):
+    dpg.add_file_dialog(directory_selector=True, show=False, tag="file_dialog_id")
+    dpg.add_button(label="Select File", callback=lambda: dpg.show_item("file_dialog_id"), height=50, width=200)
+>>>>>>> 26e329e70b5383a10e69b020571a1ccdb5248b52
 
     dpg.add_spacer(height=20)
 
