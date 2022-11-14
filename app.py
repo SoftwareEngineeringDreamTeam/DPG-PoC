@@ -61,58 +61,6 @@ class Threshold(Dragable):
         )
 
 
-class Point(Dragable):
-    y_pos = 500
-    radius = 10
-    _green = (0, 255, 0)
-    _red = (255, 0, 0)
-
-    def __init__(self, pos, val):
-        self.x_pos = pos
-        self.value = val
-        self.point = None
-
-    def draw(self):
-        if self.value:
-            self.draw_green_point()
-        else:
-            self.draw_red_point()
-
-    def draw_red_point(self):
-        self.point = dpg.draw_circle(
-            (self.x_pos, self.y_pos),
-            radius=self.radius,
-            color=self._red,
-            fill=self._red
-        )
-
-    def draw_green_point(self):
-        self.point = dpg.draw_circle(
-            (self.x_pos, self.y_pos),
-            radius=self.radius,
-            color=self._green,
-            fill=self._green
-        )
-
-
-class Threshold(Dragable):
-    y_pos = 500
-    half_length = 10
-    thickness = 4
-    color = [230, 230, 230]
-
-    def __init__(self, x_pos):
-        self.x_pos = x_pos
-
-    def draw(self):
-        dpg.draw_line(
-            [self.x_pos, self.y_pos-self.half_length],
-            [self.x_pos, self.y_pos+self.half_length],
-            color=self.color,
-            thickness=self.thickness
-        )
-
-
 class PlotData:
     def __init__(self, x_values, y_values):
         self.x_axis = x_values
