@@ -144,9 +144,6 @@ with dpg.window(tag="Primary Window"):
 
     dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
 
-    # Draggable point for testing
-    point = dpg.draw_circle(pointPos, radius=10, color=(0, 0, 255), fill=[0, 0, 255])
-
 dpg.create_viewport(title='Classification Metrics Demonstrator', width=850, resizable=False)
 dpg.setup_dearpygui()
 
@@ -169,5 +166,4 @@ while dpg.is_dearpygui_running():
         holding = False
     dpg.render_dearpygui_frame()
 
-# dpg.start_dearpygui() # No need to call when using a render loop
 dpg.destroy_context()
