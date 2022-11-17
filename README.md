@@ -1,6 +1,6 @@
 # DearPyGUI PoC
 
-## Dependecies
+## Dependencies
     
     pip install dearpygui
     pip install pyinstaller
