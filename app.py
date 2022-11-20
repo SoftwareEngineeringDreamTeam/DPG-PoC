@@ -2,10 +2,112 @@ import dearpygui.dearpygui as dpg
 from math import sin
 from random import randint, choices
 
+
+class App:
+    def __init__(self):
+        self.data = None
+        self.axis = None
+        self._prepare_gui()
+
+    def _prepare_gui(self):
+        dpg.create_context()
+        plot_data = PlotData(
+            [i/10 for i in range(0, 100, 1)],
+            [i*sin(i)/10 for i in range(0, 100, 1)]
+        )
+        self.data = {
+            "points": generate_example_points((150, 750)),
+            "threshold": Threshold(400)
+        }
+
+        with dpg.window(tag="Primary Window"):
+            dpg.add_file_dialog(
+                directory_selector=True,
+                show=False, 
+                tag="file_dialog_id"
+            )
+            dpg.add_button(
+                label="Select File",
+                callback=lambda: dpg.show_item("file_dialog_id"),
+                height=50,
+                width=200
+            )
+
+            dpg.add_spacer(height=20)
+            
+            with dpg.group(horizontal=True):
+                with dpg.plot(width = 400):
+                    dpg.add_plot_legend()
+                    dpg.add_plot_axis(dpg.mvXAxis, label="x")
+                    dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
+                    dpg.add_line_series(
+                        plot_data.x_axis,
+                        plot_data.y_axis,
+                        label='Data', 
+                        parent='y_axis'
+                    )
+
+                with dpg.plot(width = 400):
+                    dpg.add_plot_legend()
+                    dpg.add_plot_axis(dpg.mvXAxis, label="x")
+                    dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis2")
+                    dpg.add_line_series(
+                        plot_data.x_axis,
+                        plot_data.y_axis,
+                        label='Data2',
+                        parent='y_axis2'
+                    )
+
+            # Custom 1D graph
+            dpg.draw_arrow(
+                [800, 500],
+                [50, 500],
+                color=[200, 200, 200],
+                thickness=2
+            )
+
+            # Threshold
+            self.data["threshold"].draw()
+
+            # Drawing points
+            for point in self.data["points"]:
+                point.draw()
+
+            dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
+
+
+    def run(self):
+        dpg.create_viewport(title='Classification Metrics Demonstrator', width=850, resizable=False)
+        dpg.setup_dearpygui()
+
+        # dpg.show_style_editor()
+        dpg.show_viewport()
+        dpg.set_primary_window("Primary Window", True)
+
+        holding = False
+        while dpg.is_dearpygui_running():
+            if dpg.is_mouse_button_down(0):
+                for point in self.data["points"]:
+                    if abs(dpg.get_mouse_pos()[0] - point.x_pos) < 50 and abs(dpg.get_mouse_pos()[1] - point.y_pos) < 50 and not holding:
+                        holding = point
+                        point.x_pos = dpg.get_mouse_pos()[0]
+                        dpg.configure_item(item=point.point, center=(point.x_pos, point.y_pos))
+                    elif holding == point:
+                        point.x_pos = dpg.get_mouse_pos()[0]
+                        dpg.configure_item(item=point.point, center=(point.x_pos, point.y_pos))
+            else:
+                holding = False
+            dpg.render_dearpygui_frame()
+
+    def __del__(self):
+        dpg.destroy_context()
+
+
 class Dragable:
     @staticmethod
     def is_dragable():
         return True
+
 
 class Point(Dragable):
     y_pos = 500
@@ -39,6 +141,7 @@ class Point(Dragable):
             fill=self._green
         )
 
+
 class Threshold(Dragable):
     y_pos = 500
     half_length = 10
@@ -54,6 +157,7 @@ class Threshold(Dragable):
             color=self.color,
             thickness = self.thickness
         )
+
 
 class PlotData:
     def __init__(self, x_values, y_values):
@@ -74,96 +178,8 @@ def generate_example_points(
             )[0]
         ) for i in range(nr_of_points)
     ]
- 
-dpg.create_context()
-plot_data = PlotData(
-    [i/10 for i in range(0, 100, 1)],
-    [i*sin(i)/10 for i in range(0, 100, 1)]
-)
-data = {
-    "points": generate_example_points((150, 750)),
-    "threshold": Threshold(400)
-}
 
-point = None
-pointPos = [50, 500]
-points = [Point(pointPos, True)]
 
-with dpg.window(tag="Primary Window"):
-    dpg.add_file_dialog(
-        directory_selector=True,
-        show=False, 
-        tag="file_dialog_id"
-    )
-    dpg.add_button(
-        label="Select File",
-        callback=lambda: dpg.show_item("file_dialog_id"),
-        height=50,
-        width=200
-    )
-
-    dpg.add_spacer(height=20)
-    
-    with dpg.group(horizontal=True):
-        with dpg.plot(width = 400):
-            dpg.add_plot_legend()
-            dpg.add_plot_axis(dpg.mvXAxis, label="x")
-            dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
-            dpg.add_line_series(
-                plot_data.x_axis,
-                plot_data.y_axis,
-                label='Data', 
-                parent='y_axis'
-            )
-
-        with dpg.plot(width = 400):
-            dpg.add_plot_legend()
-            dpg.add_plot_axis(dpg.mvXAxis, label="x")
-            dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis2")
-            dpg.add_line_series(
-                plot_data.x_axis,
-                plot_data.y_axis,
-                label='Data2',
-                parent='y_axis2'
-            )
-
-    # Custom 1D graph
-    dpg.draw_arrow(
-        [800, 500],
-        [50, 500],
-        color=[200, 200, 200],
-        thickness=2
-    )
-
-    # Threshold
-    data["threshold"].draw()
-
-    # Drawing points
-    for point in data["points"]:
-        point.draw()
-
-    dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
-
-dpg.create_viewport(title='Classification Metrics Demonstrator', width=850, resizable=False)
-dpg.setup_dearpygui()
-
-# dpg.show_style_editor()
-dpg.show_viewport()
-dpg.set_primary_window("Primary Window", True)
-
-holding = False
-while dpg.is_dearpygui_running():
-    if dpg.is_mouse_button_down(0):
-        for point in data["points"]:
-            if abs(dpg.get_mouse_pos()[0] - point.x_pos) < 50 and abs(dpg.get_mouse_pos()[1] - point.y_pos) < 50 and not holding:
-                holding = point
-                point.x_pos = dpg.get_mouse_pos()[0]
-                dpg.configure_item(item=point.point, center=(point.x_pos, point.y_pos))
-            elif holding == point:
-                point.x_pos = dpg.get_mouse_pos()[0]
-                dpg.configure_item(item=point.point, center=(point.x_pos, point.y_pos))
-    else:
-        holding = False
-    dpg.render_dearpygui_frame()
-
-dpg.destroy_context()
+if __name__ == "__main__":
+    app = App()
+    app.run()
