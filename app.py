@@ -3,6 +3,104 @@ from math import sin, sqrt
 from random import randint, choices
 
 
+class App:
+    def __init__(self):
+        self.data = None
+        self.axis = None
+        self._prepare_gui()
+
+    def _prepare_gui(self):
+        dpg.create_context()
+        plot_data = PlotData(
+            [i/10 for i in range(0, 100, 1)],
+            [i*sin(i)/10 for i in range(0, 100, 1)]
+        )
+        self.data = {
+            "points": generate_example_points((150, 750)),
+            "threshold": Threshold(400)
+        }
+
+        with dpg.window(tag="Primary Window"):
+            dpg.add_file_dialog(
+                directory_selector=True,
+                show=False, 
+                tag="file_dialog_id"
+            )
+            dpg.add_button(
+                label="Select File",
+                callback=lambda: dpg.show_item("file_dialog_id"),
+                height=50,
+                width=200
+            )
+
+            dpg.add_spacer(height=20)
+            
+            with dpg.group(horizontal=True):
+                with dpg.plot(width = 400):
+                    dpg.add_plot_legend()
+                    dpg.add_plot_axis(dpg.mvXAxis, label="x")
+                    dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
+                    dpg.add_line_series(
+                        plot_data.x_axis,
+                        plot_data.y_axis,
+                        label='Data', 
+                        parent='y_axis'
+                    )
+
+                with dpg.plot(width = 400):
+                    dpg.add_plot_legend()
+                    dpg.add_plot_axis(dpg.mvXAxis, label="x")
+                    dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis2")
+                    dpg.add_line_series(
+                        plot_data.x_axis,
+                        plot_data.y_axis,
+                        label='Data2',
+                        parent='y_axis2'
+                    )
+
+            # Custom 1D graph
+            dpg.draw_arrow(
+                [800, 500],
+                [50, 500],
+                color=[200, 200, 200],
+                thickness=2
+            )
+
+            # Threshold
+            self.data["threshold"].draw()
+
+            # Drawing points
+            for point in self.data["points"]:
+                point.draw()
+
+            dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
+
+
+    def run(self):
+        dpg.create_viewport(title='Classification Metrics Demonstrator', width=850, resizable=False)
+        dpg.setup_dearpygui()
+
+        # dpg.show_style_editor()
+        dpg.show_viewport()
+        dpg.set_primary_window("Primary Window", True)
+
+        holding = False
+        while dpg.is_dearpygui_running():
+            if dpg.is_mouse_button_down(0):
+                for point in self.data["points"]:
+                    if bounds_check(point) and not holding:
+                        holding = point
+                        point.update_dragged_point()
+                    elif holding == point:
+                        point.update_dragged_point()
+            else:
+                holding = False
+            dpg.render_dearpygui_frame()
+
+    def __del__(self):
+        dpg.destroy_context()
+
+
 class Dragable:
     @staticmethod
     def is_dragable():
@@ -45,8 +143,8 @@ class Point(Dragable):
     def update_dragged_point(self):
         self.x_pos = dpg.get_mouse_pos()[0]
         dpg.configure_item(
-            item=point.point,
-            center=(point.x_pos - point.radius, point.y_pos)
+            item=self.point,
+            center=(self.x_pos - self.radius, self.y_pos)
         )
 
 
@@ -89,14 +187,12 @@ def generate_example_points(
         ) for i in range(nr_of_points)
     ]
 
-
 def circle_distance(a, b):
     return sqrt((a)**2 + (b)**2)
 
-
 def bounds_check(point, max_distance=20):
     dist = circle_distance(
-        (dpg.get_mouse_pos()[0] - point.x_pos),
+        (dpg.get_mouse_pos()[0] - point.x_pos - point.radius/2),
         (dpg.get_mouse_pos()[1] - point.y_pos)
     )
     if dist < max_distance:
@@ -105,97 +201,6 @@ def bounds_check(point, max_distance=20):
     return False
 
 
-dpg.create_context()
-plot_data = PlotData(
-    [i/10 for i in range(0, 100, 1)],
-    [i*sin(i)/10 for i in range(0, 100, 1)]
-)
-axis_data = {
-    "points": generate_example_points((150, 750)),
-    "threshold": Threshold(400)
-}
-
-with dpg.window(tag="Primary Window"):
-    dpg.add_file_dialog(
-        directory_selector=True,
-        show=False,
-        tag="file_dialog_id"
-    )
-    dpg.add_button(
-        label="Select File",
-        callback=lambda: dpg.show_item("file_dialog_id"),
-        height=50,
-        width=200
-    )
-
-    dpg.add_spacer(height=20)
-
-    with dpg.group(horizontal=True):
-        with dpg.plot(width=400):
-            dpg.add_plot_legend()
-            dpg.add_plot_axis(dpg.mvXAxis, label="x")
-            dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
-            dpg.add_line_series(
-                plot_data.x_axis,
-                plot_data.y_axis,
-                label='Data',
-                parent='y_axis'
-            )
-
-        with dpg.plot(width=400):
-            dpg.add_plot_legend()
-            dpg.add_plot_axis(dpg.mvXAxis, label="x")
-            dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis2")
-            dpg.add_line_series(
-                plot_data.x_axis,
-                plot_data.y_axis,
-                label='Data2',
-                parent='y_axis2'
-            )
-
-    # Custom 1D graph
-    dpg.draw_arrow(
-        [800, 500],
-        [50, 500],
-        color=[200, 200, 200],
-        thickness=2
-    )
-
-    # Custom axis. All elements will be dragable etc.
-    # It should be relativley trivial to implement.
-    dpg.draw_line([50, 500], [750, 500], color=[200, 200, 200], thickness=2)
-
-    # Threshold
-    axis_data["threshold"].draw()
-
-    # Drawing points
-    for point in axis_data["points"]:
-        point.draw()
-
-    dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
-
-dpg.create_viewport(
-    title='Classification Metrics Demonstrator',
-    width=850,
-    resizable=False
-)
-dpg.setup_dearpygui()
-
-# dpg.show_style_editor()
-dpg.show_viewport()
-dpg.set_primary_window("Primary Window", True)
-
-holding = False
-while dpg.is_dearpygui_running():
-    if dpg.is_mouse_button_down(0):
-        for point in axis_data["points"]:
-            if bounds_check(point) and not holding:
-                holding = point
-                point.update_dragged_point()
-            elif holding == point:
-                point.update_dragged_point()
-    else:
-        holding = False
-    dpg.render_dearpygui_frame()
-
-dpg.destroy_context()
+if __name__ == "__main__":
+    app = App()
+    app.run()
