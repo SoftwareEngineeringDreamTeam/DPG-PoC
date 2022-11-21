@@ -2,6 +2,32 @@ import dearpygui.dearpygui as dpg
 from math import sin
 from random import randint, choices
 
+class Entity:
+    y_pos = 500
+    def __init__(self, x_pos, color, half_length):
+        self.x_pos = x_pos
+        self.color = color
+        self.half_length = half_length
+
+    def set_position(self, x_pos, y_pos):
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+
+    def get_position(self):
+        return self.x_pos, self.y_pos
+
+    def set_color(self, color):
+        self.color = color
+
+    def get_color(self):
+        return self.color
+
+    def set_half_length(self, half_length):
+        self.half_length = half_length
+
+    def get_half_length(self):
+        return self.half_length
+
 class Dragable:
     @staticmethod
     def is_dragable():
@@ -48,6 +74,7 @@ class Threshold(Dragable):
         self.x_pos = x_pos
 
     def draw(self):
+        # dpg.draw_line([400, 490], [400, 510], color=[230, 230, 230], thickness=4) # Threshold
         dpg.draw_line(
             [self.x_pos, self.y_pos-self.half_length],
             [self.x_pos, self.y_pos+self.half_length],
@@ -144,6 +171,9 @@ with dpg.window(tag="Primary Window"):
 
     dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
 
+    # Draggable point for testing
+    point = dpg.draw_circle(pointPos, radius=10, color=(0, 0, 255), fill=[0, 0, 255])
+
 dpg.create_viewport(title='Classification Metrics Demonstrator', width=850, resizable=False)
 dpg.setup_dearpygui()
 
@@ -166,4 +196,5 @@ while dpg.is_dearpygui_running():
         holding = False
     dpg.render_dearpygui_frame()
 
+# dpg.start_dearpygui() # No need to call when using a render loop
 dpg.destroy_context()
