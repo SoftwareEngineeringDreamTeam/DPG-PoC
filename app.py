@@ -2,6 +2,8 @@ import dearpygui.dearpygui as dpg
 from math import sin, sqrt
 from random import randint, choices
 
+from data import Data
+
 
 class App:
     def __init__(self):
