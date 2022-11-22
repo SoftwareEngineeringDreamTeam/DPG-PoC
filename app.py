@@ -1,5 +1,7 @@
 import dearpygui.dearpygui as dpg
 
+from data import Data
+
 # Placeholder data for plots
 xVal = [i for i in range(10)]
 yVal = [i*i for i in range(10)]
