@@ -101,6 +101,32 @@ class App:
         dpg.destroy_context()
 
 
+class Entity:
+    y_pos = 500
+    def __init__(self, x_pos, color, half_length):
+        self.x_pos = x_pos
+        self.color = color
+        self.half_length = half_length
+
+    def set_position(self, x_pos, y_pos):
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+
+    def get_position(self):
+        return self.x_pos, self.y_pos
+
+    def set_color(self, color):
+        self.color = color
+
+    def get_color(self):
+        return self.color
+
+    def set_half_length(self, half_length):
+        self.half_length = half_length
+
+    def get_half_length(self):
+        return self.half_length
+
 class Dragable:
     @staticmethod
     def is_dragable():
