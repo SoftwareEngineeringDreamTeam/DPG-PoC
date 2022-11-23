@@ -105,6 +105,8 @@ class App:
 
 class Entity:
     y_pos = 500
+    _green = (0, 255, 0)
+    _red = (255, 0, 0)
     def __init__(self, x_pos, color, half_length):
         self.x_pos = x_pos
         self.color = color
@@ -129,22 +131,15 @@ class Entity:
     def get_half_length(self):
         return self.half_length
 
-class Dragable:
-    @staticmethod
-    def is_dragable():
-        return True
 
-
-class Point(Entity, Dragable):
-    radius = 10
-    _green = (0, 255, 0)
-    _red = (255, 0, 0)
+class Point(Entity):
+    radius = 10    
 
     def __init__(self, x_pos, val):
         if val:
-            super().__init__(x_pos, self._green, x_pos + self.radius)
+            super().__init__(x_pos, self._green, self.radius)
         else:
-            super().__init__(x_pos, self._red, x_pos + self.radius)
+            super().__init__(x_pos, self._red, self.radius)
         self.value = val
         self.point = None
 
@@ -194,7 +189,7 @@ class Point(Entity, Dragable):
         return False
 
 
-class Threshold(Dragable):
+class Threshold:
     y_pos = 500
     half_length = 10
     thickness = 4
