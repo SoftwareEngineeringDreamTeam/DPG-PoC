@@ -2,6 +2,8 @@ import dearpygui.dearpygui as dpg
 from math import sin, sqrt
 from random import randint, choices
 
+from data import Data
+
 
 class App:
     def __init__(self):
@@ -88,7 +90,7 @@ class App:
         while dpg.is_dearpygui_running():
             if dpg.is_mouse_button_down(0):
                 for point in self.data["points"]:
-                    if bounds_check(point) and not holding:
+                    if point.bounds_check() and not holding:
                         holding = point
                         point.update_dragged_point()
                     elif holding == point:
@@ -103,6 +105,8 @@ class App:
 
 class Entity:
     y_pos = 500
+    _green = (0, 255, 0)
+    _red = (255, 0, 0)
     def __init__(self, x_pos, color, half_length):
         self.x_pos = x_pos
         self.color = color
@@ -127,20 +131,15 @@ class Entity:
     def get_half_length(self):
         return self.half_length
 
-class Dragable:
-    @staticmethod
-    def is_dragable():
-        return True
 
+class Point(Entity):
+    radius = 10    
 
-class Point(Dragable):
-    y_pos = 500
-    radius = 10
-    _green = (0, 255, 0)
-    _red = (255, 0, 0)
-
-    def __init__(self, pos, val):
-        self.x_pos = pos
+    def __init__(self, x_pos, val):
+        if val:
+            super().__init__(x_pos, self._green, self.radius)
+        else:
+            super().__init__(x_pos, self._red, self.radius)
         self.value = val
         self.point = None
 
@@ -173,8 +172,24 @@ class Point(Dragable):
             center=(self.x_pos - self.radius, self.y_pos)
         )
 
+    def flip_class(self):
+        self.value = not self.value
 
-class Threshold(Dragable):
+    def _circle_distance(self, a, b):
+        return sqrt((a)**2 + (b)**2)
+
+    def bounds_check(self, max_distance=20):
+        dist = self._circle_distance(
+            (dpg.get_mouse_pos()[0] - self.x_pos - self.radius/2),
+            (dpg.get_mouse_pos()[1] - self.y_pos)
+        )
+        if dist < max_distance:
+            return True
+
+        return False
+
+
+class Threshold:
     y_pos = 500
     half_length = 10
     thickness = 4
@@ -213,18 +228,6 @@ def generate_example_points(
         ) for i in range(nr_of_points)
     ]
 
-def circle_distance(a, b):
-    return sqrt((a)**2 + (b)**2)
-
-def bounds_check(point, max_distance=20):
-    dist = circle_distance(
-        (dpg.get_mouse_pos()[0] - point.x_pos - point.radius/2),
-        (dpg.get_mouse_pos()[1] - point.y_pos)
-    )
-    if dist < max_distance:
-        return True
-
-    return False
 
 
 if __name__ == "__main__":
