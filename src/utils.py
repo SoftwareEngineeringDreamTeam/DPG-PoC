@@ -1,6 +1,6 @@
 from random import choices, randint
 
-from axis import Point
+from src.axis import Point
 
 
 def generate_example_points(

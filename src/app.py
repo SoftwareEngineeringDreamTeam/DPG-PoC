@@ -1,9 +1,9 @@
 from math import sin
 
-from __init__ import dpg
-from axis import Threshold
-from data import Data
-from utils import generate_example_points
+from src.__init__ import dpg
+from src.axis import Threshold
+from src.data import Data
+from src.utils import generate_example_points
 
 
 class App:

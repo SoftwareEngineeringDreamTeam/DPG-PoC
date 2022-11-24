@@ -1,4 +1,4 @@
 ## ROC'n'ROLL
 
-### Version 0.1.1
-    Minor PEP8 and import fixes
+### Version 0.1.2
+    Minor import fixes for the build

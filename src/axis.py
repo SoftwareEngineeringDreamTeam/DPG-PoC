@@ -1,6 +1,6 @@
 from math import sqrt
 
-from __init__ import dpg
+from src.__init__ import dpg
 
 
 class Entity:
