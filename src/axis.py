@@ -1,6 +1,6 @@
 from math import sqrt
 
-from src.__init__ import dpg
+from __init__ import dpg
 
 
 class Entity:
@@ -34,7 +34,7 @@ class Entity:
 
 
 class Point(Entity):
-    radius = 10    
+    radius = 10
 
     def __init__(self, x_pos, val):
         if val:
