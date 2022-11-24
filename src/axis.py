@@ -7,6 +7,7 @@ class Entity:
     y_pos = 500
     _green = (0, 255, 0)
     _red = (255, 0, 0)
+
     def __init__(self, x_pos, color, half_length):
         self.x_pos = x_pos
         self.color = color

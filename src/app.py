@@ -1,8 +1,8 @@
 from math import sin
 
 from __init__ import dpg
-from data import Data
 from axis import Threshold
+from data import Data
 from utils import generate_example_points
 
 
@@ -37,20 +37,20 @@ class App:
             )
 
             dpg.add_spacer(height=20)
-            
+
             with dpg.group(horizontal=True):
-                with dpg.plot(width = 400):
+                with dpg.plot(width=400):
                     dpg.add_plot_legend()
                     dpg.add_plot_axis(dpg.mvXAxis, label="x")
                     dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
                     dpg.add_line_series(
                         plot_data.x_axis,
                         plot_data.y_axis,
-                        label='Data', 
+                        label='Data',
                         parent='y_axis'
                     )
 
-                with dpg.plot(width = 400):
+                with dpg.plot(width=400):
                     dpg.add_plot_legend()
                     dpg.add_plot_axis(dpg.mvXAxis, label="x")
                     dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis2")
@@ -77,7 +77,6 @@ class App:
                 point.draw()
 
             dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
-
 
     def run(self):
         dpg.create_viewport(

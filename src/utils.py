@@ -1,7 +1,4 @@
-from random import (
-    randint,
-    choices
-)
+from random import choices, randint
 
 from axis import Point
 
