@@ -130,9 +130,20 @@ class PlotData:
 
     def save_to_png(self, sender, app_data, user_data):
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=self.x_axis,
-                                 y=self.y_axis,
-                                 mode='lines'))
+        if user_data == "ROC_curve.png":
+            fig.add_trace(go.Scatter(x=self.x_axis,
+                          y=self.y_axis,
+                          mode='lines'))
+            fig.update_layout(title_text='ROC curve')
+            fig.update_xaxes(title_text='x')
+            fig.update_yaxes(title_text='y')
+        else:
+            fig.add_trace(go.Scatter(x=self.x_axis,
+                          y=self.y_axis,
+                          mode='lines'))
+            fig.update_layout(title_text='AUC curve')
+            fig.update_xaxes(title_text='x')
+            fig.update_yaxes(title_text='y')
         fig.write_image(user_data)
 
 
