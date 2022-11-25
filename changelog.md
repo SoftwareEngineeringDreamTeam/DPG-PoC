@@ -9,4 +9,4 @@ Minor PEP8 and import fixes
 ### Version 0.1.3
     Propose plotly for plot saving.
 ### Version 0.1.4
-    Add previous versions to backlog, change imports to significant names.
+    Add previous versions to changelog, change imports to significant names.
