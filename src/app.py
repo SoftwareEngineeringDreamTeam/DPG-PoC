@@ -1,6 +1,6 @@
 from math import sin
 
-import plotly.graph_objects as go
+import plotly.graph_objects as graph_obj
 
 from __init__ import dpg
 from axis import Threshold
@@ -129,16 +129,16 @@ class PlotData:
         self.y_axis = y_values
 
     def save_to_png(self, sender, app_data, user_data):
-        fig = go.Figure()
+        fig = graph_obj.Figure()
         if user_data == "ROC_curve.png":
-            fig.add_trace(go.Scatter(x=self.x_axis,
+            fig.add_trace(graph_obj.Scatter(x=self.x_axis,
                           y=self.y_axis,
                           mode='lines'))
             fig.update_layout(title_text='ROC curve')
             fig.update_xaxes(title_text='x')
             fig.update_yaxes(title_text='y')
         else:
-            fig.add_trace(go.Scatter(x=self.x_axis,
+            fig.add_trace(graph_obj.Scatter(x=self.x_axis,
                           y=self.y_axis,
                           mode='lines'))
             fig.update_layout(title_text='AUC curve')
