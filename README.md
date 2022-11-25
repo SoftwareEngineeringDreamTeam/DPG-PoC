@@ -8,7 +8,7 @@
 ## Deployment
 To bundle into a single platform specyfic executable, run:
     
-    pyinstaller -F -w app.py
+    pyinstaller -F -w src/app.py
 
 
 
