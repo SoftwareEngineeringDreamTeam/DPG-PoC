@@ -71,6 +71,7 @@ class App:
                 dpg.set_item_user_data("btn_roc", "ROC_curve.png")
 
             self.axis.setup_axis()
+            dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
 
     def run(self):
         dpg.create_viewport(

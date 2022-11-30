@@ -15,7 +15,15 @@ class Axis:
         }
 
     def setup_axis(self):
+        self.draw()
 
+    def add_point(self):
+        pass
+
+    def delete_point(self):
+        pass
+
+    def draw(self):
         # Custom 1D graph
         dpg.draw_arrow(
             [800, 500],
@@ -30,17 +38,6 @@ class Axis:
         # Drawing points
         for point in self.data["points"]:
             point.draw()
-
-        dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
-
-    def add_point(self):
-        pass
-
-    def delete_point(self):
-        pass
-
-    def draw(self):
-        pass
 
     def check_interaction(self):
         holding = False
