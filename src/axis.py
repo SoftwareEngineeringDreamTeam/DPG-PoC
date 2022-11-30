@@ -5,7 +5,7 @@ from utils import generate_example_points
 
 
 class Axis:
-    thickness=None
+    thickness = None
 
     def __init__(self, data_ref):
         self.data_ref = data_ref
@@ -15,7 +15,7 @@ class Axis:
         }
 
     def setup_axis(self):
-        
+
         # Custom 1D graph
         dpg.draw_arrow(
             [800, 500],
@@ -88,7 +88,7 @@ class Entity:
 
 
 class Point(Entity):
-    radius = 10    
+    radius = 10
 
     def __init__(self, x_pos, val):
         if val:

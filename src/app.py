@@ -1,9 +1,9 @@
 from math import sin
 
-
 from __init__ import dpg
 from axis import Axis
 from plot import PlotData
+
 
 class App:
     def __init__(self):
