@@ -1,10 +1,8 @@
 from math import sin
 
-import plotly.graph_objects as graph_obj
-
 from __init__ import dpg
 from axis import Threshold
-from data import Data
+from data import Curve
 from utils import generate_example_points
 
 
@@ -12,6 +10,7 @@ class App:
     def __init__(self):
         self.data = None
         self.axis = None
+        self.curve = Curve()
         self._prepare_gui()
 
     def _prepare_gui(self):
@@ -41,41 +40,14 @@ class App:
             dpg.add_spacer(height=20)
 
             with dpg.group(horizontal=True):
-                with dpg.plot(width=400):
-                    dpg.add_plot_legend()
-                    dpg.add_plot_axis(dpg.mvXAxis, label="x")
-                    dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
-                    dpg.add_line_series(
-                        plot_data.x_axis,
-                        plot_data.y_axis,
-                        label='Data',
-                        parent='y_axis'
-                    )
+                self.curve.plot(plot_data.x_axis, plot_data.y_axis)
 
-                with dpg.plot(width=400):
-                    dpg.add_plot_legend()
-                    dpg.add_plot_axis(dpg.mvXAxis, label="x")
-                    dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis2")
-                    dpg.add_line_series(
-                        plot_data.x_axis,
-                        plot_data.y_axis,
-                        label='Data2',
-                        parent='y_axis2'
-                    )
-
-            with dpg.group(horizontal=True):
-                dpg.add_button(label="Download the AUC curve",
-                               tag="btn_auc",
-                               height=50, width=200,)
-                dpg.set_item_callback("btn_auc", plot_data.save_to_png)
-                dpg.set_item_user_data("btn_auc", "AUC_curve.png")
-                dpg.add_spacer(width=193)
-
-                dpg.add_button(label="Download the ROC curve",
-                               tag="btn_roc",
-                               height=50, width=200,)
-                dpg.set_item_callback("btn_roc", plot_data.save_to_png)
-                dpg.set_item_user_data("btn_roc", "ROC_curve.png")
+            dpg.add_button(label="Download the ROC curve",
+                           tag="btn_roc",
+                           height=50, width=200,)
+            dpg.set_item_callback("btn_roc", self.curve.save_to_png)
+            dpg.set_item_user_data("btn_roc",
+                                   [plot_data.x_axis, plot_data.y_axis])
 
             # Custom 1D graph
             dpg.draw_arrow(
@@ -127,24 +99,6 @@ class PlotData:
     def __init__(self, x_values: list or tuple, y_values: list or tuple):
         self.x_axis = x_values
         self.y_axis = y_values
-
-    def save_to_png(self, sender, app_data, user_data):
-        fig = graph_obj.Figure()
-        if user_data == "ROC_curve.png":
-            fig.add_trace(graph_obj.Scatter(x=self.x_axis,
-                          y=self.y_axis,
-                          mode='lines'))
-            fig.update_layout(title_text='ROC curve')
-            fig.update_xaxes(title_text='x')
-            fig.update_yaxes(title_text='y')
-        else:
-            fig.add_trace(graph_obj.Scatter(x=self.x_axis,
-                          y=self.y_axis,
-                          mode='lines'))
-            fig.update_layout(title_text='AUC curve')
-            fig.update_xaxes(title_text='x')
-            fig.update_yaxes(title_text='y')
-        fig.write_image(user_data)
 
 
 if __name__ == "__main__":
