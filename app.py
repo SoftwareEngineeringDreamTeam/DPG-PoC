@@ -1,9 +1,8 @@
-import dearpygui.dearpygui as dpg
 from math import sin, sqrt
 from random import randint, choices
+import dearpygui.dearpygui as dpg
 
 from data import Data
-
 
 class App:
     def __init__(self):
@@ -25,7 +24,7 @@ class App:
         with dpg.window(tag="Primary Window"):
             dpg.add_file_dialog(
                 directory_selector=True,
-                show=False, 
+                show=False,
                 tag="file_dialog_id"
             )
             dpg.add_button(
@@ -36,7 +35,7 @@ class App:
             )
 
             dpg.add_spacer(height=20)
-            
+
             with dpg.group(horizontal=True):
                 with dpg.plot(width = 400):
                     dpg.add_plot_legend()
@@ -45,7 +44,7 @@ class App:
                     dpg.add_line_series(
                         plot_data.x_axis,
                         plot_data.y_axis,
-                        label='Data', 
+                        label='Data',
                         parent='y_axis'
                     )
 
@@ -133,7 +132,7 @@ class Entity:
 
 
 class Point(Entity):
-    radius = 10    
+    radius = 10
 
     def __init__(self, x_pos, val):
         if val:
