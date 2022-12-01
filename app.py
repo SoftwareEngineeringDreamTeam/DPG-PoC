@@ -1,3 +1,5 @@
+# pylint: disable=missing-docstring
+
 from math import sin, sqrt
 from random import randint, choices
 import dearpygui.dearpygui as dpg
