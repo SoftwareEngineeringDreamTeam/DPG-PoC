@@ -3,15 +3,13 @@ from math import sin
 import plotly.graph_objects as graph_obj
 
 from __init__ import dpg
-from axis import Threshold
-from data import Data
-from utils import generate_example_points
+from axis import Axis
 
 
 class App:
     def __init__(self):
         self.data = None
-        self.axis = None
+        self.axis = Axis(self.data)
         self._prepare_gui()
 
     def _prepare_gui(self):
@@ -20,10 +18,6 @@ class App:
             [i/10 for i in range(0, 100, 1)],
             [i*sin(i)/10 for i in range(0, 100, 1)]
         )
-        self.data = {
-            "points": generate_example_points((150, 750)),
-            "threshold": Threshold(400)
-        }
 
         with dpg.window(tag="Primary Window"):
             dpg.add_file_dialog(
@@ -77,22 +71,7 @@ class App:
                 dpg.set_item_callback("btn_roc", plot_data.save_to_png)
                 dpg.set_item_user_data("btn_roc", "ROC_curve.png")
 
-            # Custom 1D graph
-            dpg.draw_arrow(
-                [800, 500],
-                [50, 500],
-                color=[200, 200, 200],
-                thickness=2
-            )
-
-            # Threshold
-            self.data["threshold"].draw()
-
-            # Drawing points
-            for point in self.data["points"]:
-                point.draw()
-
-            dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
+            self.axis.setup_axis()
 
     def run(self):
         dpg.create_viewport(
@@ -101,23 +80,9 @@ class App:
             resizable=False
         )
         dpg.setup_dearpygui()
-
-        # dpg.show_style_editor()
         dpg.show_viewport()
         dpg.set_primary_window("Primary Window", True)
-
-        holding = False
-        while dpg.is_dearpygui_running():
-            if dpg.is_mouse_button_down(0):
-                for point in self.data["points"]:
-                    if point.bounds_check() and not holding:
-                        holding = point
-                        point.update_dragged_point()
-                    elif holding == point:
-                        point.update_dragged_point()
-            else:
-                holding = False
-            dpg.render_dearpygui_frame()
+        self.axis.check_interaction()
 
     def __del__(self):
         dpg.destroy_context()
