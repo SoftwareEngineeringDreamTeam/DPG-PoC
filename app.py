@@ -179,7 +179,7 @@ class Point(Entity):
     def flip_class(self):
         self.value = not self.value
 
-    def _circle_distance(self, pointA, pointB):
+    def _circle_distance(self, point_a, point_b):
         return sqrt((pointA)**2 + (pointB)**2)
 
     def bounds_check(self, max_distance=20):
