@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.4.0
+    Added point and threshold popups
+
 ### Version 0.3.0
     Added Axis class, changelog correction and cleanup
 
