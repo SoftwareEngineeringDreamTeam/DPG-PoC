@@ -1,9 +1,13 @@
-import dearpygui.dearpygui as dpg
+# pylint: disable=missing-docstring
+# pylint: disable=too-few-public-methods
+# pylint: disable=unused-import
+# pylint: disable=import-error
+
 from math import sin, sqrt
 from random import randint, choices
+import dearpygui.dearpygui as dpg
 
 from data import Data
-
 
 class App:
     def __init__(self):
@@ -25,7 +29,7 @@ class App:
         with dpg.window(tag="Primary Window"):
             dpg.add_file_dialog(
                 directory_selector=True,
-                show=False, 
+                show=False,
                 tag="file_dialog_id"
             )
             dpg.add_button(
@@ -36,7 +40,7 @@ class App:
             )
 
             dpg.add_spacer(height=20)
-            
+
             with dpg.group(horizontal=True):
                 with dpg.plot(width = 400):
                     dpg.add_plot_legend()
@@ -45,7 +49,7 @@ class App:
                     dpg.add_line_series(
                         plot_data.x_axis,
                         plot_data.y_axis,
-                        label='Data', 
+                        label='Data',
                         parent='y_axis'
                     )
 
@@ -133,7 +137,7 @@ class Entity:
 
 
 class Point(Entity):
-    radius = 10    
+    radius = 10
 
     def __init__(self, x_pos, val):
         if val:
@@ -175,8 +179,8 @@ class Point(Entity):
     def flip_class(self):
         self.value = not self.value
 
-    def _circle_distance(self, a, b):
-        return sqrt((a)**2 + (b)**2)
+    def _circle_distance(self, point_a, point_b):
+        return sqrt((point_a)**2 + (point_b)**2)
 
     def bounds_check(self, max_distance=20):
         dist = self._circle_distance(
