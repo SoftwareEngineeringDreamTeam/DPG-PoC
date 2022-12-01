@@ -65,13 +65,13 @@ class Axis:
             dpg.render_dearpygui_frame()
 
     def __show_popup_for(self, item):
-        if isinstance(item, Point):
-            with dpg.window(
+        with dpg.window(
                 modal=True,
                 pos=item.get_position(),
                 no_move=True,
                 on_close=lambda: dpg.delete_item(popup)
             ) as popup:
+            if isinstance(item, Point):
                 with dpg.group(horizontal=True):
                     dpg.add_button(
                         label="Delete",
@@ -89,8 +89,11 @@ class Axis:
                     max_value=1
                 )
 
-        elif isinstance(item, Threshold):
-            pass
+            elif isinstance(item, Threshold):
+                dpg.add_input_float(
+                    min_value=0,
+                    max_value=1
+                )
 
 
 class Entity:
