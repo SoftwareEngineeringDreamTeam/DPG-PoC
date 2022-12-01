@@ -1,9 +1,10 @@
 from math import sin
+
 import numpy as np
 
 from __init__ import dpg
 from axis import Axis
-from plot import PlotData, PlotCurve, PlotMatrix
+from plot import PlotCurve, PlotData, PlotMatrix
 
 
 class App:
