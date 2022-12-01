@@ -1,4 +1,5 @@
 # pylint: disable=missing-docstring
+# pylint: disable=too-few-public-methods
 
 from math import sin, sqrt
 from random import randint, choices
