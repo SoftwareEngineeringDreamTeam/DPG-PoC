@@ -10,3 +10,5 @@ Minor PEP8 and import fixes
     Propose plotly for plot saving.
 ### Version 0.1.4
     Add previous versions to changelog, change imports to significant names.
+### Version 0.1.5
+    Add plotting classes for confusion matrix and ROC curve.
