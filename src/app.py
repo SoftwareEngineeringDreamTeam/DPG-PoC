@@ -1,8 +1,9 @@
 from math import sin
+import numpy as np
 
 from __init__ import dpg
 from axis import Axis
-from plot import PlotData, PlotCurve
+from plot import PlotData, PlotCurve, PlotMatrix
 
 
 class App:
@@ -10,6 +11,7 @@ class App:
         self.data = None
         self.axis = Axis(self.data)
         self.curve = PlotCurve()
+        self.matrix = PlotMatrix()
         self._prepare_gui()
 
     def _prepare_gui(self):
@@ -36,6 +38,7 @@ class App:
 
             with dpg.group(horizontal=True):
                 self.curve.plot(plot_data.x_axis, plot_data.y_axis)
+                self.matrix.plot(np.array([[1, 2], [3, 4]]))
 
             dpg.add_button(label="Download the ROC curve",
                            tag="btn_roc",

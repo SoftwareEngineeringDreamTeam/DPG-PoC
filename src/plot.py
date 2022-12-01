@@ -29,9 +29,25 @@ class PlotCurve(Plot):
         fig.write_image("ROC_curve.png")
 
 
-class ConfussionMatrix(Plot):
+class PlotMatrix(Plot):
     def plot(self, confusion_matrix):
-        pass
+        labels = ["Predicted positive", "Predicted negative"]
+        with dpg.table(header_row=True, resizable=True,
+                       policy=dpg.mvTable_SizingStretchProp,
+                       borders_outerH=True, borders_innerV=True,
+                       borders_innerH=True, borders_outerV=True):
+            dpg.add_table_column(label="")
+            dpg.add_table_column(label="Real Positive")
+            dpg.add_table_column(label="Real Negative")
+
+            # once it reaches the end of the columns
+            for i in range(0, 2):
+                with dpg.table_row():
+                    for j in range(0, 3):
+                        if j == 0:
+                            dpg.add_text(labels[i])
+                        else:
+                            dpg.add_text(confusion_matrix[i, j-1])
 
 
 class PlotData:
