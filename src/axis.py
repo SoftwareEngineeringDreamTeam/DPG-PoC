@@ -1,6 +1,57 @@
 from math import sqrt
 
 from __init__ import dpg
+from utils import generate_example_points
+
+
+class Axis:
+    thickness = None
+
+    def __init__(self, data_ref):
+        self.data_ref = data_ref
+        self.data = {
+            "points": generate_example_points((150, 750), Point),
+            "threshold": 400
+        }
+
+    def setup_axis(self):
+        self.draw()
+
+    def add_point(self):
+        pass
+
+    def delete_point(self):
+        pass
+
+    def draw(self):
+        # Custom 1D graph
+        dpg.draw_arrow(
+            [800, 500],
+            [50, 500],
+            color=[200, 200, 200],
+            thickness=2
+        )
+
+        # Threshold
+        Threshold(self.data["threshold"]).draw()
+
+        # Drawing points
+        for point in self.data["points"]:
+            point.draw()
+
+    def check_interaction(self):
+        holding = False
+        while dpg.is_dearpygui_running():
+            if dpg.is_mouse_button_down(0):
+                for point in self.data["points"]:
+                    if point.bounds_check() and not holding:
+                        holding = point
+                        point.update_dragged_point()
+                    elif holding == point:
+                        point.update_dragged_point()
+            else:
+                holding = False
+            dpg.render_dearpygui_frame()
 
 
 class Entity:
