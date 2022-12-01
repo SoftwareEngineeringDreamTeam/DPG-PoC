@@ -36,7 +36,7 @@ class Axis:
     def add_point(self):
         pass
 
-    def delete_point(self):
+    def delete_point(self, point):
         pass
 
     def draw(self):
@@ -44,17 +44,53 @@ class Axis:
 
     def check_interaction(self):
         holding = False
+
         while dpg.is_dearpygui_running():
-            if dpg.is_mouse_button_down(0):
+            if dpg.is_mouse_button_down(0):  # Left button
                 for point in self.data["points"]:
                     if point.bounds_check() and not holding:
                         holding = point
                         point.update_dragged_point()
                     elif holding == point:
                         point.update_dragged_point()
+
+            elif dpg.is_mouse_button_down(1):  # Right button
+                for point in self.data["points"]:
+                    if point.bounds_check():
+                        self.__show_popup_for(point)
+
             else:
                 holding = False
+
             dpg.render_dearpygui_frame()
+
+    def __show_popup_for(self, item):
+        if isinstance(item, Point):
+            with dpg.window(
+                modal=True,
+                pos=item.get_position(),
+                no_move=True,
+                on_close=lambda: dpg.delete_item(popup)
+            ) as popup:
+                with dpg.group(horizontal=True):
+                    dpg.add_button(
+                        label="Delete",
+                        user_data=item,
+                        callback=lambda sender, app_data, user_data: self.delete_point(user_data)
+                    )
+                    dpg.add_checkbox(
+                        label="Class",
+                        default_value=item.get_value(),
+                        callback=item.flip_class()
+                    )
+
+                dpg.add_input_float(
+                    min_value=0,
+                    max_value=1
+                )
+
+        elif isinstance(item, Threshold):
+            pass
 
 
 class Entity:
@@ -129,6 +165,9 @@ class Point(Entity):
 
     def flip_class(self):
         self.value = not self.value
+
+    def get_value(self):
+        return self.value
 
     def _circle_distance(self, a, b):
         return sqrt((a)**2 + (b)**2)
