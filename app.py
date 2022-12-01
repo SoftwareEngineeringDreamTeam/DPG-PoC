@@ -180,7 +180,7 @@ class Point(Entity):
         self.value = not self.value
 
     def _circle_distance(self, point_a, point_b):
-        return sqrt((pointA)**2 + (pointB)**2)
+        return sqrt((point_a)**2 + (point_b)**2)
 
     def bounds_check(self, max_distance=20):
         dist = self._circle_distance(
