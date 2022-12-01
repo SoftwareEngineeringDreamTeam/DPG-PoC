@@ -1,5 +1,7 @@
 # pylint: disable=missing-docstring
 # pylint: disable=too-few-public-methods
+# pylint: disable=unused-import
+# pylint: disable=import-error
 
 from math import sin, sqrt
 from random import randint, choices
@@ -177,8 +179,8 @@ class Point(Entity):
     def flip_class(self):
         self.value = not self.value
 
-    def _circle_distance(self, a, b):
-        return sqrt((a)**2 + (b)**2)
+    def _circle_distance(self, pointA, pointB):
+        return sqrt((pointA)**2 + (pointB)**2)
 
     def bounds_check(self, max_distance=20):
         dist = self._circle_distance(
