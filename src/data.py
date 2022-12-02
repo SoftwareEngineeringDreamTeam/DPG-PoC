@@ -1,3 +1,5 @@
+# pylint: disable=missing-docstring
+
 class Data:
     def __init__(self):
         self.save_file = "res.csv"
