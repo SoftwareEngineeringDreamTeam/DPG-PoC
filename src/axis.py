@@ -1,3 +1,9 @@
+# pylint: disable=missing-docstring
+# pylint: disable=too-few-public-methods
+# pylint: disable=unused-import
+# pylint: disable=import-error
+# pylint: disable=W
+
 from math import sqrt
 
 from __init__ import dpg
@@ -24,6 +30,7 @@ class Axis:
         pass
 
     def draw(self):
+
         # Custom 1D graph
         dpg.draw_arrow(
             [800, 500],
@@ -40,15 +47,6 @@ class Axis:
             point.draw()
 
         dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
-
-    def add_point(self):
-        pass
-
-    def delete_point(self, point):
-        pass
-
-    def draw(self):
-        pass
 
     def check_interaction(self):
         holding = False
@@ -78,7 +76,7 @@ class Axis:
                 pos=item.get_position(),
                 no_move=True,
                 on_close=lambda: dpg.delete_item(popup)
-            ) as popup:
+                ) as popup:
             if isinstance(item, Point):
                 with dpg.group(horizontal=True):
                     dpg.add_button(
@@ -180,8 +178,8 @@ class Point(Entity):
     def get_value(self):
         return self.value
 
-    def _circle_distance(self, a, b):
-        return sqrt((a)**2 + (b)**2)
+    def _circle_distance(self, point_a, point_b):
+        return sqrt((point_a)**2 + (point_b)**2)
 
     def bounds_check(self, max_distance=20):
         dist = self._circle_distance(
