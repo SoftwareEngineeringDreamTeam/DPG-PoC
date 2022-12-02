@@ -1,3 +1,8 @@
+# pylint: disable=missing-docstring
+# pylint: disable=too-few-public-methods
+# pylint: disable=unused-import
+# pylint: disable=import-error
+
 from math import sqrt
 
 from __init__ import dpg
