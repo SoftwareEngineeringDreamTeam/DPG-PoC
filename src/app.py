@@ -1,3 +1,9 @@
+# pylint: disable=missing-docstring
+# pylint: disable=too-few-public-methods
+# pylint: disable=unused-import
+# pylint: disable=import-error
+# pylint: disable=W
+
 from math import sin
 
 import plotly.graph_objects as graph_obj
