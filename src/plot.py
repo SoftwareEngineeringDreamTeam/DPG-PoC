@@ -14,12 +14,12 @@ class Plot:
 
 
 class PlotCurve(Plot):
-    def plot(self, x, y):
+    def plot(self, x_val, y_val):
         with dpg.plot(width=400):
             dpg.add_plot_legend()
             dpg.add_plot_axis(dpg.mvXAxis, label="FP Rate")
             dpg.add_plot_axis(dpg.mvYAxis, label="TP Rate", tag="y_axis")
-            dpg.add_line_series(x, y,
+            dpg.add_line_series(x_val, y_val,
                                 label='ROC Curve',
                                 parent='y_axis')
 
