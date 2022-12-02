@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.5.1
+    Add dependencies to requirements.txt
+
 ### Version 0.5.0
     Add plotting classes for confusion matrix and ROC curve.
 
