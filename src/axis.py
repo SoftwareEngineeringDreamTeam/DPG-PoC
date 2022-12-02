@@ -26,7 +26,7 @@ class Axis:
     def add_point(self):
         pass
 
-    def delete_point(self):
+    def delete_point(self, point):
         pass
 
     def draw(self):
