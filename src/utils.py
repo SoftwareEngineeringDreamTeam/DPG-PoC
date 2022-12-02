@@ -1,5 +1,10 @@
-from random import choices, randint
+# pylint: disable=missing-docstring
+# pylint: disable=too-few-public-methods
+# pylint: disable=unused-import
+# pylint: disable=import-error
+# pylint: disable=W
 
+from random import choices, randint
 
 def generate_example_points(
         x_range: tuple,
