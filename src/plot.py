@@ -24,10 +24,10 @@ class PlotCurve(Plot):
                                 parent='y_axis')
 
     def save_to_png(self, sender, app_data, user_data):
-        x, y = user_data
+        x_val, y_val = user_data
         fig = graph_obj.Figure()
-        fig.add_trace(graph_obj.Scatter(x=x,
-                      y=y,
+        fig.add_trace(graph_obj.Scatter(x=x_val,
+                      y=y_val,
                       mode='lines'))
         fig.update_layout(title_text='ROC curve')
         fig.update_xaxes(title_text='FP Rate')
