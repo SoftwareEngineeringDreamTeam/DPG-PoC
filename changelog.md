@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.5.0
+    Added threshold dragging and checking axis limits
+
 ### Version 0.4.0
     Added point and threshold popups
 
