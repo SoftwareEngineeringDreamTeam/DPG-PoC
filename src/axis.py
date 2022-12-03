@@ -11,7 +11,7 @@ from utils import generate_example_points
 
 
 class Axis:
-    thickness=None
+    thickness = None
 
     def __init__(self, data_ref):
         self.data_ref = data_ref
@@ -23,6 +23,15 @@ class Axis:
         self.end = 800
 
     def setup_axis(self):
+        self.draw()
+
+    def add_point(self):
+        pass
+
+    def delete_point(self, point):
+        pass
+
+    def draw(self):
 
         # Custom 1D graph
         dpg.draw_arrow(
@@ -43,15 +52,6 @@ class Axis:
 
     def check_axis_limits(self):
         return dpg.get_mouse_pos()[0] >= self.start and dpg.get_mouse_pos()[0] <= self.end
-
-    def add_point(self):
-        pass
-
-    def delete_point(self, point):
-        pass
-
-    def draw(self):
-        pass
 
     def check_interaction(self):
         holding = False
@@ -88,7 +88,7 @@ class Axis:
                 pos=item.get_position(),
                 no_move=True,
                 on_close=lambda: dpg.delete_item(popup)
-            ) as popup:
+                ) as popup:
             if isinstance(item, Point):
                 with dpg.group(horizontal=True):
                     dpg.add_button(
