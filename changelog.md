@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.6.0
+    Added threshold dragging and checking axis limits
+
 ### Version 0.5.1
     Add dependencies to requirements.txt
 
