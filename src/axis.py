@@ -220,7 +220,16 @@ class Threshold(Entity):
         )
 
     def bounds_check(self):
-        return dpg.get_mouse_pos()[0] >= self.x_pos - self.thickness * 2 and dpg.get_mouse_pos()[0] <= self.x_pos + self.thickness * 2
+        mouse_x = dpg.get_mouse_pos()[0]
+        mouse_y = dpg.get_mouse_pos()[1]
+        upper_y = self.y_pos + self.half_length
+        lower_y = self.y_pos - self.half_length * 2
+        upper_x = self.x_pos + self.thickness * 2
+        lower_x =  self.x_pos - self.thickness * 2
+        if lower_y <= mouse_y <= upper_y:
+            return lower_x <= mouse_x <= upper_x
+
+        return False
 
     def update_dragged_threshhold(self):
         self.x_pos = dpg.get_mouse_pos()[0]
@@ -229,3 +238,4 @@ class Threshold(Entity):
             p1=[self.x_pos - self.thickness * 3 / 2, self.y_pos - self.half_length],
             p2=[self.x_pos - self.thickness * 3 / 2, self.y_pos + self.half_length]
         )
+        

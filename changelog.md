@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.6.1
+    Code cleanup
+
 ### Version 0.6.0
     Added threshold dragging and checking axis limits
 
