@@ -25,3 +25,8 @@ class F1Exception(MetricException):
     # no true positives detected
     # the classifier would be useless
     pass
+
+
+class AccuracyException(MetricException):
+    # no data at all
+    pass

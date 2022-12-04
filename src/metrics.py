@@ -56,8 +56,12 @@ class Metrics:
         f1_score = 2*precision*recall/(precision+recall)
         return f1_score
 
-    def calculate_accuracy(self, y_true, y_pred):
-        pass
+    def calculate_accuracy(self, true_pos, true_neg, y_true):
+        all_samples = y_true.shape[0]
+        if all_samples == 0:
+            raise events.AccuracyException
+        accuracy = (true_pos + true_neg)/all_samples
+        return accuracy
 
     def calculate_tp_rate(self, y_true, y_pred):
         pass

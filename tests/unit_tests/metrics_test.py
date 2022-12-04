@@ -102,7 +102,21 @@ def test_metrics_calculates_f1():
     recall = 1/3
     metrics = Metrics()
     f1_score = metrics.calculate_f1_score(precision, recall)
-    assert round(f1_score - 2/7, 9) == 0
     assert f1_score == pytest.approx(2/7)
     with pytest.raises(events.F1Exception):
         _ = metrics.calculate_f1_score(0, 0)
+
+
+def test_metrics_calculates_accuracy():
+    # 5/10
+    y_true, y_pred = generate_example_labels()
+    y_empty = np.array([])
+    metrics = Metrics()
+    true_pos = metrics.get_true_pos(y_true, y_pred)
+    true_neg = metrics.get_true_neg(y_true, y_pred)
+    accuracy_score = metrics.calculate_accuracy(true_pos,
+                                                true_neg,
+                                                y_true)
+    assert accuracy_score == 0.5
+    with pytest.raises(events.AccuracyException):
+        _ = metrics.calculate_accuracy(0, 0, y_empty)

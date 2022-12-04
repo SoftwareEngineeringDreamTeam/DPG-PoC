@@ -25,11 +25,12 @@ class Data:
         true_pos = self.metrics.get_true_pos(y_true, y_pred)
         # false_pos = self.metrics.get_false_pos(y_true, y_pred)
         # false_neg = self.metrics.get_false_neg(y_true, y_pred)
-        # true_neg = self.metrics.get_true_neg(y_true, y_pred)
+        true_neg = self.metrics.get_true_neg(y_true, y_pred)
 
         precision = self._update_precision_score(y_pred, true_pos)
         recall = self._update_recall_score(y_true, true_pos)
         _ = self._update_f1_score(precision, recall)
+        _ = self._update_accuracy_score(true_pos, true_neg, y_true)
 
     def _update_precision_score(self, y_pred, true_pos):
         precision = self.metrics.calculate_precision(y_pred, true_pos)
@@ -45,8 +46,9 @@ class Data:
         f1 = self.metrics.calculate_f1_score(precision, recall)
         return f1
 
-    def _update_accuracy_score(self):
-        pass
+    def _update_accuracy_score(self, true_pos, true_neg, y_true):
+        accuracy = self.metrics.calculate_accuracy(true_pos, true_neg, y_true)
+        return accuracy
 
     def _update_roc_curve(self):
         pass
