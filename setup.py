@@ -8,12 +8,13 @@ from setuptools import setup
 
 setup(
     name="ROC'n'ROLL",
+    packages=['src'],
     author='SoftwareEngineeringDreamTeam',
-    version='0.6.3',
+    version='0.7.0',
     install_requires=[
-        'numpy'
-        'dearpygui'
-        'plotly'
+        'numpy',
+        'dearpygui',
+        'plotly',
         'kaleido'
     ],
 )

@@ -6,7 +6,7 @@
 
 import numpy as np
 
-import events
+import src.events as events
 
 
 class Metrics:

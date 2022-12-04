@@ -6,7 +6,7 @@
 
 import numpy as np
 
-from metrics import Metrics
+from src.metrics import Metrics
 
 
 class Data:

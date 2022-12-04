@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.7.0
+    Changed the app working directory to root and fixed imports
+
 ### Version 0.6.3
     Added first tests
 

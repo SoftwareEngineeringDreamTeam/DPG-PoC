@@ -2,15 +2,9 @@
 
 ## Dependencies
     
-    pip install dearpygui
-    pip install pyinstaller
+    pip install -r requirements.txt
 
 ## Deployment
 To bundle into a single platform specyfic executable, run:
     
-    pyinstaller -F -w src/app.py
-
-
-
-
-
+    pyinstaller -F -w run.py
