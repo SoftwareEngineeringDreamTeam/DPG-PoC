@@ -6,7 +6,7 @@
 
 import plotly.graph_objects as graph_obj
 
-from __init__ import dpg
+from src.__init__ import dpg
 
 
 class Plot:

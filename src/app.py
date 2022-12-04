@@ -8,9 +8,9 @@ from math import sin
 
 import numpy as np
 
-from __init__ import dpg
-from axis import Axis
-from plot import PlotCurve, PlotData, PlotMatrix
+from src.__init__ import dpg
+from src.axis import Axis
+from src.plot import PlotCurve, PlotData, PlotMatrix
 
 
 class App:
@@ -70,8 +70,3 @@ class App:
 
     def __del__(self):
         dpg.destroy_context()
-
-
-if __name__ == "__main__":
-    app = App()
-    app.run()

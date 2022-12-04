@@ -6,8 +6,8 @@
 
 from math import sqrt
 
-from __init__ import dpg
-from utils import generate_example_points
+from src.__init__ import dpg
+from src.utils import generate_example_points
 
 
 class Axis:
