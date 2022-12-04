@@ -6,6 +6,8 @@
 
 import numpy as np
 
+import events
+
 
 class Metrics:
     def get_true_pos(self, y_true, y_pred):
@@ -36,11 +38,10 @@ class Metrics:
         labels = y_vals > thr
         return labels.astype(int)
 
-    def calculate_precision(self, y_true, y_pred):
+    def calculate_precision(self, y_pred, true_pos):
         all_pos_pred = np.sum(y_pred)
         if all_pos_pred == 0:
-            return "No positive predictions."
-        true_pos = self.get_true_pos(y_true, y_pred)
+            raise events.PrecisionException
         return true_pos/all_pos_pred
 
     def calculate_recall(self, y_true, y_pred):
@@ -50,8 +51,9 @@ class Metrics:
         true_pos = self.get_true_pos(y_true, y_pred)
         return true_pos/all_pos_ground_truths
 
-    def calculate_f1_score(self, y_true, y_pred):
-        pass
+    def calculate_f1_score(self, precision, recall):
+        f1_score = 2*precision*recall/(precision+recall)
+        return f1_score
 
     def calculate_accuracy(self, y_true, y_pred):
         pass
