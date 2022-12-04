@@ -27,8 +27,9 @@ class Data:
         # false_neg = self.metrics.get_false_neg(y_true, y_pred)
         # true_neg = self.metrics.get_true_neg(y_true, y_pred)
 
-        self._update_precision_score(y_pred, true_pos)
-        self._update_recall_score(y_true, true_pos)
+        precision = self._update_precision_score(y_pred, true_pos)
+        recall = self._update_recall_score(y_true, true_pos)
+        _ = self._update_f1_score(precision, recall)
 
     def _update_precision_score(self, y_pred, true_pos):
         precision = self.metrics.calculate_precision(y_pred, true_pos)
@@ -40,8 +41,9 @@ class Data:
         recall = self.metrics.calculate_recall(y_true, true_pos)
         return recall
 
-    def _update_f1_score(self):
-        pass
+    def _update_f1_score(self, precision, recall):
+        f1 = self.metrics.calculate_f1_score(precision, recall)
+        return f1
 
     def _update_accuracy_score(self):
         pass

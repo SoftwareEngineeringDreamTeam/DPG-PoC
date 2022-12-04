@@ -11,9 +11,17 @@ class MetricException(Exception):
 class PrecisionException(MetricException):
     # no values above thresholds
     # in other words, no positive predictions
+    # useless classifier
     pass
 
 
 class RecallException(MetricException):
     # no positive ground truths
+    # classification task would not exist
+    pass
+
+
+class F1Exception(MetricException):
+    # no true positives detected
+    # the classifier would be useless
     pass

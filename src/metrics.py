@@ -51,6 +51,8 @@ class Metrics:
         return true_pos/all_pos_ground_truths
 
     def calculate_f1_score(self, precision, recall):
+        if precision == 0 and recall == 0:
+            raise events.F1Exception
         f1_score = 2*precision*recall/(precision+recall)
         return f1_score
 

@@ -96,16 +96,13 @@ def test_metrics_calculates_recall():
         recall = metrics.calculate_recall(y_zeros, 0)
 
 
-# def test_metrics_calculates_f1():
-#     # 2*1/3*1/4/(3/12+4/12) = (2/12)/(7/12) = 2/7
-#     precision = 1/4
-#     recall = 1/3
-#     metrics = Metrics()
-#     f1_score = metrics.calculate_f1_score(precision, recall)
-#     assert round(f1_score - 2/7, 9) == 0
-#     assert 2.2 == pytest.approx(2.3)
-#     f1_score = metrics.calculate_f1_score(0, 0)
-#     # f1_score_msg = metrics.calculate_f1_score(y_empty, y_empty)
-#     # assert f1_score_msg == "No positive ground truths."
-#     # f1_score_msg = metrics.calculate_f1_score(y_zeros, y_pred)
-#     # assert f1_score_msg == "No positive ground truths."
+def test_metrics_calculates_f1():
+    # 2*1/3*1/4/(3/12+4/12) = (2/12)/(7/12) = 2/7
+    precision = 1/4
+    recall = 1/3
+    metrics = Metrics()
+    f1_score = metrics.calculate_f1_score(precision, recall)
+    assert round(f1_score - 2/7, 9) == 0
+    assert f1_score == pytest.approx(2/7)
+    with pytest.raises(events.F1Exception):
+        _ = metrics.calculate_f1_score(0, 0)
