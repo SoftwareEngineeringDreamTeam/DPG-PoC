@@ -226,8 +226,8 @@ class Threshold(Entity):
         lower_y = self.y_pos - self.half_length * 2
         upper_x = self.x_pos + self.thickness * 2
         lower_x =  self.x_pos - self.thickness * 2
-        if mouse_y >= lower_y and mouse_y <= upper_y:
-            return mouse_x >= lower_x and mouse_x <= upper_x
+        if lower_y <= mouse_y <= upper_y:
+            return lower_x <= mouse_x <= upper_x
 
         return False
 
