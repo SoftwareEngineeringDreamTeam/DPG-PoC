@@ -81,18 +81,19 @@ def test_metrics_calculates_precision():
         precision = metrics.calculate_precision(y_zeros, 0)
 
 
-# def test_metrics_calculates_recall():
-#     y_true, y_pred = generate_example_labels()
-#     y_zeros = np.zeros(y_true.shape, dtype=int)
-#     y_empty = np.array([])
-#     metrics = Metrics()
-#     recall = metrics.calculate_recall(y_true, y_pred)
-#     # 1/(3)
-#     assert recall == 1/3
-#     recall_msg = metrics.calculate_recall(y_empty, y_empty)
-#     assert recall_msg == "No positive ground truths."
-#     recall_msg = metrics.calculate_recall(y_zeros, y_pred)
-#     assert recall_msg == "No positive ground truths."
+def test_metrics_calculates_recall():
+    y_true, y_pred = generate_example_labels()
+    y_zeros = np.zeros(y_true.shape, dtype=int)
+    y_empty = np.array([])
+    metrics = Metrics()
+    true_pos = metrics.get_true_pos(y_true, y_pred)
+    recall = metrics.calculate_recall(y_true, true_pos)
+    # 1/(3)
+    assert recall == 1/3
+    with pytest.raises(events.RecallException):
+        recall = metrics.calculate_recall(y_empty, 0)
+    with pytest.raises(events.RecallException):
+        recall = metrics.calculate_recall(y_zeros, 0)
 
 
 # def test_metrics_calculates_f1():

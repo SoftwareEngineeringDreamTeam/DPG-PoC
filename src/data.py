@@ -28,7 +28,7 @@ class Data:
         # true_neg = self.metrics.get_true_neg(y_true, y_pred)
 
         self._update_precision_score(y_pred, true_pos)
-        pass
+        self._update_recall_score(y_true, true_pos)
 
     def _update_precision_score(self, y_pred, true_pos):
         precision = self.metrics.calculate_precision(y_pred, true_pos)
@@ -36,13 +36,14 @@ class Data:
         # try catch?
         return precision
 
+    def _update_recall_score(self, y_true, true_pos):
+        recall = self.metrics.calculate_recall(y_true, true_pos)
+        return recall
+
     def _update_f1_score(self):
         pass
 
     def _update_accuracy_score(self):
-        pass
-
-    def _update_recall_score(self):
         pass
 
     def _update_roc_curve(self):

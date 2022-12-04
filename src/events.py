@@ -12,3 +12,8 @@ class PrecisionException(MetricException):
     # no values above thresholds
     # in other words, no positive predictions
     pass
+
+
+class RecallException(MetricException):
+    # no positive ground truths
+    pass

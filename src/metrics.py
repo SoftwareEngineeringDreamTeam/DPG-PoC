@@ -44,11 +44,10 @@ class Metrics:
             raise events.PrecisionException
         return true_pos/all_pos_pred
 
-    def calculate_recall(self, y_true, y_pred):
+    def calculate_recall(self, y_true, true_pos):
         all_pos_ground_truths = np.sum(y_true)
         if all_pos_ground_truths == 0:
-            return "No positive ground truths."
-        true_pos = self.get_true_pos(y_true, y_pred)
+            raise events.RecallException
         return true_pos/all_pos_ground_truths
 
     def calculate_f1_score(self, precision, recall):
