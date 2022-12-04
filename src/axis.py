@@ -11,33 +11,19 @@ from utils import generate_example_points
 
 
 class Axis:
-    thickness=None
+    thickness = None
 
     def __init__(self, data_ref):
         self.data_ref = data_ref
         self.data = {
             "points": generate_example_points((150, 750), Point),
-            "threshold": 400
+            "threshold": Threshold(400)
         }
+        self.start = 50
+        self.end = 800
 
     def setup_axis(self):
-
-        # Custom 1D graph
-        dpg.draw_arrow(
-            [800, 500],
-            [50, 500],
-            color=[200, 200, 200],
-            thickness=2
-        )
-
-        # Threshold
-        Threshold(self.data["threshold"]).draw()
-
-        # Drawing points
-        for point in self.data["points"]:
-            point.draw()
-
-        dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
+        self.draw()
 
     def add_point(self):
         pass
@@ -46,19 +32,45 @@ class Axis:
         pass
 
     def draw(self):
-        pass
+
+        # Custom 1D graph
+        dpg.draw_arrow(
+            [self.end, 500],
+            [self.start, 500],
+            color=[200, 200, 200],
+            thickness=2
+        )
+
+        # Threshold
+        self.data["threshold"].draw()
+
+        # Drawing points
+        for point in self.data["points"]:
+            point.draw()
+
+        dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
+
+    def check_axis_limits(self):
+        return dpg.get_mouse_pos()[0] >= self.start and dpg.get_mouse_pos()[0] <= self.end
 
     def check_interaction(self):
         holding = False
 
         while dpg.is_dearpygui_running():
-            if dpg.is_mouse_button_down(0):  # Left button
-                for point in self.data["points"]:
-                    if point.bounds_check() and not holding:
-                        holding = point
-                        point.update_dragged_point()
-                    elif holding == point:
-                        point.update_dragged_point()
+            if dpg.is_mouse_button_down(0) and self.check_axis_limits():  # Left button
+                threshhold = self.data["threshold"]
+                if threshhold.bounds_check() and not holding:
+                    holding = threshhold
+                    threshhold.update_dragged_threshhold()
+                elif holding == threshhold:
+                    threshhold.update_dragged_threshhold()
+                else:
+                    for point in self.data["points"]:
+                        if point.bounds_check() and not holding:
+                            holding = point
+                            point.update_dragged_point()
+                        elif holding == point:
+                            point.update_dragged_point()
 
             elif dpg.is_mouse_button_down(1):  # Right button
                 for point in self.data["points"]:
@@ -76,7 +88,7 @@ class Axis:
                 pos=item.get_position(),
                 no_move=True,
                 on_close=lambda: dpg.delete_item(popup)
-            ) as popup:
+                ) as popup:
             if isinstance(item, Point):
                 with dpg.group(horizontal=True):
                     dpg.add_button(
@@ -192,19 +204,38 @@ class Point(Entity):
         return False
 
 
-class Threshold:
-    y_pos = 500
-    half_length = 10
-    thickness = 4
-    color = [230, 230, 230]
+class Threshold(Entity):
 
     def __init__(self, x_pos):
-        self.x_pos = x_pos
+        super().__init__(x_pos, (230, 230, 230), 10)
+        self.thickness = 6
+        self.line = None
 
     def draw(self):
-        dpg.draw_line(
-            [self.x_pos, self.y_pos-self.half_length],
-            [self.x_pos, self.y_pos+self.half_length],
+        self.line = dpg.draw_line(
+            p1=[self.x_pos, self.y_pos - self.half_length],
+            p2=[self.x_pos, self.y_pos + self.half_length],
             color=self.color,
             thickness=self.thickness
         )
+
+    def bounds_check(self):
+        mouse_x = dpg.get_mouse_pos()[0]
+        mouse_y = dpg.get_mouse_pos()[1]
+        upper_y = self.y_pos + self.half_length
+        lower_y = self.y_pos - self.half_length * 2
+        upper_x = self.x_pos + self.thickness * 2
+        lower_x =  self.x_pos - self.thickness * 2
+        if lower_y <= mouse_y <= upper_y:
+            return lower_x <= mouse_x <= upper_x
+
+        return False
+
+    def update_dragged_threshhold(self):
+        self.x_pos = dpg.get_mouse_pos()[0]
+        dpg.configure_item(
+            item=self.line,
+            p1=[self.x_pos - self.thickness * 3 / 2, self.y_pos - self.half_length],
+            p2=[self.x_pos - self.thickness * 3 / 2, self.y_pos + self.half_length]
+        )
+        
