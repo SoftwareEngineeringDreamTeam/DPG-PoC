@@ -9,7 +9,7 @@ from setuptools import setup
 setup(
     name="ROC'n'ROLL",
     author='SoftwareEngineeringDreamTeam',
-    version='0.6.1',
+    version='0.6.2',
     install_requires=[
         'numpy'
         'dearpygui'

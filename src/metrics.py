@@ -1,9 +1,18 @@
+import numpy as np
+
+
 class Metrics:
     def _get_true_pos(self, y_true, y_pred):
-        pass
+        if y_true.shape[0] == 0:
+            return 0
+        return np.sum(y_true & y_pred)
 
     def _get_true_neg(self, y_true, y_pred):
-        pass
+        if y_true.shape[0] == 0:
+            return 0
+        y_true = y_true.astype(bool)
+        y_pred = y_pred.astype(bool)
+        return np.sum(~y_true & ~y_pred)
 
     def _get_false_pos(self, y_true, y_pred):
         pass
@@ -12,7 +21,8 @@ class Metrics:
         pass
 
     def convert_to_binary(self, y, thr):
-        pass
+        labels = y > thr
+        return labels.astype(int)
 
     def calculate_precision(self, y_true, y_pred):
         pass

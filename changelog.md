@@ -1,6 +1,9 @@
 ## ROC'n'ROLL
 
-### Version 0.6.0
+### Version 0.6.2
+    Added first tests
+
+### Version 0.6.1
     Added initial metrics classes
 
 ### Version 0.6.0
