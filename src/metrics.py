@@ -6,7 +6,7 @@
 
 import numpy as np
 
-import src.events as events
+from src import events
 
 
 class Metrics:
@@ -67,6 +67,9 @@ class Metrics:
         pass
 
     def calculate_fp_rate(self, y_true, y_pred):
+        pass
+
+    def calculate_roc(self):
         pass
 
     def calculate_mmc(self, matrix, y_true, y_pred):

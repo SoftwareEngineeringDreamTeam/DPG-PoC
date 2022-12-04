@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-import src.events as events
+from src import events
 from src.metrics import Metrics
 
 

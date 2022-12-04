@@ -46,8 +46,8 @@ class Data:
         return recall
 
     def _update_f1_score(self, precision, recall):
-        f1 = self.metrics.calculate_f1_score(precision, recall)
-        return f1
+        f1_score = self.metrics.calculate_f1_score(precision, recall)
+        return f1_score
 
     def _update_accuracy_score(self, true_pos, true_neg, y_true):
         accuracy = self.metrics.calculate_accuracy(true_pos, true_neg, y_true)
