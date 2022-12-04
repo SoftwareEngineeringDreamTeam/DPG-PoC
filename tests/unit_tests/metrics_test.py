@@ -6,21 +6,15 @@ from src.metrics import Metrics
 
 
 def generate_example_labels():
-    zeros = np.zeros(30, dtype=int)
-    ones = np.ones(20, dtype=int)
-    # y_true: 60 no, 40 yes
-    data1 = np.append(zeros, zeros)
-    data1 = np.append(data1, ones)
-    data1 = np.append(data1, ones)
-    # 30 tn
-    # 20 fp
-    # 10 tn
-    # 20 fn
-    # 20 tp
-    # y_pred: 30 no, 20 yes, 30 no, 20 yes
-    data2 = np.append(zeros, ones)
-    data2 = np.append(data2, data2)
-    return data1, data2
+    y_true = np.array([1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+                      dtype=int)
+    y_pred = np.array([0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
+                      dtype=int)
+    # tn: 4
+    # fp: 3
+    # tp: 1
+    # fn: 2
+    return y_true, y_pred
 
 
 def test_metrics_converts_to_binary():
@@ -38,7 +32,7 @@ def test_metrics_calculates_tp():
     y_empty = np.array([])
     metrics = Metrics()
     tp = metrics.get_true_pos(y_true, y_pred)
-    assert tp == 20
+    assert tp == 1
     assert metrics.get_true_pos(y_empty, y_empty) == 0
 
 
@@ -47,7 +41,7 @@ def test_metrics_calculates_tn():
     y_empty = np.array([])
     metrics = Metrics()
     tn = metrics.get_true_neg(y_true, y_pred)
-    assert tn == 40
+    assert tn == 4
     assert metrics.get_true_neg(y_empty, y_empty) == 0
 
 
@@ -56,7 +50,7 @@ def test_metrics_calculates_fp():
     y_empty = np.array([])
     metrics = Metrics()
     fp = metrics.get_false_pos(y_true, y_pred)
-    assert fp == 20
+    assert fp == 3
     assert metrics.get_false_pos(y_empty, y_empty) == 0
 
 
@@ -65,5 +59,33 @@ def test_metrics_calculates_fn():
     y_empty = np.array([])
     metrics = Metrics()
     fn = metrics.get_false_neg(y_true, y_pred)
-    assert fn == 20
-    assert metrics.get_false_pos(y_empty, y_empty) == 0
+    assert fn == 2
+    assert metrics.get_false_neg(y_empty, y_empty) == 0
+
+
+def test_metrics_calculates_precision():
+    y_true, y_pred = generate_example_labels()
+    y_zeros = np.zeros(y_true.shape, dtype=int)
+    y_empty = np.array([])
+    metrics = Metrics()
+    precision = metrics.calculate_precision(y_true, y_pred)
+    # 1/(4)
+    assert precision == 0.25
+    precision_msg = metrics.calculate_precision(y_empty, y_empty)
+    assert precision_msg == "No positive predictions."
+    precision_msg = metrics.calculate_precision(y_true, y_zeros)
+    assert precision_msg == "No positive predictions."
+
+
+def test_metrics_calculates_recall():
+    y_true, y_pred = generate_example_labels()
+    y_zeros = np.zeros(y_true.shape, dtype=int)
+    y_empty = np.array([])
+    metrics = Metrics()
+    recall = metrics.calculate_recall(y_true, y_pred)
+    # 1/(3)
+    assert recall == 1/3
+    recall_msg = metrics.calculate_recall(y_empty, y_empty)
+    assert recall_msg == "No positive ground truths."
+    recall_msg = metrics.calculate_recall(y_zeros, y_pred)
+    assert recall_msg == "No positive ground truths."
