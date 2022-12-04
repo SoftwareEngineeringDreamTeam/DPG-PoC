@@ -23,14 +23,16 @@ class Data:
         y_pred = self.metrics.convert_to_binary(y_vals, thr)
 
         true_pos = self.metrics.get_true_pos(y_true, y_pred)
-        # false_pos = self.metrics.get_false_pos(y_true, y_pred)
-        # false_neg = self.metrics.get_false_neg(y_true, y_pred)
+        false_pos = self.metrics.get_false_pos(y_true, y_pred)
+        false_neg = self.metrics.get_false_neg(y_true, y_pred)
         true_neg = self.metrics.get_true_neg(y_true, y_pred)
 
         precision = self._update_precision_score(y_pred, true_pos)
         recall = self._update_recall_score(y_true, true_pos)
         _ = self._update_f1_score(precision, recall)
         _ = self._update_accuracy_score(true_pos, true_neg, y_true)
+        matrix = np.array([[true_pos, false_pos], [false_neg, true_neg]])
+        self._update_matrix(matrix)
 
     def _update_precision_score(self, y_pred, true_pos):
         precision = self.metrics.calculate_precision(y_pred, true_pos)
@@ -56,7 +58,9 @@ class Data:
     def _update_mmc_score(self):
         pass
 
-    def _update_matrix(self):
+    def _update_matrix(self, matrix):
+        # update the matrix
+        print(matrix)
         pass
 
     def save(self):

@@ -71,6 +71,3 @@ class Metrics:
 
     def calculate_mmc(self, y_true, y_pred):
         pass
-
-    def calculate_confusion_matrix(self, y_true, y_pred):
-        pass
