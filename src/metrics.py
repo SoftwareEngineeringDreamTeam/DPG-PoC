@@ -76,6 +76,6 @@ class Metrics:
         if denom == 0:
             raise events.MMCException
         correct_pred = matrix[0, 0]*matrix[1, 1]
-        false_pred = matrix[0, 1]*matrix[1,0]
+        false_pred = matrix[0, 1]*matrix[1, 0]
         mmc = (correct_pred - false_pred)/denom
         return mmc

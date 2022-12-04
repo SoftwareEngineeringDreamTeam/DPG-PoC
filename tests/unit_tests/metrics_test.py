@@ -123,7 +123,6 @@ def test_metrics_calculates_accuracy():
 
 
 def test_metrics_calculates_mmc():
-    # 5/10
     matrix = np.array([[1, 3], [2, 4]])
     matrix_zeros = np.zeros((2, 2))
     y_true, y_pred = generate_example_labels()
