@@ -1,10 +1,13 @@
 ## ROC'n'ROLL
 
-### Version 0.6.2
+### Version 0.6.3
     Added first tests
 
-### Version 0.6.1
+### Version 0.6.2
     Added initial metrics classes
+
+### Version 0.6.1
+    Code cleanup
 
 ### Version 0.6.0
     Added threshold dragging and checking axis limits

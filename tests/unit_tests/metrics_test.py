@@ -1,3 +1,5 @@
+# pylint: skip-file
+# pylint: disable-msg=R0801
 import numpy as np
 
 from src.metrics import Metrics
@@ -35,15 +37,15 @@ def test_metrics_calculates_tp():
     y_true, y_pred = generate_example_labels()
     y_empty = np.array([])
     metrics = Metrics()
-    tp = metrics._get_true_pos(y_true, y_pred)
+    tp = metrics.get_true_pos(y_true, y_pred)
     assert tp == 20
-    assert metrics._get_true_pos(y_empty, y_empty) == 0
+    assert metrics.get_true_pos(y_empty, y_empty) == 0
 
 
 def test_metrics_calculates_tn():
     y_true, y_pred = generate_example_labels()
     y_empty = np.array([])
     metrics = Metrics()
-    tn = metrics._get_true_neg(y_true, y_pred)
+    tn = metrics.get_true_neg(y_true, y_pred)
     assert tn == 40
-    assert metrics._get_true_neg(y_empty, y_empty) == 0
+    assert metrics.get_true_neg(y_empty, y_empty) == 0
