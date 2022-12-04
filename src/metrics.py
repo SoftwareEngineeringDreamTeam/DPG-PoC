@@ -21,13 +21,19 @@ class Metrics:
         return np.sum(~y_true & ~y_pred)
 
     def get_false_pos(self, y_true, y_pred):
-        pass
+        if y_true.shape[0] == 0:
+            return 0
+        y_true = y_true.astype(bool)
+        return np.sum(~y_true & y_pred)
 
     def get_false_neg(self, y_true, y_pred):
-        pass
+        if y_true.shape[0] == 0:
+            return 0
+        y_pred = y_pred.astype(bool)
+        return np.sum(y_true & ~y_pred)
 
-    def convert_to_binary(self, y, thr):
-        labels = y > thr
+    def convert_to_binary(self, y_vals, thr):
+        labels = y_vals > thr
         return labels.astype(int)
 
     def calculate_precision(self, y_true, y_pred):

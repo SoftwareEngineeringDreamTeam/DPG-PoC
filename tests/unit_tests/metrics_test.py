@@ -49,3 +49,21 @@ def test_metrics_calculates_tn():
     tn = metrics.get_true_neg(y_true, y_pred)
     assert tn == 40
     assert metrics.get_true_neg(y_empty, y_empty) == 0
+
+
+def test_metrics_calculates_fp():
+    y_true, y_pred = generate_example_labels()
+    y_empty = np.array([])
+    metrics = Metrics()
+    fp = metrics.get_false_pos(y_true, y_pred)
+    assert fp == 20
+    assert metrics.get_false_pos(y_empty, y_empty) == 0
+
+
+def test_metrics_calculates_fn():
+    y_true, y_pred = generate_example_labels()
+    y_empty = np.array([])
+    metrics = Metrics()
+    fn = metrics.get_false_neg(y_true, y_pred)
+    assert fn == 20
+    assert metrics.get_false_pos(y_empty, y_empty) == 0
