@@ -120,3 +120,27 @@ def test_metrics_calculates_accuracy():
     assert accuracy_score == 0.5
     with pytest.raises(events.AccuracyException):
         _ = metrics.calculate_accuracy(0, 0, y_empty)
+
+
+def test_metrics_calculates_mmc():
+    # 5/10
+    matrix = np.array([[1, 3], [2, 4]])
+    matrix_zeros = np.zeros((2, 2))
+    y_true, y_pred = generate_example_labels()
+    y_empty = np.array([])
+    y_zeros = np.zeros(y_true.shape, dtype=int)
+    y_ones = np.ones(y_true.shape, dtype=int)
+    metrics = Metrics()
+    # (1*4 - 3*2)/sqrt(4*3*6*7)
+    mmc = metrics.calculate_mmc(matrix, y_true, y_pred)
+    assert mmc == pytest.approx((1*4 - 3*2)/np.sqrt(4*3*6*7))
+    with pytest.raises(events.MMCException):
+        _ = metrics.calculate_mmc(matrix_zeros, y_empty, y_empty)
+    with pytest.raises(events.MMCException):
+        _ = metrics.calculate_mmc(matrix_zeros, y_zeros, y_pred)
+    with pytest.raises(events.MMCException):
+        _ = metrics.calculate_mmc(matrix_zeros, y_true, y_zeros)
+    with pytest.raises(events.MMCException):
+        _ = metrics.calculate_mmc(matrix_zeros, y_ones, y_pred)
+    with pytest.raises(events.MMCException):
+        _ = metrics.calculate_mmc(matrix_zeros, y_true, y_ones)

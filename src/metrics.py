@@ -69,5 +69,13 @@ class Metrics:
     def calculate_fp_rate(self, y_true, y_pred):
         pass
 
-    def calculate_mmc(self, y_true, y_pred):
-        pass
+    def calculate_mmc(self, matrix, y_true, y_pred):
+        true_vals = np.sum(y_true)*(y_true.shape - np.sum(y_true))
+        pred_vals = np.sum(y_pred)*(y_pred.shape - np.sum(y_pred))
+        denom = np.sqrt(pred_vals*true_vals)
+        if denom == 0:
+            raise events.MMCException
+        correct_pred = matrix[0, 0]*matrix[1, 1]
+        false_pred = matrix[0, 1]*matrix[1,0]
+        mmc = (correct_pred - false_pred)/denom
+        return mmc

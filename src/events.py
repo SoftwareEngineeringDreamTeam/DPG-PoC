@@ -30,3 +30,8 @@ class F1Exception(MetricException):
 class AccuracyException(MetricException):
     # no data at all
     pass
+
+
+class MMCException(MetricException):
+    # one of the arrays has only one class
+    pass
