@@ -11,11 +11,12 @@ import numpy as np
 from __init__ import dpg
 from axis import Axis
 from plot import PlotCurve, PlotData, PlotMatrix
+from data import Data
 
 
 class App:
     def __init__(self):
-        self.data = None
+        self.data = Data()
         self.axis = Axis(self.data)
         self.curve = PlotCurve()
         self.matrix = PlotMatrix()
