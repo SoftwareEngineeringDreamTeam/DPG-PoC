@@ -122,7 +122,7 @@ def test_metrics_calculates_accuracy():
         _ = metrics.calculate_accuracy(0, 0, y_empty)
 
 
-def test_metrics_calculates_mmc():
+def test_metrics_calculates_mcc():
     matrix = np.array([[1, 3], [2, 4]])
     matrix_zeros = np.zeros((2, 2))
     y_true, y_pred = generate_example_labels()
@@ -131,15 +131,30 @@ def test_metrics_calculates_mmc():
     y_ones = np.ones(y_true.shape, dtype=int)
     metrics = Metrics()
     # (1*4 - 3*2)/sqrt(4*3*6*7)
-    mmc = metrics.calculate_mmc(matrix, y_true, y_pred)
-    assert mmc == pytest.approx((1*4 - 3*2)/np.sqrt(4*3*6*7))
-    with pytest.raises(events.MMCException):
-        _ = metrics.calculate_mmc(matrix_zeros, y_empty, y_empty)
-    with pytest.raises(events.MMCException):
-        _ = metrics.calculate_mmc(matrix_zeros, y_zeros, y_pred)
-    with pytest.raises(events.MMCException):
-        _ = metrics.calculate_mmc(matrix_zeros, y_true, y_zeros)
-    with pytest.raises(events.MMCException):
-        _ = metrics.calculate_mmc(matrix_zeros, y_ones, y_pred)
-    with pytest.raises(events.MMCException):
-        _ = metrics.calculate_mmc(matrix_zeros, y_true, y_ones)
+    mcc = metrics.calculate_mcc(matrix, y_true, y_pred)
+    assert mcc == pytest.approx((1*4 - 3*2)/np.sqrt(4*3*6*7))
+    with pytest.raises(events.MCCException):
+        _ = metrics.calculate_mcc(matrix_zeros, y_empty, y_empty)
+    with pytest.raises(events.MCCException):
+        _ = metrics.calculate_mcc(matrix_zeros, y_zeros, y_pred)
+    with pytest.raises(events.MCCException):
+        _ = metrics.calculate_mcc(matrix_zeros, y_true, y_zeros)
+    with pytest.raises(events.MCCException):
+        _ = metrics.calculate_mcc(matrix_zeros, y_ones, y_pred)
+    with pytest.raises(events.MCCException):
+        _ = metrics.calculate_mcc(matrix_zeros, y_true, y_ones)
+
+
+def test_metrics_calculates_specificity():
+    y_true, y_pred = generate_example_labels()
+    y_ones = np.ones(y_true.shape, dtype=int)
+    y_empty = np.array([])
+    metrics = Metrics()
+    true_neg = metrics.get_true_neg(y_true, y_pred)
+    specificity = metrics.calculate_specificity(y_true, true_neg)
+    # 4/(7)
+    assert specificity == 4/7
+    with pytest.raises(events.SpecificityException):
+        specificity = metrics.calculate_specificity(y_empty, 0)
+    with pytest.raises(events.SpecificityException):
+        specificity = metrics.calculate_specificity(y_ones, 0)

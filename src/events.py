@@ -21,6 +21,12 @@ class RecallException(MetricException):
     pass
 
 
+class SpecificityException(MetricException):
+    # no negative ground truths
+    # classification task would not exist
+    pass
+
+
 class F1Exception(MetricException):
     # no true positives detected
     # the classifier would be useless
@@ -32,6 +38,6 @@ class AccuracyException(MetricException):
     pass
 
 
-class MMCException(MetricException):
+class MCCException(MetricException):
     # one of the arrays has only one class
     pass

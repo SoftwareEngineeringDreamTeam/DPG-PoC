@@ -15,8 +15,9 @@ class Data:
         self.metrics = Metrics()
 
     def update(self):
-        y_true = np.array([1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-                          dtype=int)
+        y_true_real = np.array([1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+                               dtype=int)
+        y_true = (y_true_real > 0).astype(int)
         y_vals = np.array([0.2, 0.1, 0.9, 0.8, 0.7, 0.6, 0.3, 0.4, 0.2, 0.1],
                           dtype=int)
         thr = 0.5
@@ -29,6 +30,8 @@ class Data:
 
         precision = self._update_precision_score(y_pred, true_pos)
         recall = self._update_recall_score(y_true, true_pos)
+        specificity = self._update_specificity(y_true, true_neg)
+
         _ = self._update_f1_score(precision, recall)
         _ = self._update_accuracy_score(true_pos, true_neg, y_true)
         matrix = np.array([[true_pos, false_pos], [false_neg, true_neg]])
@@ -45,6 +48,10 @@ class Data:
         recall = self.metrics.calculate_recall(y_true, true_pos)
         return recall
 
+    def _update_specificity(self, y_true, true_neg):
+        specificity = self.metrics.calculate_specificity(y_true, true_neg)
+        return specificity
+
     def _update_f1_score(self, precision, recall):
         f1_score = self.metrics.calculate_f1_score(precision, recall)
         return f1_score
@@ -56,10 +63,10 @@ class Data:
     def _update_roc_curve(self):
         pass
 
-    def _update_mmc_score(self, confusion_matrix, y_true, y_pred):
-        mmc_score = self.metrics.calculate_mmc(confusion_matrix,
+    def _update_mcc_score(self, confusion_matrix, y_true, y_pred):
+        mcc_score = self.metrics.calculate_mcc(confusion_matrix,
                                                y_true, y_pred)
-        return mmc_score
+        return mcc_score
 
     def _update_matrix(self, matrix):
         # update the matrix
