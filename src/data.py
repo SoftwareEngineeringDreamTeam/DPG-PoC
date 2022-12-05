@@ -31,6 +31,7 @@ class Data:
         precision = self._update_precision_score(y_pred, true_pos)
         recall = self._update_recall_score(y_true, true_pos)
         specificity = self._update_specificity(y_true, true_neg)
+        _ = self._update_balanced_accuracy(recall, specificity)
 
         _ = self._update_f1_score(precision, recall)
         _ = self._update_accuracy_score(true_pos, true_neg, y_true)
@@ -59,6 +60,10 @@ class Data:
     def _update_accuracy_score(self, true_pos, true_neg, y_true):
         accuracy = self.metrics.calculate_accuracy(true_pos, true_neg, y_true)
         return accuracy
+
+    def _update_balanced_accuracy(self, sensitivity, specificity):
+        balanced_accuracy = (sensitivity + specificity)/2
+        return balanced_accuracy
 
     def _update_roc_curve(self):
         pass
