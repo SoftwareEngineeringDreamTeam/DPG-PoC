@@ -37,7 +37,7 @@ class Data:
         _ = self._update_accuracy_score(true_pos, true_neg, y_true)
         matrix = np.array([[true_pos, false_pos], [false_neg, true_neg]])
         self._update_matrix(matrix)
-        _ = self._update_mmc_score(matrix, y_true, y_pred)
+        _ = self._update_mcc_score(matrix, y_true, y_pred)
 
     def _update_precision_score(self, y_pred, true_pos):
         precision = self.metrics.calculate_precision(y_pred, true_pos)
