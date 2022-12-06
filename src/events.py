@@ -41,3 +41,9 @@ class AccuracyException(MetricException):
 class MCCException(MetricException):
     # one of the arrays has only one class
     pass
+
+
+class ROCException(MetricException):
+    # true labels only have one clas
+    # classification task would not exist
+    pass

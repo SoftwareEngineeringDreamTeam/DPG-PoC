@@ -38,6 +38,8 @@ class Data:
         matrix = np.array([[true_pos, false_pos], [false_neg, true_neg]])
         self._update_matrix(matrix)
         _ = self._update_mcc_score(matrix, y_true, y_pred)
+        fpr, tpr = self._update_roc_curve(y_true, y_vals)
+        _ = self._update_auc(fpr, tpr)
 
     def _update_precision_score(self, y_pred, true_pos):
         precision = self.metrics.calculate_precision(y_pred, true_pos)
@@ -65,8 +67,14 @@ class Data:
         balanced_accuracy = (sensitivity + specificity)/2
         return balanced_accuracy
 
-    def _update_roc_curve(self):
-        pass
+    def _update_roc_curve(self, y_true, y_val):
+        fpr, tpr = self.metrics.calculate_roc(y_true, y_val)
+        # plot the data
+        return fpr, tpr
+
+    def _update_auc(self, fpr, tpr):
+        auc = self.metrics.calculate_auc(fpr, tpr)
+        return auc
 
     def _update_mcc_score(self, confusion_matrix, y_true, y_pred):
         mcc_score = self.metrics.calculate_mcc(confusion_matrix,

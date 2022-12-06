@@ -5,6 +5,7 @@
 # pylint: disable=W
 
 import numpy as np
+from sklearn.metrics import auc, roc_curve
 
 from src import events
 
@@ -69,14 +70,14 @@ class Metrics:
         accuracy = (true_pos + true_neg)/all_samples
         return accuracy
 
-    def calculate_tp_rate(self, y_true, y_pred):
-        pass
+    def calculate_roc(self, y_true, y_val):
+        if np.sum(y_true) == 0 or np.sum(y_true) == y_true.shape[0]:
+            raise events.ROCException
+        fpr, tpr, _ = roc_curve(y_true, y_val)
+        return fpr, tpr
 
-    def calculate_fp_rate(self, y_true, y_pred):
-        pass
-
-    def calculate_roc(self):
-        pass
+    def calculate_auc(self, fpr, tpr):
+        return auc(fpr, tpr)
 
     def calculate_mcc(self, matrix, y_true, y_pred):
         true_vals = np.sum(y_true)*(y_true.shape - np.sum(y_true))
