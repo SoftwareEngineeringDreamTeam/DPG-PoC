@@ -7,7 +7,6 @@
 from math import sqrt
 
 from src.__init__ import dpg
-from src.utils import generate_example_points
 
 
 class Axis:
@@ -15,21 +14,22 @@ class Axis:
 
     def __init__(self, data_ref):
         self.data_ref = data_ref
-        self.data = {
-            "points": generate_example_points((150, 750), Point),
-            "threshold": Threshold(400)
-        }
+        self.choosen_value = True
         self.start = 50
         self.end = 800
 
     def setup_axis(self):
+        self.data_ref.init_axis_data(self.start, self.end)
         self.draw()
 
-    def add_point(self):
-        pass
+    def add_point(self, mouse_x_position):
+        self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
     def delete_point(self, point):
-        pass
+        self.data_ref.delete_point(point)
+
+    def invert_all_points(self):
+        self.data_ref.switch_points_values()
 
     def draw(self):
 
@@ -42,10 +42,10 @@ class Axis:
         )
 
         # Threshold
-        self.data["threshold"].draw()
+        self.data_ref.threshold.draw()
 
         # Drawing points
-        for point in self.data["points"]:
+        for point in self.data_ref.points:
             point.draw()
 
         dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
@@ -58,14 +58,14 @@ class Axis:
 
         while dpg.is_dearpygui_running():
             if dpg.is_mouse_button_down(0) and self.check_axis_limits():  # Left button
-                threshhold = self.data["threshold"]
+                threshhold = self.data_ref.threshold
                 if threshhold.bounds_check() and not holding:
                     holding = threshhold
                     threshhold.update_dragged_threshhold()
                 elif holding == threshhold:
                     threshhold.update_dragged_threshhold()
                 else:
-                    for point in self.data["points"]:
+                    for point in self.data_ref.points:
                         if point.bounds_check() and not holding:
                             holding = point
                             point.update_dragged_point()
@@ -73,7 +73,7 @@ class Axis:
                             point.update_dragged_point()
 
             elif dpg.is_mouse_button_down(1):  # Right button
-                for point in self.data["points"]:
+                for point in self.data_ref.points:
                     if point.bounds_check():
                         self.__show_popup_for(point)
 
@@ -225,7 +225,7 @@ class Threshold(Entity):
         upper_y = self.y_pos + self.half_length
         lower_y = self.y_pos - self.half_length * 2
         upper_x = self.x_pos + self.thickness * 2
-        lower_x =  self.x_pos - self.thickness * 2
+        lower_x = self.x_pos - self.thickness * 2
         if lower_y <= mouse_y <= upper_y:
             return lower_x <= mouse_x <= upper_x
 
@@ -238,4 +238,3 @@ class Threshold(Entity):
             p1=[self.x_pos - self.thickness * 3 / 2, self.y_pos - self.half_length],
             p2=[self.x_pos - self.thickness * 3 / 2, self.y_pos + self.half_length]
         )
-        

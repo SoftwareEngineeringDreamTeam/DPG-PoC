@@ -8,6 +8,7 @@ from math import sin
 
 import numpy as np
 
+from src.data import Data
 from src.__init__ import dpg
 from src.axis import Axis
 from src.plot import PlotCurve, PlotData, PlotMatrix
@@ -15,7 +16,7 @@ from src.plot import PlotCurve, PlotData, PlotMatrix
 
 class App:
     def __init__(self):
-        self.data = None
+        self.data = Data()
         self.axis = Axis(self.data)
         self.curve = PlotCurve()
         self.matrix = PlotMatrix()
