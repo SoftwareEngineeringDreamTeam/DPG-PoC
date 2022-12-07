@@ -13,11 +13,19 @@ from src.axis import Point, Threshold
 
 class Data:
     _f1_score = None
+    _true_pos = None
+    _true_neg = None
+    _false_pos = None
+    _false_neg = None
+    _precision = None
 
     def __init__(self):
         self.save_file = "res.csv"
         self.points = []
         self.threshold = None
+        self.y_true = np.array([])
+        self.y_pred = np.array([])
+        self.y_vals = np.array([])
         self.metrics = Metrics()
 
     def init_axis_data(self, min, max):
@@ -28,7 +36,14 @@ class Data:
         pass
 
     def update(self):
+        # preparations
         self._get_points_as_arrays()
+        self.__update_true_pos()
+        self.__update_true_neg()
+        self.__update_false_pos()
+        self.__update_false_neg()
+        # metrics
+        self.__update_precision()
         # self.__update_accuracy_score()
         # self.__update_roc_curve()
         # self.__update_f1_score()
@@ -64,6 +79,64 @@ class Data:
         self.y_pred = self.metrics.convert_to_binary(self.y_vals,
                                                      self.threshold.x_pos)
         self.y_true = y_true.astype(int)
+
+    @property
+    def __true_pos(self):
+        if self._true_pos is None:
+            self._true_pos = self.metrics.get_true_pos(self.y_true,
+                                                       self.y_pred)
+        return self._true_pos
+
+    def __update_true_pos(self):
+        self._true_pos = self.metrics.get_true_pos(self.y_true,
+                                                   self.y_pred)
+
+    @property
+    def __true_neg(self):
+        if self._true_neg is None:
+            self._true_neg = self.metrics.get_true_neg(self.y_true,
+                                                       self.y_pred)
+        return self._true_neg
+
+    def __update_true_neg(self):
+        self._true_neg = self.metrics.get_true_neg(self.y_true,
+                                                   self.y_pred)
+
+    @property
+    def __false_pos(self):
+        if self._false_pos is None:
+            self._false_pos = self.metrics.get_false_pos(self.y_true,
+                                                         self.y_pred)
+        return self._false_pos
+
+    def __update_false_pos(self):
+        self._false_pos = self.metrics.get_false_pos(self.y_true,
+                                                     self.y_pred)
+
+    @property
+    def __false_neg(self):
+        if self._false_neg is None:
+            self._false_neg = self.metrics.get_false_neg(self.y_true,
+                                                         self.y_pred)
+        return self._false_neg
+
+    def __update_false_neg(self):
+        self._false_neg = self.metrics.get_false_neg(self.y_true,
+                                                     self.y_pred)
+
+    @property
+    def __precision(self):
+        if self._precision is None:
+            precision = self.metrics.calculate_precision(self.y_pred,
+                                                         self.__true_pos)
+            self._precision = [0, precision]
+        return self._precision
+
+    def __update_precision(self):
+        old_precision = self.__precision
+        cur_precision = self.metrics.calculate_precision(self.y_pred,
+                                                         self.__true_pos)
+        self._precision = [old_precision[1], cur_precision]
 
     @property
     def __f1_score(self):
