@@ -21,6 +21,8 @@ class Data:
     _specificity = None
     _balanced_accuracy = None
     _f1_score = None
+    _accuracy = None
+    _confusion_matrix = None
 
     def __init__(self):
         self.save_file = "res.csv"
@@ -51,12 +53,11 @@ class Data:
         self.__update_specificity()
         self.__update_balanced_accuracy()
         self.__update_f1_score()
-        # self.__update_accuracy_score()
+        self.__update_accuracy_score()
+        self.__update_confusion_matrix()
         # self.__update_roc_curve()
-        # self.__update_matrix()
-        # self.__update_mmc_score()
-        # self.__update_recall_score()
         # self.__update_auc_score()
+        # self.__update_mmc_score()
 
     def add_point(self, x_position, value):
         self.points.append(Point(x_position, value))
@@ -198,38 +199,40 @@ class Data:
                                                  self.__recall[1])
         self._f1_score = [old_f1[1], cur_f1]
 
+    @property
+    def __accuracy(self):
+        if self._accuracy is None:
+            accuracy = self.metrics.calculate_accuracy(self.__true_pos,
+                                                       self.__true_neg,
+                                                       self.y_true)
+            self._accuracy = [0, accuracy]
+        return self._accuracy
+
     def __update_accuracy_score(self):
-        self.metrics = Metrics()
+        old_acc = self.__accuracy
+        cur_acc = self.metrics.calculate_accuracy(self.__true_pos,
+                                                  self.__true_neg,
+                                                  self.y_true)
+        self._accuracy = [old_acc[1], cur_acc]
+
+    @property
+    def __confusion_matrix(self):
+        if self._confusion_matrix is None:
+            confusion_matrix = np.array([[self.__true_pos, self.__false_pos],
+                                        [self.__false_neg, self.__true_neg]])
+            self._confusion_matrix = [np.zeros((2, 2)), confusion_matrix]
+        return self._confusion_matrix
+
+    def __update_confusion_matrix(self):
+        old_matrix = self.__confusion_matrix
+        cur_matrix = np.array([[self.__true_pos, self.__false_pos],
+                              [self.__false_neg, self.__true_neg]])
+        self._confusion_matrix = [old_matrix[1], cur_matrix]
 
     # def update(self):
-    #     _ = self._update_accuracy_score(true_pos, true_neg, y_true)
-    #     matrix = np.array([[true_pos, false_pos], [false_neg, true_neg]])
-    #     self._update_matrix(matrix)
     #     _ = self._update_mcc_score(matrix, y_true, y_pred)
     #     fpr, tpr = self._update_roc_curve(y_true, y_vals)
     #     _ = self._update_auc(fpr, tpr)
-
-    def _update_precision_score(self, y_pred, true_pos):
-        precision = self.metrics.calculate_precision(y_pred, true_pos)
-        # update ...
-        # try catch?
-        return precision
-
-    def _update_recall_score(self, y_true, true_pos):
-        recall = self.metrics.calculate_recall(y_true, true_pos)
-        return recall
-
-    def _update_specificity(self, y_true, true_neg):
-        specificity = self.metrics.calculate_specificity(y_true, true_neg)
-        return specificity
-
-    def _update_accuracy_score(self, true_pos, true_neg, y_true):
-        accuracy = self.metrics.calculate_accuracy(true_pos, true_neg, y_true)
-        return accuracy
-
-    def _update_balanced_accuracy(self, sensitivity, specificity):
-        balanced_accuracy = (sensitivity + specificity)/2
-        return balanced_accuracy
 
     def _update_roc_curve(self, y_true, y_val):
         fpr, tpr = self.metrics.calculate_roc(y_true, y_val)

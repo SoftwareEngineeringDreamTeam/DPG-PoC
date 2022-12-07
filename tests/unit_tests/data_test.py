@@ -109,3 +109,25 @@ def test_data_updates_f1():
     test_data.add_point(0.5, 0)
     assert (1/10)/(9/20) == test_data._f1_score[0]
     assert (1/10)/(9/20) == test_data._f1_score[1]
+
+
+def test_data_updates_accuracy():
+    test_data = prepare_data()
+    assert 3/10 == test_data._accuracy[1]
+    test_data.add_point(1, 1)
+    assert 3/10 == test_data._accuracy[0]
+    assert 3/11 == test_data._accuracy[1]
+    test_data.add_point(11, 1)
+    assert 3/11 == test_data._accuracy[0]
+    assert 4/12 == test_data._accuracy[1]
+
+
+def test_data_updates_confusion_matrix():
+    test_data = prepare_data()
+    np.testing.assert_array_equal(np.array([[1, 4], [3, 2]]),
+                                  test_data._confusion_matrix[1])
+    test_data.add_point(11, 1)
+    np.testing.assert_array_equal(np.array([[1, 4], [3, 2]]),
+                                  test_data._confusion_matrix[0])
+    np.testing.assert_array_equal(np.array([[2, 4], [3, 2]]),
+                                  test_data._confusion_matrix[1])
