@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.8.1
+    Integrated the metrics with Data
+
 ### Version 0.8.0
     Added the metrics
 

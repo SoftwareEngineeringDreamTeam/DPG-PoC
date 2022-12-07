@@ -268,7 +268,7 @@ class Data:
     def __auc_score(self):
         if self._auc_score is None:
             auc = self.metrics.calculate_auc(self.__roc_curve[1]["fpr"],
-                                             self.__roc[1]["tpr"])
+                                             self.__roc_curve[1]["tpr"])
             self._auc_score = [0, auc]
         return self._auc_score
 
