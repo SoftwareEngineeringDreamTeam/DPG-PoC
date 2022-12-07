@@ -93,3 +93,19 @@ def test_data_updates_specificity():
     test_data.add_point(11, 1)
     assert 3/7 == test_data._specificity[0]
     assert 3/7 == test_data._specificity[1]
+
+
+def test_data_updates_balanced_accuracy():
+    test_data = prepare_data()
+    assert (1/3+1/4)/2 == test_data._balanced_accuracy[1]
+    test_data.add_point(0.5, 0)
+    assert (1/3+1/4)/2 == test_data._balanced_accuracy[0]
+    assert (3/7+1/4)/2 == test_data._balanced_accuracy[1]
+
+
+def test_data_updates_f1():
+    test_data = prepare_data()
+    assert (1/10)/(9/20) == test_data._f1_score[1]
+    test_data.add_point(0.5, 0)
+    assert (1/10)/(9/20) == test_data._f1_score[0]
+    assert (1/10)/(9/20) == test_data._f1_score[1]

@@ -6,13 +6,12 @@
 
 import numpy as np
 
+from src.axis import Point, Threshold
 from src.metrics import Metrics
 from src.utils import generate_example_points
-from src.axis import Point, Threshold
 
 
 class Data:
-    _f1_score = None
     _true_pos = None
     _true_neg = None
     _false_pos = None
@@ -20,6 +19,8 @@ class Data:
     _precision = None
     _recall = None
     _specificity = None
+    _balanced_accuracy = None
+    _f1_score = None
 
     def __init__(self):
         self.save_file = "res.csv"
@@ -48,9 +49,10 @@ class Data:
         self.__update_precision()
         self.__update_recall()
         self.__update_specificity()
+        self.__update_balanced_accuracy()
+        self.__update_f1_score()
         # self.__update_accuracy_score()
         # self.__update_roc_curve()
-        # self.__update_f1_score()
         # self.__update_matrix()
         # self.__update_mmc_score()
         # self.__update_recall_score()
@@ -171,6 +173,18 @@ class Data:
         self._specificity = [old_specificity[1], cur_specificity]
 
     @property
+    def __balanced_accuracy(self):
+        if self._balanced_accuracy is None:
+            balanced_accuracy = (self.__recall[1] + self.__specificity[1])/2
+            self._balanced_accuracy = [0, balanced_accuracy]
+        return self._balanced_accuracy
+
+    def __update_balanced_accuracy(self):
+        old_bal_acc = self.__balanced_accuracy
+        cur_bal_acc = (self.__recall[1] + self.__specificity[1])/2
+        self._balanced_accuracy = [old_bal_acc[1], cur_bal_acc]
+
+    @property
     def __f1_score(self):
         if self._f1_score is None:
             f1_score = self.metrics.calculate_f1_score(self.__precision[1],
@@ -188,9 +202,6 @@ class Data:
         self.metrics = Metrics()
 
     # def update(self):
-    #     _ = self._update_balanced_accuracy(recall, specificity)
-
-    #     _ = self._update_f1_score(precision, recall)
     #     _ = self._update_accuracy_score(true_pos, true_neg, y_true)
     #     matrix = np.array([[true_pos, false_pos], [false_neg, true_neg]])
     #     self._update_matrix(matrix)
