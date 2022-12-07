@@ -52,7 +52,7 @@ def test_data_raises_precision_error():
     test_data = data.Data()
     test_data.threshold = Threshold(4)
     with pytest.raises(events.PrecisionException):
-        test_data.add_point(0, 0)
+        test_data.add_point(0, 1)
 
 
 def test_data_updates_precision():
@@ -64,3 +64,32 @@ def test_data_updates_precision():
     test_data.add_point(0.5, 0)
     assert 1/3 == test_data._precision[0]
     assert 1/3 == test_data._precision[1]
+
+
+def test_data_raises_recall_error():
+    test_data = data.Data()
+    test_data.threshold = Threshold(4)
+    with pytest.raises(events.RecallException):
+        test_data.add_point(6, 0)
+
+
+def test_data_updates_recall():
+    test_data = prepare_data()
+    assert 1/4 == test_data._recall[1]
+    test_data.add_point(1, 1)
+    assert 1/4 == test_data._recall[0]
+    assert 1/5 == test_data._recall[1]
+    test_data.add_point(1, 0)
+    assert 1/5 == test_data._recall[0]
+    assert 1/5 == test_data._recall[1]
+
+
+def test_data_updates_specificity():
+    test_data = prepare_data()
+    assert 2/6 == test_data._specificity[1]
+    test_data.add_point(0.5, 0)
+    assert 2/6 == test_data._specificity[0]
+    assert 3/7 == test_data._specificity[1]
+    test_data.add_point(11, 1)
+    assert 3/7 == test_data._specificity[0]
+    assert 3/7 == test_data._specificity[1]
