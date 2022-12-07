@@ -246,7 +246,7 @@ class Data:
         cur_mcc = self.metrics.calculate_mcc(self.__confusion_matrix[1],
                                              self.y_true,
                                              self.y_pred)
-        
+
         self._mcc_score = [old_mcc[1], cur_mcc]
 
     @property
@@ -267,15 +267,15 @@ class Data:
     @property
     def __auc_score(self):
         if self._auc_score is None:
-            auc = self.metrics.calculate_auc(self.__roc[1]["fpr"],
+            auc = self.metrics.calculate_auc(self.__roc_curve[1]["fpr"],
                                              self.__roc[1]["tpr"])
             self._auc_score = [0, auc]
         return self._auc_score
 
     def __update_auc_score(self):
         old_auc = self.__auc_score
-        cur_auc = self.metrics.calculate_auc(self.__roc[1]["fpr"],
-                                             self.__roc[1]["tpr"])
+        cur_auc = self.metrics.calculate_auc(self.__roc_curve[1]["fpr"],
+                                             self.__roc_curve[1]["tpr"])
         self._roc_curve = [old_auc[1], cur_auc]
 
     def save(self):
