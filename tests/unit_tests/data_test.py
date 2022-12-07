@@ -131,3 +131,11 @@ def test_data_updates_confusion_matrix():
                                   test_data._confusion_matrix[0])
     np.testing.assert_array_equal(np.array([[2, 4], [3, 2]]),
                                   test_data._confusion_matrix[1])
+
+
+def test_data_updates_mcc_score():
+    test_data = prepare_data()
+    assert (2-12)/np.sqrt(24*25) == test_data._mcc_score[1]
+    test_data.add_point(11, 1)
+    assert (2-12)/np.sqrt(24*25) == test_data._mcc_score[0]
+    assert (4-12)/30 == test_data._mcc_score[1]

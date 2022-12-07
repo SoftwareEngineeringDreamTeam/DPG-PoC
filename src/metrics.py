@@ -88,4 +88,4 @@ class Metrics:
         correct_pred = matrix[0, 0]*matrix[1, 1]
         false_pred = matrix[0, 1]*matrix[1, 0]
         mcc = (correct_pred - false_pred)/denom
-        return mcc
+        return mcc[0]

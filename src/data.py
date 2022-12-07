@@ -23,6 +23,9 @@ class Data:
     _f1_score = None
     _accuracy = None
     _confusion_matrix = None
+    _mcc_score = None
+    _roc_curve = None
+    _auc_score = None
 
     def __init__(self):
         self.save_file = "res.csv"
@@ -55,9 +58,9 @@ class Data:
         self.__update_f1_score()
         self.__update_accuracy_score()
         self.__update_confusion_matrix()
-        # self.__update_roc_curve()
-        # self.__update_auc_score()
-        # self.__update_mmc_score()
+        self.__update_mcc_score()
+        self.__update_roc_curve()
+        self.__update_auc_score()
 
     def add_point(self, x_position, value):
         self.points.append(Point(x_position, value))
@@ -229,28 +232,51 @@ class Data:
                               [self.__false_neg, self.__true_neg]])
         self._confusion_matrix = [old_matrix[1], cur_matrix]
 
-    # def update(self):
-    #     _ = self._update_mcc_score(matrix, y_true, y_pred)
-    #     fpr, tpr = self._update_roc_curve(y_true, y_vals)
-    #     _ = self._update_auc(fpr, tpr)
+    @property
+    def __mcc_score(self):
+        if self._mcc_score is None:
+            mcc_score = self.metrics.calculate_mcc(self.__confusion_matrix[1],
+                                                   self.y_true,
+                                                   self.y_pred)
+            self._mcc_score = [0, mcc_score]
+        return self._mcc_score
 
-    def _update_roc_curve(self, y_true, y_val):
-        fpr, tpr = self.metrics.calculate_roc(y_true, y_val)
-        # plot the data
-        return fpr, tpr
+    def __update_mcc_score(self):
+        old_mcc = self.__mcc_score
+        cur_mcc = self.metrics.calculate_mcc(self.__confusion_matrix[1],
+                                             self.y_true,
+                                             self.y_pred)
+        
+        self._mcc_score = [old_mcc[1], cur_mcc]
 
-    def _update_auc(self, fpr, tpr):
-        auc = self.metrics.calculate_auc(fpr, tpr)
-        return auc
+    @property
+    def __roc_curve(self):
+        if self._roc_curve is None:
+            fpr, tpr = self.metrics.calculate_roc(self.y_true, self.y_vals)
+            roc_curve = {"fpr": fpr, "tpr": tpr}
+            self._roc_curve = [{"fpr": np.array([]), "tpr": np.array([])},
+                               roc_curve]
+        return self._roc_curve
 
-    def _update_mcc_score(self, confusion_matrix, y_true, y_pred):
-        mcc_score = self.metrics.calculate_mcc(confusion_matrix,
-                                               y_true, y_pred)
-        return mcc_score
+    def __update_roc_curve(self):
+        old_roc = self.__roc_curve
+        fpr, tpr = self.metrics.calculate_roc(self.y_true, self.y_vals)
+        cur_roc = {"fpr": fpr, "tpr": tpr}
+        self._roc_curve = [old_roc[1], cur_roc]
 
-    def _update_matrix(self, matrix):
-        # update the matrix
-        print(matrix)
+    @property
+    def __auc_score(self):
+        if self._auc_score is None:
+            auc = self.metrics.calculate_auc(self.__roc[1]["fpr"],
+                                             self.__roc[1]["tpr"])
+            self._auc_score = [0, auc]
+        return self._auc_score
+
+    def __update_auc_score(self):
+        old_auc = self.__auc_score
+        cur_auc = self.metrics.calculate_auc(self.__roc[1]["fpr"],
+                                             self.__roc[1]["tpr"])
+        self._roc_curve = [old_auc[1], cur_auc]
 
     def save(self):
         pass
