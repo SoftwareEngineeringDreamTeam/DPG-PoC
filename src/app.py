@@ -55,7 +55,7 @@ class App:
                                    [plot_data.x_axis, plot_data.y_axis])
 
             self.axis.setup_axis()
-            dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
+
 
     def run(self):
         dpg.create_viewport(
