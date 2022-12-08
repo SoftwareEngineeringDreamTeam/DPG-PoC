@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.7.1
+    Moved render loop back to App class and fixed inability to close the app properly
+
 ### Version 0.7.0
     Changed the app working directory to root and fixed imports
 

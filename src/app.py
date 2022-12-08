@@ -73,5 +73,4 @@ class App:
 
             dpg.render_dearpygui_frame()
             
-    def __del__(self):
         dpg.destroy_context()
