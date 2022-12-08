@@ -12,6 +12,7 @@ from src.utils import generate_example_points
 
 class Axis:
     thickness = None
+    holding = False
 
     def __init__(self, data_ref):
         self.data_ref = data_ref
@@ -54,33 +55,28 @@ class Axis:
         return dpg.get_mouse_pos()[0] >= self.start and dpg.get_mouse_pos()[0] <= self.end
 
     def check_interaction(self):
-        holding = False
-
-        while dpg.is_dearpygui_running():
-            if dpg.is_mouse_button_down(0) and self.check_axis_limits():  # Left button
-                threshhold = self.data["threshold"]
-                if threshhold.bounds_check() and not holding:
-                    holding = threshhold
-                    threshhold.update_dragged_threshhold()
-                elif holding == threshhold:
-                    threshhold.update_dragged_threshhold()
-                else:
-                    for point in self.data["points"]:
-                        if point.bounds_check() and not holding:
-                            holding = point
-                            point.update_dragged_point()
-                        elif holding == point:
-                            point.update_dragged_point()
-
-            elif dpg.is_mouse_button_down(1):  # Right button
-                for point in self.data["points"]:
-                    if point.bounds_check():
-                        self.__show_popup_for(point)
-
+        if dpg.is_mouse_button_down(0) and self.check_axis_limits():  # Left button
+            threshhold = self.data["threshold"]
+            if threshhold.bounds_check() and not self.holding:
+                self.holding = threshhold
+                threshhold.update_dragged_threshhold()
+            elif self.holding == threshhold:
+                threshhold.update_dragged_threshhold()
             else:
-                holding = False
+                for point in self.data["points"]:
+                    if point.bounds_check() and not self.holding:
+                        self.holding = point
+                        point.update_dragged_point()
+                    elif self.holding == point:
+                        point.update_dragged_point()
 
-            dpg.render_dearpygui_frame()
+        elif dpg.is_mouse_button_down(1):  # Right button
+            for point in self.data["points"]:
+                if point.bounds_check():
+                    self.__show_popup_for(point)
+
+        else:
+            self.holding = False
 
     def __show_popup_for(self, item):
         with dpg.window(

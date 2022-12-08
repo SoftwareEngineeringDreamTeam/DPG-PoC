@@ -66,7 +66,12 @@ class App:
         dpg.setup_dearpygui()
         dpg.show_viewport()
         dpg.set_primary_window("Primary Window", True)
-        self.axis.check_interaction()
 
+        # Main render loop
+        while dpg.is_dearpygui_running():
+            self.axis.check_interaction()
+
+            dpg.render_dearpygui_frame()
+            
     def __del__(self):
         dpg.destroy_context()
