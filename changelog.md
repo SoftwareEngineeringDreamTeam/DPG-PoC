@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.8.0
+    Added interface for metrics UI
+
 ### Version 0.7.1
     Moved render loop back to App class and fixed inability to close the app properly
 

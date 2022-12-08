@@ -49,8 +49,6 @@ class Axis:
         for point in self.data["points"]:
             point.draw()
 
-        dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
-
     def check_axis_limits(self):
         return dpg.get_mouse_pos()[0] >= self.start and dpg.get_mouse_pos()[0] <= self.end
 
