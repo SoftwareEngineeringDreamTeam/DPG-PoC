@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.8.1
+    Simplified interface for metrics UI
+
 ### Version 0.8.0
     Added interface for metrics UI
 
