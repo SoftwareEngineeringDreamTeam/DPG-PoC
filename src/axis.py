@@ -98,8 +98,11 @@ class Axis:
                     )
 
                 dpg.add_input_float(
-                    min_value=0,
-                    max_value=1
+                    min_value=50,
+                    max_value=800,
+                    step=1,
+                    default_value=item.get_position()[0],
+                    callback=lambda sender, app_data, user_data: item.update_point_position(app_data)
                 )
 
             elif isinstance(item, Threshold):
@@ -178,6 +181,11 @@ class Point(Entity):
             item=self.point,
             center=(self.x_pos - self.radius, self.y_pos)
         )
+
+    def update_point_position(self, x_pos):
+        self.set_position(x_pos, self.y_pos)
+        dpg.configure_item(self.point, center = (self.x_pos, self.y_pos))
+
 
     def flip_class(self):
         self.value = not self.value
