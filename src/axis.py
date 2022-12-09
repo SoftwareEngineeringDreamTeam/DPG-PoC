@@ -26,8 +26,9 @@ class Axis:
     def add_point(self, mouse_x_position):
         self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
-    def delete_point(self, point):
-        self.data_ref.delete_point(point)
+    def delete_point(self, point_and_popup):
+        dpg.delete_item(point_and_popup[1])
+        self.data_ref.delete_point(point_and_popup[0])
 
     def invert_all_points(self):
         self.data_ref.switch_points_values()
@@ -76,26 +77,6 @@ class Axis:
         else:
             self.holding = False
 
-        # if dpg.is_mouse_button_down(0) and self.check_axis_limits():  # Left button
-        #     threshhold = self.data["threshold"]
-        #     if threshhold.bounds_check() and not self.holding:
-        #         self.holding = threshhold
-        #         threshhold.update_dragged_threshhold()
-        #     elif self.holding == threshhold:
-        #         threshhold.update_dragged_threshhold()
-        #     else:
-        #         for point in self.data["points"]:
-        #             if point.bounds_check() and not self.holding:
-        #                 self.holding = point
-        #                 point.update_dragged_point()
-        #             elif self.holding == point:
-        #                 point.update_dragged_point()
-
-        # elif dpg.is_mouse_button_down(1):  # Right button
-        #     for point in self.data["points"]:
-        #         if point.bounds_check():
-        #             self.__show_popup_for(point)
-
     def __show_popup_for(self, item):
         with dpg.window(
                 modal=True,
@@ -107,7 +88,7 @@ class Axis:
                 with dpg.group(horizontal=True):
                     dpg.add_button(
                         label="Delete",
-                        user_data=item,
+                        user_data=(item, popup),
                         callback=lambda sender, app_data, user_data: self.delete_point(user_data)
                     )
                     dpg.add_checkbox(
@@ -216,6 +197,10 @@ class Point(Entity):
             return True
 
         return False
+
+    def __del__(self):
+        dpg.configure_item(self.point, show=False)
+        dpg.delete_item(self.point)
 
 
 class Threshold(Entity):

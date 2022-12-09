@@ -12,6 +12,7 @@ from src.data import Data
 from src.__init__ import dpg
 from src.axis import Axis
 from src.plot import PlotCurve, PlotData, PlotMatrix, Value
+from src.events import *
 
 
 class App:
@@ -65,7 +66,6 @@ class App:
                 # f_measure = Value("F measure")
                 # f_measure.draw()
 
-
     def run(self):
         dpg.create_viewport(
             title='Classification Metrics Demonstrator',
@@ -79,7 +79,6 @@ class App:
         # Main render loop
         while dpg.is_dearpygui_running():
             self.axis.check_interaction()
-
             dpg.render_dearpygui_frame()
-            
+
         dpg.destroy_context()

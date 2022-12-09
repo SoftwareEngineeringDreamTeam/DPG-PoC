@@ -62,17 +62,21 @@ class Data:
         self.__update_roc_curve()
         self.__update_auc_score()
 
-    def add_point(self, x_position, value):
+    def add_point(self, x_position, value, update=True):
         self.points.append(Point(x_position, value))
         self.update()
 
-    def switch_points_values(self):
+    def switch_points_values(self, update=True):
         for point in self.points:
             point.value = not point.value
 
-    def delete_point(self, point):
+    def point_moved(self):
+        pass
+
+    def delete_point(self, point, update=True):
         self.points.remove(point)
-        self.update()
+        if update:
+            self.update()
 
     def __init_random_points(self, min, max):
         self.points = generate_example_points((min, max), Point)
@@ -185,7 +189,10 @@ class Data:
 
     def __update_balanced_accuracy(self):
         old_bal_acc = self.__balanced_accuracy
-        cur_bal_acc = (self.__recall[1] + self.__specificity[1])/2
+        if self.__recall[1] == "NaN" or self.__specificity[1] == "NaN":
+            cur_bal_acc = "NaN"
+        else:
+            cur_bal_acc = (self.__recall[1] + self.__specificity[1])/2
         self._balanced_accuracy = [old_bal_acc[1], cur_bal_acc]
 
     @property
