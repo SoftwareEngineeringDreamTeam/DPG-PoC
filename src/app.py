@@ -57,7 +57,7 @@ class App:
 
             self.axis.setup_axis()
 
-            dpg.add_spacer(height = 150)
+            dpg.add_spacer(height=150)
 
             with dpg.group(horizontal=True):
                 pass
