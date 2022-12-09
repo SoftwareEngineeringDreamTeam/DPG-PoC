@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.10.0
+    Added point management
+
 ### Version 0.9.1
     Integrated the metrics with Data
 
