@@ -11,7 +11,7 @@ import numpy as np
 from src.data import Data
 from src.__init__ import dpg
 from src.axis import Axis
-from src.plot import PlotCurve, PlotData, PlotMatrix
+from src.plot import PlotCurve, PlotData, PlotMatrix, Value
 
 
 class App:
@@ -56,7 +56,15 @@ class App:
                                    [plot_data.x_axis, plot_data.y_axis])
 
             self.axis.setup_axis()
-            dpg.add_text("F measure etc...", indent=1, pos=[50, 600])
+
+            dpg.add_spacer(height = 150)
+
+            with dpg.group(horizontal=True):
+                pass
+                # Draw metrics here
+                # f_measure = Value("F measure")
+                # f_measure.draw()
+
 
     def run(self):
         dpg.create_viewport(
@@ -67,7 +75,11 @@ class App:
         dpg.setup_dearpygui()
         dpg.show_viewport()
         dpg.set_primary_window("Primary Window", True)
-        self.axis.check_interaction()
 
-    def __del__(self):
+        # Main render loop
+        while dpg.is_dearpygui_running():
+            self.axis.check_interaction()
+
+            dpg.render_dearpygui_frame()
+            
         dpg.destroy_context()
