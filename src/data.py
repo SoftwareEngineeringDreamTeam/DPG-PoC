@@ -183,7 +183,10 @@ class Data:
     @property
     def __balanced_accuracy(self):
         if self._balanced_accuracy is None:
-            balanced_accuracy = (self.__recall[1] + self.__specificity[1])/2
+            if self.__recall[1] == "NaN" or self.__specificity[1] == "NaN":
+                balanced_accuracy = "NaN"
+            else:
+                balanced_accuracy = (self.__recall[1] + self.__specificity[1])/2
             self._balanced_accuracy = [0, balanced_accuracy]
         return self._balanced_accuracy
 
