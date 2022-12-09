@@ -199,7 +199,6 @@ class Point(Entity):
         return False
 
     def __del__(self):
-        dpg.configure_item(self.point, show=False)
         dpg.delete_item(self.point)
 
 
