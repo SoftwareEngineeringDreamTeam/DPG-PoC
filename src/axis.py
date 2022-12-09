@@ -170,7 +170,7 @@ class Point(Entity):
 
     def update_point_position(self, x_pos):
         self.set_position(x_pos, self.y_pos)
-        dpg.configure_item(self.point, center = (self.x_pos, self.y_pos))
+        dpg.configure_item(self.point, center = (self.x_pos - self.radius, self.y_pos))
 
 
     def flip_class(self):
