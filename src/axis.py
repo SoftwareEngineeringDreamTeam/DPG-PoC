@@ -94,7 +94,7 @@ class Axis:
                     dpg.add_checkbox(
                         label="Class",
                         default_value=item.get_value(),
-                        callback=item.flip_class()
+                        callback=lambda sender, app_data, user_data: item.flip_class()
                     )
 
                 dpg.add_input_float(
@@ -181,6 +181,13 @@ class Point(Entity):
 
     def flip_class(self):
         self.value = not self.value
+
+        if self.value:
+            self.color = self._green
+        else:
+            self.color = self._red
+
+        dpg.configure_item(self.point, color = self.color, fill = self.color)
 
     def get_value(self):
         return self.value
