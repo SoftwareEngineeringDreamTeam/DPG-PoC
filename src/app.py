@@ -12,7 +12,6 @@ from src.data import Data
 from src.__init__ import dpg
 from src.axis import Axis
 from src.plot import PlotCurve, PlotData, PlotMatrix, Value
-from src.events import *
 
 
 class App:
