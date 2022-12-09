@@ -26,9 +26,9 @@ class Axis:
     def add_point(self, mouse_x_position):
         self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
-    def delete_point(self, point_and_popup):
-        dpg.delete_item(point_and_popup[1])
-        self.data_ref.delete_point(point_and_popup[0])
+    def delete_point(self, point, popup):
+        dpg.delete_item(popup)
+        self.data_ref.delete_point(point)
 
     def invert_all_points(self):
         self.data_ref.switch_points_values()
@@ -88,8 +88,7 @@ class Axis:
                 with dpg.group(horizontal=True):
                     dpg.add_button(
                         label="Delete",
-                        user_data=(item, popup),
-                        callback=lambda sender, app_data, user_data: self.delete_point(user_data)
+                        callback=lambda sender, app_data, user_data: self.delete_point(item, popup)
                     )
                     dpg.add_checkbox(
                         label="Class",

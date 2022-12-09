@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.10.1
+    Simplified point deletion
+
 ### Version 0.10.0
     Added point management
 
