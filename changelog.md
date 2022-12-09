@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.10.2
+    Fixed pytest seg fault
+
 ### Version 0.10.1
     Simplified point deletion
 
