@@ -154,25 +154,11 @@ class Point(Entity):
         self.point = None
 
     def draw(self):
-        if self.value:
-            self.draw_green_point()
-        else:
-            self.draw_red_point()
-
-    def draw_red_point(self):
         self.point = dpg.draw_circle(
             (self.x_pos, self.y_pos),
             radius=self.radius,
-            color=self._red,
-            fill=self._red
-        )
-
-    def draw_green_point(self):
-        self.point = dpg.draw_circle(
-            (self.x_pos, self.y_pos),
-            radius=self.radius,
-            color=self._green,
-            fill=self._green
+            color=self.color,
+            fill=self.color
         )
 
     def update_dragged_point(self):
