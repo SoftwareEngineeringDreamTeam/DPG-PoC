@@ -63,38 +63,29 @@ class PlotData:
 
 
 class Value:
-    error_message = None
-    white = [255, 255, 255]
-    red = [255, 0, 0]
+    color = [255, 255, 255]
 
-    def __init__(self, name: str, initial_value: float = 0):
+    def __init__(self, name: str, initial_value = 0):
         self.name = name
         self.value = initial_value
 
     def draw(self):
         with dpg.group(horizontal=True):
             dpg.add_text(self.name + ":")
-            self.ui_elem = dpg.add_text(self.value)
+            self.ui_elem = dpg.add_text(self.value, color = self.color)
             dpg.add_spacer(width=10)
 
-    def set_value(self, value: float):
+    def set_value(self, value):
         self.value = value
 
     def get_value(self):
         return self.value
 
-    def set_error_message(self, error_message: str):
-        self.error_message = error_message
-
-    def clear_error_message(self):
-        self.error_message = None
+    def set_color(self, color: list):
+        self.color = color
 
     def update(self):
         if not self.ui_elem:
-            pass  # should raise exception?
+            return  # should raise exception?
 
-        if not self.error_message:
-            dpg.configure_item(self.ui_elem, default_value=self.value, color=self.white)
-
-        else:
-            dpg.configure_item(self.ui_elem, default_value=self.error_message, color=self.red)
+        dpg.configure_item(self.ui_elem, default_value=self.value, color=self.color)
