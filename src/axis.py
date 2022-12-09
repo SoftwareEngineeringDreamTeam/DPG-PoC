@@ -96,8 +96,6 @@ class Axis:
         #         if point.bounds_check():
         #             self.__show_popup_for(point)
 
-        
-
     def __show_popup_for(self, item):
         with dpg.window(
                 modal=True,
