@@ -28,6 +28,7 @@ class Axis:
 
     def delete_point(self, point, popup):
         dpg.delete_item(popup)
+        point.delete()
         self.data_ref.delete_point(point)
 
     def invert_all_points(self):
@@ -198,7 +199,7 @@ class Point(Entity):
 
         return False
 
-    def __del__(self):
+    def delete(self):
         dpg.delete_item(self.point)
 
 
