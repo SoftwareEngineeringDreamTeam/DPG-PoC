@@ -26,9 +26,9 @@ class Axis:
     def add_point(self, mouse_x_position):
         self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
-    def delete_point(self, point_and_popup):
-        dpg.delete_item(point_and_popup[1])
-        self.data_ref.delete_point(point_and_popup[0])
+    def delete_point(self, point, popup):
+        dpg.delete_item(popup)
+        self.data_ref.delete_point(point)
 
     def invert_all_points(self):
         self.data_ref.switch_points_values()
@@ -88,18 +88,20 @@ class Axis:
                 with dpg.group(horizontal=True):
                     dpg.add_button(
                         label="Delete",
-                        user_data=(item, popup),
-                        callback=lambda sender, app_data, user_data: self.delete_point(user_data)
+                        callback=lambda sender, app_data, user_data: self.delete_point(item, popup)
                     )
                     dpg.add_checkbox(
                         label="Class",
                         default_value=item.get_value(),
-                        callback=item.flip_class()
+                        callback=lambda sender, app_data, user_data: item.flip_class()
                     )
 
                 dpg.add_input_float(
-                    min_value=0,
-                    max_value=1
+                    min_value=50,
+                    max_value=800,
+                    step=1,
+                    default_value=item.get_position()[0],
+                    callback=lambda sender, app_data, user_data: item.update_point_position(app_data)
                 )
 
             elif isinstance(item, Threshold):
@@ -151,25 +153,11 @@ class Point(Entity):
         self.point = None
 
     def draw(self):
-        if self.value:
-            self.draw_green_point()
-        else:
-            self.draw_red_point()
-
-    def draw_red_point(self):
         self.point = dpg.draw_circle(
             (self.x_pos, self.y_pos),
             radius=self.radius,
-            color=self._red,
-            fill=self._red
-        )
-
-    def draw_green_point(self):
-        self.point = dpg.draw_circle(
-            (self.x_pos, self.y_pos),
-            radius=self.radius,
-            color=self._green,
-            fill=self._green
+            color=self.color,
+            fill=self.color
         )
 
     def update_dragged_point(self):
@@ -179,8 +167,20 @@ class Point(Entity):
             center=(self.x_pos - self.radius, self.y_pos)
         )
 
+    def update_point_position(self, x_pos):
+        self.set_position(x_pos, self.y_pos)
+        dpg.configure_item(self.point, center = (self.x_pos - self.radius, self.y_pos))
+
+
     def flip_class(self):
         self.value = not self.value
+
+        if self.value:
+            self.color = self._green
+        else:
+            self.color = self._red
+
+        dpg.configure_item(self.point, color = self.color, fill = self.color)
 
     def get_value(self):
         return self.value
