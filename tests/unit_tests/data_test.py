@@ -1,10 +1,9 @@
 # pylint: skip-file
 # pylint: disable-msg=R0801
 import numpy as np
-import pytest
 
-from src import data, events
-from src.axis import Threshold, Point
+from src import data
+from src.axis import Point, Threshold
 
 
 def prepare_data():
@@ -48,11 +47,11 @@ def test_data_updates_false_neg():
     assert 3 == test_data._false_neg
 
 
-def test_data_raises_precision_error():
+def test_data_finds_precision_error():
     test_data = data.Data()
     test_data.threshold = Threshold(4)
-    with pytest.raises(events.PrecisionException):
-        test_data.add_point(0, 1)
+    test_data.add_point(0, 1)
+    assert "NaN" == test_data._precision[1]
 
 
 def test_data_updates_precision():
@@ -66,11 +65,11 @@ def test_data_updates_precision():
     assert 1/3 == test_data._precision[1]
 
 
-def test_data_raises_recall_error():
+def test_data_finds_recall_error():
     test_data = data.Data()
     test_data.threshold = Threshold(4)
-    with pytest.raises(events.RecallException):
-        test_data.add_point(6, 0)
+    test_data.add_point(6, 0)
+    assert "NaN" == test_data._recall[1]
 
 
 def test_data_updates_recall():

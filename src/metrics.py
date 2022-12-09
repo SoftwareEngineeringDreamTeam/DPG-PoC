@@ -7,8 +7,6 @@
 import numpy as np
 from sklearn.metrics import auc, roc_curve
 
-from src import events
-
 
 class Metrics:
     def get_true_pos(self, y_true, y_pred):

@@ -3,7 +3,6 @@
 import numpy as np
 import pytest
 
-from src import events
 from src.metrics import Metrics
 
 
@@ -75,10 +74,10 @@ def test_metrics_calculates_precision():
     precision = metrics.calculate_precision(y_pred, true_pos)
     # 1/(4)
     assert precision == 0.25
-    with pytest.raises(events.PrecisionException):
-        precision = metrics.calculate_precision(y_empty, 0)
-    with pytest.raises(events.PrecisionException):
-        precision = metrics.calculate_precision(y_zeros, 0)
+    precision = metrics.calculate_precision(y_empty, 0)
+    assert precision == "NaN"
+    precision = metrics.calculate_precision(y_zeros, 0)
+    assert precision == "NaN"
 
 
 def test_metrics_calculates_recall():
@@ -90,10 +89,10 @@ def test_metrics_calculates_recall():
     recall = metrics.calculate_recall(y_true, true_pos)
     # 1/(3)
     assert recall == 1/3
-    with pytest.raises(events.RecallException):
-        recall = metrics.calculate_recall(y_empty, 0)
-    with pytest.raises(events.RecallException):
-        recall = metrics.calculate_recall(y_zeros, 0)
+    recall = metrics.calculate_recall(y_empty, 0)
+    assert recall == "NaN"
+    recall = metrics.calculate_recall(y_zeros, 0)
+    assert recall == "NaN"
 
 
 def test_metrics_calculates_f1():
@@ -103,8 +102,8 @@ def test_metrics_calculates_f1():
     metrics = Metrics()
     f1_score = metrics.calculate_f1_score(precision, recall)
     assert f1_score == pytest.approx(2/7)
-    with pytest.raises(events.F1Exception):
-        _ = metrics.calculate_f1_score(0, 0)
+    f1_score = metrics.calculate_f1_score(0, 0)
+    assert f1_score == "NaN"
 
 
 def test_metrics_calculates_accuracy():
@@ -118,8 +117,8 @@ def test_metrics_calculates_accuracy():
                                                 true_neg,
                                                 y_true)
     assert accuracy_score == 0.5
-    with pytest.raises(events.AccuracyException):
-        _ = metrics.calculate_accuracy(0, 0, y_empty)
+    accuracy_score = metrics.calculate_accuracy(0, 0, y_empty)
+    assert accuracy_score == "NaN"
 
 
 def test_metrics_calculates_mcc():
@@ -133,16 +132,16 @@ def test_metrics_calculates_mcc():
     # (1*4 - 3*2)/sqrt(4*3*6*7)
     mcc = metrics.calculate_mcc(matrix, y_true, y_pred)
     assert mcc == pytest.approx((1*4 - 3*2)/np.sqrt(4*3*6*7))
-    with pytest.raises(events.MCCException):
-        _ = metrics.calculate_mcc(matrix_zeros, y_empty, y_empty)
-    with pytest.raises(events.MCCException):
-        _ = metrics.calculate_mcc(matrix_zeros, y_zeros, y_pred)
-    with pytest.raises(events.MCCException):
-        _ = metrics.calculate_mcc(matrix_zeros, y_true, y_zeros)
-    with pytest.raises(events.MCCException):
-        _ = metrics.calculate_mcc(matrix_zeros, y_ones, y_pred)
-    with pytest.raises(events.MCCException):
-        _ = metrics.calculate_mcc(matrix_zeros, y_true, y_ones)
+    mcc = metrics.calculate_mcc(matrix_zeros, y_empty, y_empty)
+    assert mcc == "NaN"
+    mcc = metrics.calculate_mcc(matrix_zeros, y_zeros, y_pred)
+    assert mcc == "NaN"
+    mcc = metrics.calculate_mcc(matrix_zeros, y_true, y_zeros)
+    assert mcc == "NaN"
+    mcc = metrics.calculate_mcc(matrix_zeros, y_ones, y_pred)
+    assert mcc == "NaN"
+    mcc = metrics.calculate_mcc(matrix_zeros, y_true, y_ones)
+    assert mcc == "NaN"
 
 
 def test_metrics_calculates_specificity():
@@ -154,7 +153,7 @@ def test_metrics_calculates_specificity():
     specificity = metrics.calculate_specificity(y_true, true_neg)
     # 4/(7)
     assert specificity == 4/7
-    with pytest.raises(events.SpecificityException):
-        specificity = metrics.calculate_specificity(y_empty, 0)
-    with pytest.raises(events.SpecificityException):
-        specificity = metrics.calculate_specificity(y_ones, 0)
+    specificity = metrics.calculate_specificity(y_empty, 0)
+    assert specificity == "NaN"
+    specificity = metrics.calculate_specificity(y_ones, 0)
+    assert specificity == "NaN"

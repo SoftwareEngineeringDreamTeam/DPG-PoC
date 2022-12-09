@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.9.2
+    Changed the events to strings messages
+
 ### Version 0.9.1
     Integrated the metrics with Data
 
