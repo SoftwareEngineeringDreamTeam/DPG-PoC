@@ -8,6 +8,7 @@ from math import sin
 
 import numpy as np
 
+from src.data import Data
 from src.__init__ import dpg
 from src.axis import Axis
 from src.plot import PlotCurve, PlotData, PlotMatrix, Value
@@ -15,7 +16,7 @@ from src.plot import PlotCurve, PlotData, PlotMatrix, Value
 
 class App:
     def __init__(self):
-        self.data = None
+        self.data = Data()
         self.axis = Axis(self.data)
         self.curve = PlotCurve()
         self.matrix = PlotMatrix()
@@ -56,14 +57,13 @@ class App:
 
             self.axis.setup_axis()
 
-            dpg.add_spacer(height = 150)
+            dpg.add_spacer(height=150)
 
             with dpg.group(horizontal=True):
                 pass
                 # Draw metrics here
                 # f_measure = Value("F measure")
                 # f_measure.draw()
-
 
     def run(self):
         dpg.create_viewport(
@@ -78,7 +78,6 @@ class App:
         # Main render loop
         while dpg.is_dearpygui_running():
             self.axis.check_interaction()
-
             dpg.render_dearpygui_frame()
-            
+
         dpg.destroy_context()

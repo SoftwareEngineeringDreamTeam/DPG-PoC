@@ -1,5 +1,23 @@
 ## ROC'n'ROLL
 
+### Version 0.10.2
+    Fixed pytest seg fault
+
+### Version 0.10.1
+    Simplified point deletion
+
+### Version 0.10.0
+    Added point management
+
+### Version 0.9.2
+    Changed the events to strings messages
+
+### Version 0.9.1
+    Integrated the metrics with Data
+
+### Version 0.9.0
+    Added the metrics
+
 ### Version 0.8.1
     Simplified interface for metrics UI
 

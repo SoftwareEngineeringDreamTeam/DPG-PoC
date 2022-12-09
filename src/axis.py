@@ -7,7 +7,6 @@
 from math import sqrt
 
 from src.__init__ import dpg
-from src.utils import generate_example_points
 
 
 class Axis:
@@ -16,21 +15,24 @@ class Axis:
 
     def __init__(self, data_ref):
         self.data_ref = data_ref
-        self.data = {
-            "points": generate_example_points((150, 750), Point),
-            "threshold": Threshold(400)
-        }
+        self.choosen_value = True
         self.start = 50
         self.end = 800
 
     def setup_axis(self):
+        self.data_ref.init_axis_data(self.start, self.end)
         self.draw()
 
-    def add_point(self):
-        pass
+    def add_point(self, mouse_x_position):
+        self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
-    def delete_point(self, point):
-        pass
+    def delete_point(self, point, popup):
+        dpg.delete_item(popup)
+        point.delete()
+        self.data_ref.delete_point(point)
+
+    def invert_all_points(self):
+        self.data_ref.switch_points_values()
 
     def draw(self):
 
@@ -43,10 +45,10 @@ class Axis:
         )
 
         # Threshold
-        self.data["threshold"].draw()
+        self.data_ref.threshold.draw()
 
         # Drawing points
-        for point in self.data["points"]:
+        for point in self.data_ref.points:
             point.draw()
 
     def check_axis_limits(self):
@@ -54,14 +56,14 @@ class Axis:
 
     def check_interaction(self):
         if dpg.is_mouse_button_down(0) and self.check_axis_limits():  # Left button
-            threshhold = self.data["threshold"]
+            threshhold = self.data_ref.threshold
             if threshhold.bounds_check() and not self.holding:
                 self.holding = threshhold
                 threshhold.update_dragged_threshhold()
             elif self.holding == threshhold:
                 threshhold.update_dragged_threshhold()
             else:
-                for point in self.data["points"]:
+                for point in self.data_ref.points:
                     if point.bounds_check() and not self.holding:
                         self.holding = point
                         point.update_dragged_point()
@@ -69,7 +71,7 @@ class Axis:
                         point.update_dragged_point()
 
         elif dpg.is_mouse_button_down(1):  # Right button
-            for point in self.data["points"]:
+            for point in self.data_ref.points:
                 if point.bounds_check():
                     self.__show_popup_for(point)
 
@@ -87,18 +89,20 @@ class Axis:
                 with dpg.group(horizontal=True):
                     dpg.add_button(
                         label="Delete",
-                        user_data=item,
-                        callback=lambda sender, app_data, user_data: self.delete_point(user_data)
+                        callback=lambda sender, app_data, user_data: self.delete_point(item, popup)
                     )
                     dpg.add_checkbox(
                         label="Class",
                         default_value=item.get_value(),
-                        callback=item.flip_class()
+                        callback=lambda sender, app_data, user_data: item.flip_class()
                     )
 
                 dpg.add_input_float(
-                    min_value=0,
-                    max_value=1
+                    min_value=50,
+                    max_value=800,
+                    step=1,
+                    default_value=item.get_position()[0],
+                    callback=lambda sender, app_data, user_data: item.update_point_position(app_data)
                 )
 
             elif isinstance(item, Threshold):
@@ -150,25 +154,11 @@ class Point(Entity):
         self.point = None
 
     def draw(self):
-        if self.value:
-            self.draw_green_point()
-        else:
-            self.draw_red_point()
-
-    def draw_red_point(self):
         self.point = dpg.draw_circle(
             (self.x_pos, self.y_pos),
             radius=self.radius,
-            color=self._red,
-            fill=self._red
-        )
-
-    def draw_green_point(self):
-        self.point = dpg.draw_circle(
-            (self.x_pos, self.y_pos),
-            radius=self.radius,
-            color=self._green,
-            fill=self._green
+            color=self.color,
+            fill=self.color
         )
 
     def update_dragged_point(self):
@@ -178,8 +168,20 @@ class Point(Entity):
             center=(self.x_pos - self.radius, self.y_pos)
         )
 
+    def update_point_position(self, x_pos):
+        self.set_position(x_pos, self.y_pos)
+        dpg.configure_item(self.point, center = (self.x_pos - self.radius, self.y_pos))
+
+
     def flip_class(self):
         self.value = not self.value
+
+        if self.value:
+            self.color = self._green
+        else:
+            self.color = self._red
+
+        dpg.configure_item(self.point, color = self.color, fill = self.color)
 
     def get_value(self):
         return self.value
@@ -196,6 +198,9 @@ class Point(Entity):
             return True
 
         return False
+
+    def delete(self):
+        dpg.delete_item(self.point)
 
 
 class Threshold(Entity):
@@ -219,7 +224,7 @@ class Threshold(Entity):
         upper_y = self.y_pos + self.half_length
         lower_y = self.y_pos - self.half_length * 2
         upper_x = self.x_pos + self.thickness * 2
-        lower_x =  self.x_pos - self.thickness * 2
+        lower_x = self.x_pos - self.thickness * 2
         if lower_y <= mouse_y <= upper_y:
             return lower_x <= mouse_x <= upper_x
 
@@ -232,4 +237,3 @@ class Threshold(Entity):
             p1=[self.x_pos - self.thickness * 3 / 2, self.y_pos - self.half_length],
             p2=[self.x_pos - self.thickness * 3 / 2, self.y_pos + self.half_length]
         )
-        

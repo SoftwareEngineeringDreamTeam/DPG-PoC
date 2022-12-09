@@ -10,11 +10,12 @@ setup(
     name="ROC'n'ROLL",
     packages=['src'],
     author='SoftwareEngineeringDreamTeam',
-    version='0.7.1',
+    version='0.10.2',
     install_requires=[
         'numpy',
         'dearpygui',
         'plotly',
-        'kaleido'
+        'kaleido',
+        'scikit-learn'
     ],
 )
