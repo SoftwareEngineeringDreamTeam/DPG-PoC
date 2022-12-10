@@ -16,9 +16,9 @@ class App:
     def __init__(self):
         self.metrics_panel = MetricsPanel()
         self.matrix = PlotMatrix()
-        self.data = Data(self.metrics_panel, self.matrix)
-        self.axis = Axis(self.data)
         self.curve = PlotCurve()
+        self.data = Data(self.metrics_panel, self.matrix, self.curve)
+        self.axis = Axis(self.data)
         self._prepare_gui()
 
     def _load_file(self, sender, app_data):
@@ -51,7 +51,7 @@ class App:
             dpg.add_spacer(height=20)
 
             with dpg.group(horizontal=True):
-                self.curve.plot(plot_data.x_axis, plot_data.y_axis)
+                self.curve.draw()
                 self.matrix.draw()
 
             dpg.add_button(label="Download the ROC curve",

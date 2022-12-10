@@ -14,14 +14,36 @@ class Plot:
 
 
 class PlotCurve(Plot):
-    def plot(self, x_val, y_val):
+    def __init__(self, roc={"fpr": np.array([]),
+                            "tpr": np.array([])}):
+        self.roc = roc
+        self.prev_roc = self.roc
+
+    def draw(self):
         with dpg.plot(width=400):
             dpg.add_plot_legend()
             dpg.add_plot_axis(dpg.mvXAxis, label="FP Rate")
+            dpg.set_axis_limits(dpg.last_item(), -0.1, 1.1)
             dpg.add_plot_axis(dpg.mvYAxis, label="TP Rate", tag="y_axis")
-            dpg.add_line_series(x_val, y_val,
-                                label='ROC Curve',
-                                parent='y_axis')
+            dpg.set_axis_limits(dpg.last_item(), -0.1, 1.1)
+            dpg.add_line_series(self.prev_roc["fpr"],
+                                self.prev_roc["tpr"],
+                                label="Previous ROC curve",
+                                parent='y_axis',
+                                tag="prev_roc_tag")
+            dpg.add_line_series(self.roc["fpr"],
+                                self.roc["tpr"],
+                                label="ROC Curve",
+                                parent='y_axis',
+                                tag="roc_tag")
+
+    def update(self, roc):
+        self.prev_roc = self.roc
+        self.roc = roc
+        dpg.set_value('roc_tag', [self.roc["fpr"],
+                                  self.roc["tpr"]])
+        dpg.set_value('prev_roc_tag', [self.prev_roc["fpr"],
+                                       self.prev_roc["tpr"]])
 
     def save_to_png(self, sender, app_data, user_data):
         x_val, y_val = user_data

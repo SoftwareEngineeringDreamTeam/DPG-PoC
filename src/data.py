@@ -31,7 +31,7 @@ class Data:
     _roc_curve = None
     _auc_score = None
 
-    def __init__(self, metrics_panel, matrix):
+    def __init__(self, metrics_panel, matrix, curve):
         self.save_file = "res.csv"
         self.points = []
         self.threshold = None
@@ -41,6 +41,7 @@ class Data:
         self.metrics = Metrics()
         self.matrix = matrix
         self.metrics_panel = metrics_panel
+        self.curve = curve
 
     def init_axis_data(self, min, max):
         self.__init_random_points(min, max)
@@ -80,6 +81,10 @@ class Data:
         self.__update_auc_score()
         self.__update_metrics_panel()
         self.__update_plot_matrix()
+        self.__update_curve()
+
+    def __update_curve(self):
+        self.curve.update(self.__roc_curve[1])
 
     def __update_plot_matrix(self):
         self.matrix.update(self.__confusion_matrix[1])
@@ -319,7 +324,7 @@ class Data:
         old_auc = self.__auc_score
         cur_auc = self.metrics.calculate_auc(self.__roc_curve[1]["fpr"],
                                              self.__roc_curve[1]["tpr"])
-        self._roc_curve = [old_auc[1], cur_auc]
+        self._auc = [old_auc[1], cur_auc]
 
     def save(self):
         pass
