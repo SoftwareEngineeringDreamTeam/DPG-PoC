@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.13.0
+    Added updating ROC curve and confusion matrix
+
 ### Version 0.12.0
     Added displaying and highlighting metrics
 

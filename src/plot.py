@@ -45,15 +45,19 @@ class PlotCurve(Plot):
         dpg.set_value('prev_roc_tag', [self.prev_roc["fpr"],
                                        self.prev_roc["tpr"]])
 
-    def save_to_png(self, sender, app_data, user_data):
-        x_val, y_val = user_data
+    def save_to_png(self):
         fig = graph_obj.Figure()
-        fig.add_trace(graph_obj.Scatter(x=x_val,
-                      y=y_val,
+        fig.add_trace(graph_obj.Scatter(x=self.prev_roc["fpr"],
+                      y=self.prev_roc["tpr"],
+                      name="Previous ROC Curve",
+                      mode='lines'))
+        fig.add_trace(graph_obj.Scatter(x=self.roc["fpr"],
+                      y=self.roc["tpr"],
+                      name="ROC Curve",
                       mode='lines'))
         fig.update_layout(title_text='ROC curve')
-        fig.update_xaxes(title_text='FP Rate')
-        fig.update_yaxes(title_text='TP Rate')
+        fig.update_xaxes(title_text='FP Rate', range=[-0.01, 1.01])
+        fig.update_yaxes(title_text='TP Rate', range=[-0.01, 1.01])
         fig.write_image("ROC_curve.png")
 
 
@@ -87,12 +91,6 @@ class PlotMatrix(Plot):
             for j in range(0, 2):
                 self.vals[i][j].set_value(matrix[i, j])
                 self.vals[i][j].update()
-
-
-class PlotData:
-    def __init__(self, x_values: list or tuple, y_values: list or tuple):
-        self.x_axis = x_values
-        self.y_axis = y_values
 
 
 class Value:

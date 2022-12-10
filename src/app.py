@@ -4,12 +4,10 @@
 # pylint: disable=import-error
 # pylint: disable=W
 
-from math import sin
-
 from src.__init__ import dpg
 from src.axis import Axis
 from src.data import Data
-from src.plot import PlotCurve, PlotData, PlotMatrix, Value
+from src.plot import PlotCurve, PlotMatrix, Value
 
 
 class App:
@@ -27,10 +25,6 @@ class App:
 
     def _prepare_gui(self):
         dpg.create_context()
-        plot_data = PlotData(
-            [i/10 for i in range(0, 100, 1)],
-            [i*sin(i)/10 for i in range(0, 100, 1)]
-        )
 
         with dpg.window(tag="Primary Window"):
             with dpg.file_dialog(
@@ -58,8 +52,6 @@ class App:
                            tag="btn_roc",
                            height=50, width=200,)
             dpg.set_item_callback("btn_roc", self.curve.save_to_png)
-            dpg.set_item_user_data("btn_roc",
-                                   [plot_data.x_axis, plot_data.y_axis])
 
             self.axis.setup_axis()
 
