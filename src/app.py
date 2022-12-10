@@ -66,11 +66,7 @@ class App:
 
             dpg.add_spacer(height=150)
 
-            with dpg.group(horizontal=True):
-                pass
-                # Draw metrics here
-                # f_measure = Value("F measure")
-                # f_measure.draw()
+            metrics_panel = MetricsPanel()
 
     def run(self):
         dpg.create_viewport(
@@ -88,3 +84,33 @@ class App:
             dpg.render_dearpygui_frame()
 
         dpg.destroy_context()
+
+
+class MetricsPanel:
+    def __init__(self):
+        self.metrics = {
+            "f1_score": Value("F1 Score"),
+            "auc": Value("AUC"),
+            "accuracy": Value("Accuracy"),
+            "specificity": Value("Specificity"),
+            "recall": Value("Recall"),
+            "precision": Value("Precision")
+        }
+        self.group_split()
+
+    def group_split(self):
+        with dpg.group(horizontal=True):
+            dpg.add_spacer(width=75)
+            with dpg.group():
+                self.metrics["f1_score"].draw()
+                self.metrics["auc"].draw()
+
+            dpg.add_spacer(width=150)
+            with dpg.group():
+                self.metrics["accuracy"].draw()
+                self.metrics["specificity"].draw()
+
+            dpg.add_spacer(width=150)
+            with dpg.group():
+                self.metrics["recall"].draw()
+                self.metrics["precision"].draw()
