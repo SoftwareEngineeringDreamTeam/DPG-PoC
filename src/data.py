@@ -4,9 +4,9 @@
 # pylint: disable=import-error
 # pylint: disable=W
 
-import numpy as np
 import csv
 import copy
+import numpy as np
 
 from src.axis import Point, Threshold
 from src.metrics import Metrics
