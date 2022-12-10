@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.11.0
+    Added loading data from CSV files
+
 ### Version 0.10.2
     Fixed pytest seg fault
 

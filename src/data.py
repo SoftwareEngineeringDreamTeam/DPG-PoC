@@ -5,6 +5,8 @@
 # pylint: disable=W
 
 import numpy as np
+import csv
+import copy
 
 from src.axis import Point, Threshold
 from src.metrics import Metrics
@@ -41,7 +43,18 @@ class Data:
         self.__init__threshold()
 
     def load_points(self, source_file_name):
-        pass
+        old_points = copy.deepcopy(self.points) # needed to remove them in axis
+        # override current points
+        self.points = []
+        if '.csv' in source_file_name:
+            with open(source_file_name, 'r') as file:
+                reader = csv.reader(file)
+                for row in list(reader)[1:]: # skip first row
+                    x_pos = int(row[0])
+                    val = bool(int(row[1]))
+                    self.add_point(x_pos, val)
+
+        return old_points
 
     def update(self):
         # preparations
