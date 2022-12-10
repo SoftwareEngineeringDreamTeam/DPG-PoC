@@ -3,6 +3,7 @@
 # pylint: disable=unused-import
 # pylint: disable=import-error
 # pylint: disable=W
+# pylint: disable=too-many-instance-attributes
 
 import csv
 import copy
