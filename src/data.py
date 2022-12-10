@@ -31,7 +31,7 @@ class Data:
     _roc_curve = None
     _auc_score = None
 
-    def __init__(self, metrics_panel):
+    def __init__(self, metrics_panel, matrix):
         self.save_file = "res.csv"
         self.points = []
         self.threshold = None
@@ -39,6 +39,7 @@ class Data:
         self.y_pred = np.array([])
         self.y_vals = np.array([])
         self.metrics = Metrics()
+        self.matrix = matrix
         self.metrics_panel = metrics_panel
 
     def init_axis_data(self, min, max):
@@ -78,6 +79,10 @@ class Data:
         self.__update_roc_curve()
         self.__update_auc_score()
         self.__update_metrics_panel()
+        self.__update_plot_matrix()
+
+    def __update_plot_matrix(self):
+        self.matrix.update(self.__confusion_matrix[1])
 
     def __update_metrics_panel(self):
         vals = [self.__f1_score[1],

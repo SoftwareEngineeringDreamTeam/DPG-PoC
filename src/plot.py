@@ -3,7 +3,7 @@
 # pylint: disable=unused-import
 # pylint: disable=import-error
 # pylint: disable=W
-
+import numpy as np
 import plotly.graph_objects as graph_obj
 
 from src.__init__ import dpg
@@ -36,7 +36,14 @@ class PlotCurve(Plot):
 
 
 class PlotMatrix(Plot):
-    def plot(self, confusion_matrix):
+    def __init__(self, matrix=np.zeros((2, 2), dtype=int)):
+        true_pos = Value("", matrix[0, 0])
+        true_neg = Value("", matrix[1, 1])
+        false_pos = Value("", matrix[0, 1])
+        false_neg = Value("", matrix[1, 0])
+        self.vals = [[true_pos, false_pos], [false_neg, true_neg]]
+
+    def draw(self):
         labels = ["Predicted positive", "Predicted negative"]
         with dpg.table(header_row=True, resizable=True,
                        policy=dpg.mvTable_SizingStretchProp,
@@ -45,15 +52,19 @@ class PlotMatrix(Plot):
             dpg.add_table_column(label="")
             dpg.add_table_column(label="Real Positive")
             dpg.add_table_column(label="Real Negative")
-
-            # once it reaches the end of the columns
             for i in range(0, 2):
                 with dpg.table_row():
                     for j in range(0, 3):
                         if j == 0:
                             dpg.add_text(labels[i])
                         else:
-                            dpg.add_text(confusion_matrix[i, j-1])
+                            self.vals[i][j-1].draw()
+
+    def update(self, matrix):
+        for i in range(0, 2):
+            for j in range(0, 2):
+                self.vals[i][j].set_value(matrix[i, j])
+                self.vals[i][j].update()
 
 
 class PlotData:
@@ -73,7 +84,8 @@ class Value:
 
     def draw(self):
         with dpg.group(horizontal=True):
-            dpg.add_text(self.name + ":")
+            if self.name != "":
+                dpg.add_text(self.name + ":")
             self.ui_elem = dpg.add_text(self.value, color=self.color)
             dpg.add_spacer(width=10)
 

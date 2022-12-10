@@ -6,8 +6,6 @@
 
 from math import sin
 
-import numpy as np
-
 from src.__init__ import dpg
 from src.axis import Axis
 from src.data import Data
@@ -17,10 +15,10 @@ from src.plot import PlotCurve, PlotData, PlotMatrix, Value
 class App:
     def __init__(self):
         self.metrics_panel = MetricsPanel()
-        self.data = Data(self.metrics_panel)
+        self.matrix = PlotMatrix()
+        self.data = Data(self.metrics_panel, self.matrix)
         self.axis = Axis(self.data)
         self.curve = PlotCurve()
-        self.matrix = PlotMatrix()
         self._prepare_gui()
 
     def _load_file(self, sender, app_data):
@@ -54,7 +52,7 @@ class App:
 
             with dpg.group(horizontal=True):
                 self.curve.plot(plot_data.x_axis, plot_data.y_axis)
-                self.matrix.plot(np.array([[1, 2], [3, 4]]))
+                self.matrix.draw()
 
             dpg.add_button(label="Download the ROC curve",
                            tag="btn_roc",
