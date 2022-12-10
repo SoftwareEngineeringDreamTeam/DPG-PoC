@@ -4,12 +4,14 @@ import numpy as np
 
 from src import data
 from src.axis import Point, Threshold
+from src.app import MetricsPanel
 
 
 def prepare_data():
     vals = [0, 0, 1, 1, 1, 1, 0, 0, 0]
     x_coord = np.linspace(0, 8, num=9)
-    test_data = data.Data()
+    panel = MetricsPanel()
+    test_data = data.Data(panel)
     test_data.threshold = Threshold(4)
     test_data.points = [Point(x_coord[i], vals[i]) for i in range(9)]
     test_data.add_point(9, 0)
@@ -48,7 +50,8 @@ def test_data_updates_false_neg():
 
 
 def test_data_finds_precision_error():
-    test_data = data.Data()
+    panel = MetricsPanel()
+    test_data = data.Data(panel)
     test_data.threshold = Threshold(4)
     test_data.add_point(0, 1)
     assert "NaN" == test_data._precision[1]
@@ -66,7 +69,8 @@ def test_data_updates_precision():
 
 
 def test_data_finds_recall_error():
-    test_data = data.Data()
+    panel = MetricsPanel()
+    test_data = data.Data(panel)
     test_data.threshold = Threshold(4)
     test_data.add_point(6, 0)
     assert "NaN" == test_data._recall[1]

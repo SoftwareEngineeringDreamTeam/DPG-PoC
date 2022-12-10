@@ -64,6 +64,7 @@ class PlotData:
 
 class Value:
     color = [255, 255, 255]
+    ui_elem = None
 
     def __init__(self, name: str, initial_value=0):
         self.name = name
