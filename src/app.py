@@ -22,6 +22,10 @@ class App:
         self.matrix = PlotMatrix()
         self._prepare_gui()
 
+    def _load_file(self, sender, app_data):
+        old_points = self.data.load_points(app_data['file_path_name'])
+        self.axis.override_points(old_points)
+
     def _prepare_gui(self):
         dpg.create_context()
         plot_data = PlotData(
@@ -30,11 +34,14 @@ class App:
         )
 
         with dpg.window(tag="Primary Window"):
-            dpg.add_file_dialog(
-                directory_selector=True,
+            with dpg.file_dialog(
+                directory_selector=False,
                 show=False,
+                callback=self._load_file,
                 tag="file_dialog_id"
-            )
+            ):
+                dpg.add_file_extension(".csv", color=(255, 255, 0, 255))
+
             dpg.add_button(
                 label="Select File",
                 callback=lambda: dpg.show_item("file_dialog_id"),

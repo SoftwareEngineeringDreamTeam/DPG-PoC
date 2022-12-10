@@ -34,6 +34,12 @@ class Axis:
     def invert_all_points(self):
         self.data_ref.switch_points_values()
 
+    def override_points(self, old_points):
+        for old_point in old_points:
+            old_point.delete()
+        for new_point in self.data_ref.points:
+            new_point.draw()
+
     def draw(self):
 
         # Custom 1D graph
@@ -158,7 +164,8 @@ class Point(Entity):
             (self.x_pos, self.y_pos),
             radius=self.radius,
             color=self.color,
-            fill=self.color
+            fill=self.color,
+            parent='Primary Window' # 'parent could not be deduced' error without it when loading new points
         )
 
     def update_dragged_point(self):
