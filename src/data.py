@@ -56,7 +56,11 @@ class Data:
                 reader = csv.reader(file)
                 for row in list(reader)[1:]:  # skip first row
                     x_pos = int(row[0])
-                    val = bool(int(row[1]))
+                    if int(row[1]) == 0 or int(row[1]) == -1:
+                        val = False
+                    else:
+                        val = True
+                    # val = bool(int(row[1]))
                     self.add_point(x_pos, val)
 
         return old_points
