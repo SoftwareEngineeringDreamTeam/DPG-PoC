@@ -5,8 +5,9 @@
 # pylint: disable=W
 # pylint: disable=too-many-instance-attributes
 
-import csv
 import copy
+import csv
+
 import numpy as np
 
 from src.axis import Point, Threshold
@@ -30,7 +31,7 @@ class Data:
     _roc_curve = None
     _auc_score = None
 
-    def __init__(self):
+    def __init__(self, metrics_panel):
         self.save_file = "res.csv"
         self.points = []
         self.threshold = None
@@ -38,19 +39,20 @@ class Data:
         self.y_pred = np.array([])
         self.y_vals = np.array([])
         self.metrics = Metrics()
+        self.metrics_panel = metrics_panel
 
     def init_axis_data(self, min, max):
         self.__init_random_points(min, max)
         self.__init__threshold()
 
     def load_points(self, source_file_name):
-        old_points = copy.deepcopy(self.points) # needed to remove them in axis
+        old_points = copy.deepcopy(self.points)  # need to remove them in axis
         # override current points
         self.points = []
         if '.csv' in source_file_name:
             with open(source_file_name, 'r') as file:
                 reader = csv.reader(file)
-                for row in list(reader)[1:]: # skip first row
+                for row in list(reader)[1:]:  # skip first row
                     x_pos = int(row[0])
                     val = bool(int(row[1]))
                     self.add_point(x_pos, val)
@@ -75,6 +77,18 @@ class Data:
         self.__update_mcc_score()
         self.__update_roc_curve()
         self.__update_auc_score()
+        self.__update_metrics_panel()
+
+    def __update_metrics_panel(self):
+        vals = [self.__f1_score[1],
+                self.__auc_score[1],
+                self.__accuracy[1],
+                self.__specificity[1],
+                self.__recall[1],
+                self.__precision[1],
+                self.__balanced_accuracy[1],
+                self.__mcc_score[1]]
+        self.metrics_panel.update(vals)
 
     def add_point(self, x_position, value, update=True):
         self.points.append(Point(x_position, value))
@@ -198,10 +212,10 @@ class Data:
     def __balanced_accuracy(self):
         if self._balanced_accuracy is None:
             if self.__recall[1] == "NaN" or self.__specificity[1] == "NaN":
-                balanced_accuracy = "NaN"
+                bal_acc = "NaN"
             else:
-                balanced_accuracy = (self.__recall[1] + self.__specificity[1])/2
-            self._balanced_accuracy = [0, balanced_accuracy]
+                bal_acc = (self.__recall[1] + self.__specificity[1])/2
+            self._balanced_accuracy = [0, bal_acc]
         return self._balanced_accuracy
 
     def __update_balanced_accuracy(self):

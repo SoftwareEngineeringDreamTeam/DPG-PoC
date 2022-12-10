@@ -93,4 +93,5 @@ class Value:
         if not self.ui_elem:
             return  # should raise exception?
 
-        dpg.configure_item(self.ui_elem, default_value=self.value, color=self.color)
+        dpg.configure_item(self.ui_elem, default_value=self.value,
+                           color=self.color)

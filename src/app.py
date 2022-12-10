@@ -8,19 +8,19 @@ from math import sin
 
 import numpy as np
 
-from src.data import Data
 from src.__init__ import dpg
 from src.axis import Axis
+from src.data import Data
 from src.plot import PlotCurve, PlotData, PlotMatrix, Value
 
 
 class App:
     def __init__(self):
-        self.data = Data()
+        self.metrics_panel = MetricsPanel()
+        self.data = Data(self.metrics_panel)
         self.axis = Axis(self.data)
         self.curve = PlotCurve()
         self.matrix = PlotMatrix()
-        self.metrics_panel = MetricsPanel()
         self._prepare_gui()
 
     def _load_file(self, sender, app_data):
@@ -95,7 +95,9 @@ class MetricsPanel:
             "accuracy": Value("Accuracy"),
             "specificity": Value("Specificity"),
             "recall": Value("Recall"),
-            "precision": Value("Precision")
+            "precision": Value("Precision"),
+            "balanced_acc": Value("Balanced Accuracy"),
+            "mcc": Value("Matthew's correlation coefficient")
         }
 
     def draw(self):
@@ -110,7 +112,21 @@ class MetricsPanel:
                 self.metrics["accuracy"].draw()
                 self.metrics["specificity"].draw()
 
-            dpg.add_spacer(width=150)
+        with dpg.group(horizontal=True):
+            dpg.add_spacer(width=75)
             with dpg.group():
                 self.metrics["recall"].draw()
                 self.metrics["precision"].draw()
+
+            dpg.add_spacer(width=144)
+            with dpg.group():
+                self.metrics["balanced_acc"].draw()
+                self.metrics["mcc"].draw()
+
+    def update(self, vals):
+        for i, value in enumerate(self.metrics.values()):
+            score = vals[i]
+            if score != "NaN":
+                score = round(score, 3)
+            value.set_value(score)
+            value.update()
