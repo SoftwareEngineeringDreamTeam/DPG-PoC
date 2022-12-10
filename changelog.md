@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.13.1
+    Loading points from CSV files are assiged False to 0 or -1
+
 ### Version 0.13.0
     Added updating ROC curve and confusion matrix
 
