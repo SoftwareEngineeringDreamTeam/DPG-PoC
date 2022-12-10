@@ -1,5 +1,44 @@
 ## ROC'n'ROLL
 
+### Version 0.11.0
+    Added loading data from CSV files
+
+### Version 0.10.2
+    Fixed pytest seg fault
+
+### Version 0.10.1
+    Simplified point deletion
+
+### Version 0.10.0
+    Added point management
+
+### Version 0.9.2
+    Changed the events to strings messages
+
+### Version 0.9.1
+    Integrated the metrics with Data
+
+### Version 0.9.0
+    Added the metrics
+
+### Version 0.8.1
+    Simplified interface for metrics UI
+
+### Version 0.8.0
+    Added interface for metrics UI
+
+### Version 0.7.1
+    Moved render loop back to App class and fixed inability to close the app properly
+
+### Version 0.7.0
+    Changed the app working directory to root and fixed imports
+
+### Version 0.6.3
+    Added first tests
+
+### Version 0.6.2
+    Added initial metrics classes
+
 ### Version 0.6.1
     Code cleanup
 

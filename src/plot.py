@@ -6,7 +6,7 @@
 
 import plotly.graph_objects as graph_obj
 
-from __init__ import dpg
+from src.__init__ import dpg
 
 
 class Plot:
@@ -60,3 +60,37 @@ class PlotData:
     def __init__(self, x_values: list or tuple, y_values: list or tuple):
         self.x_axis = x_values
         self.y_axis = y_values
+
+
+class Value:
+    color = [255, 255, 255]
+
+    def __init__(self, name: str, initial_value=0):
+        self.name = name
+        self.value = initial_value
+        self.prev_value = self.value
+
+    def draw(self):
+        with dpg.group(horizontal=True):
+            dpg.add_text(self.name + ":")
+            self.ui_elem = dpg.add_text(self.value, color=self.color)
+            dpg.add_spacer(width=10)
+
+    def set_value(self, value):
+        self.value = value
+        if self.prev_value != self.value:
+            self.set_color([255, 0, 0])
+        else:
+            self.set_color([255, 255, 255])
+
+    def get_value(self):
+        return self.value
+
+    def set_color(self, color: list):
+        self.color = color
+
+    def update(self):
+        if not self.ui_elem:
+            return  # should raise exception?
+
+        dpg.configure_item(self.ui_elem, default_value=self.value, color=self.color)
