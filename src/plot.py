@@ -77,9 +77,11 @@ class Value:
             dpg.add_spacer(width=10)
 
     def set_value(self, value):
+        self.prev_value = self.value
         self.value = value
         if self.prev_value != self.value:
             self.set_color([255, 0, 0])
+
         else:
             self.set_color([255, 255, 255])
 

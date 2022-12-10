@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.12.0
+    Added displaying and highlighting metrics
+
 ### Version 0.11.0
     Added loading data from CSV files
 
