@@ -20,6 +20,7 @@ class App:
         self.axis = Axis(self.data)
         self.curve = PlotCurve()
         self.matrix = PlotMatrix()
+        self.metrics_panel = MetricsPanel()
         self._prepare_gui()
 
     def _load_file(self, sender, app_data):
@@ -66,7 +67,7 @@ class App:
 
             dpg.add_spacer(height=150)
 
-            metrics_panel = MetricsPanel()
+            self.metrics_panel.draw()
 
     def run(self):
         dpg.create_viewport(
@@ -96,9 +97,8 @@ class MetricsPanel:
             "recall": Value("Recall"),
             "precision": Value("Precision")
         }
-        self.group_split()
 
-    def group_split(self):
+    def draw(self):
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=75)
             with dpg.group():

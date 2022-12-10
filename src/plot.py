@@ -65,18 +65,23 @@ class PlotData:
 class Value:
     color = [255, 255, 255]
 
-    def __init__(self, name: str, initial_value = 0):
+    def __init__(self, name: str, initial_value=0):
         self.name = name
         self.value = initial_value
+        self.prev_value = self.value
 
     def draw(self):
         with dpg.group(horizontal=True):
             dpg.add_text(self.name + ":")
-            self.ui_elem = dpg.add_text(self.value, color = self.color)
+            self.ui_elem = dpg.add_text(self.value, color=self.color)
             dpg.add_spacer(width=10)
 
     def set_value(self, value):
         self.value = value
+        if self.prev_value != self.value:
+            self.set_color([255, 0, 0])
+        else:
+            self.set_color([255, 255, 255])
 
     def get_value(self):
         return self.value
