@@ -177,8 +177,10 @@ class Point(Entity):
 
     def update_point_position(self, x_pos):
         self.set_position(x_pos, self.y_pos)
-        dpg.configure_item(self.point, center = (self.x_pos - self.radius, self.y_pos))
-
+        dpg.configure_item(
+            self.point,
+            center=(self.x_pos - self.radius, self.y_pos)
+        )
 
     def flip_class(self):
         self.value = not self.value
@@ -188,7 +190,11 @@ class Point(Entity):
         else:
             self.color = self._red
 
-        dpg.configure_item(self.point, color = self.color, fill = self.color)
+        dpg.configure_item(
+            self.point,
+            color=self.color,
+            fill=self.color
+        )
 
     def get_value(self):
         return self.value
