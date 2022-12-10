@@ -165,7 +165,9 @@ class Point(Entity):
             radius=self.radius,
             color=self.color,
             fill=self.color,
-            parent='Primary Window'  # 'parent could not be deduced' error without it when loading new points
+            parent='Primary Window'
+            # 'parent could not be deduced' error without it
+            # when loading new points
         )
 
     def update_dragged_point(self):
