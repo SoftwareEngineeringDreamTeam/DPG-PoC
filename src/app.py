@@ -23,6 +23,41 @@ class App:
         old_points = self.data.load_points(app_data['file_path_name'])
         self.axis.override_points(old_points)
 
+    def _add_new_point(self, x_pos, value, popup):
+        self.data.add_point(x_pos, value)
+        self.axis.render_new_point()
+        dpg.delete_item(popup)
+
+    def _show_add_point_popup(self, sender, app_data):
+        with dpg.window(
+                modal=True,
+                pos=dpg.get_item_pos(sender),
+                no_move=True,
+                on_close=lambda: dpg.delete_item(popup)
+                ) as popup:
+            dpg.add_input_float(
+                tag="new_point_x_pos",
+                min_value=50,
+                max_value=800,
+                step=1,
+                default_value=0
+            )
+            dpg.add_checkbox(
+                tag="new_point_value",
+                label="Class",
+                default_value=False,
+            )
+            dpg.add_spacer(height=10)
+            dpg.add_button(
+                label="Add",
+                width=150,
+                callback=lambda sender, app_data, user_data: self._add_new_point(
+                    x_pos=dpg.get_value("new_point_x_pos"),
+                    value=dpg.get_value("new_point_value"),
+                    popup=popup
+                )
+            )
+
     def _prepare_gui(self):
         dpg.create_context()
 
@@ -36,7 +71,7 @@ class App:
                 dpg.add_file_extension(".csv", color=(255, 255, 0, 255))
 
             dpg.add_button(
-                label="Select File",
+                label="Select file",
                 callback=lambda: dpg.show_item("file_dialog_id"),
                 height=50,
                 width=200
@@ -58,6 +93,14 @@ class App:
             dpg.add_spacer(height=150)
 
             self.metrics_panel.draw()
+
+            dpg.add_button(
+                label="+",
+                pos=[780, 530],
+                callback=self._show_add_point_popup,
+                height=30,
+                width=30
+            )
 
     def run(self):
         dpg.create_viewport(

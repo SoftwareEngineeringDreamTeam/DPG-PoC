@@ -26,6 +26,9 @@ class Axis:
     def add_point(self, mouse_x_position):
         self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
+    def render_new_point(self):
+        self.data_ref.points[-1].draw()
+
     def delete_point(self, point, popup):
         dpg.delete_item(popup)
         point.delete()
