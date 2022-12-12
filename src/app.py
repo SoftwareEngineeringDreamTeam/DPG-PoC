@@ -95,6 +95,14 @@ class App:
             self.metrics_panel.draw()
 
             dpg.add_button(
+                label="Swap",
+                pos=[670, 530],
+                callback=lambda: self.axis.invert_all_points(),
+                height=30,
+                width=100
+            )
+
+            dpg.add_button(
                 label="+",
                 pos=[780, 530],
                 callback=self._show_add_point_popup,

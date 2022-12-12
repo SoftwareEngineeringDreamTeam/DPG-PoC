@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.15.0
+    Reverting value of all points at once
+
 ### Version 0.14.0
     Adding single points
 
