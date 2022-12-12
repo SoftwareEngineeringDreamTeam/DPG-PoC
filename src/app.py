@@ -71,6 +71,14 @@ class App:
                 dpg.add_file_extension(".csv", color=(255, 255, 0, 255))
 
             dpg.add_button(
+                label="Generate random points",
+                pos=[640, 10],
+                callback=lambda: self.axis.generate_random_points(),
+                height=50,
+                width=200
+            )
+
+            dpg.add_button(
                 label="Select file",
                 callback=lambda: dpg.show_item("file_dialog_id"),
                 height=50,
@@ -93,6 +101,14 @@ class App:
             dpg.add_spacer(height=150)
 
             self.metrics_panel.draw()
+
+            dpg.add_button(
+                label="Invert all",
+                pos=[670, 530],
+                callback=lambda: self.axis.invert_all_points(),
+                height=30,
+                width=100
+            )
 
             dpg.add_button(
                 label="+",

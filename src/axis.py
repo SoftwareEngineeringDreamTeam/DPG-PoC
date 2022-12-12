@@ -4,6 +4,8 @@
 # pylint: disable=import-error
 # pylint: disable=W
 
+import copy
+
 from math import sqrt
 
 from src.__init__ import dpg
@@ -20,8 +22,14 @@ class Axis:
         self.end = 800
 
     def setup_axis(self):
-        self.data_ref.init_axis_data(self.start, self.end)
+        self.data_ref.init_axis_data()
         self.draw()
+
+    def generate_random_points(self):
+        old_points = copy.deepcopy(self.data_ref.points)
+        self.data_ref.generate_random_points(self.start, self.end)
+        self.override_points(old_points)
+        self.data_ref.update()
 
     def add_point(self, mouse_x_position):
         self.data_ref.add_point(mouse_x_position, self.choosen_value)
@@ -43,13 +51,21 @@ class Axis:
         self.data_ref.delete_point(point)
 
     def invert_all_points(self):
-        self.data_ref.switch_points_values()
+        for point in self.data_ref.points:
+            point.flip_class()
+
+        self.data_ref.update()
 
     def override_points(self, old_points):
         for old_point in old_points:
             old_point.delete()
         for new_point in self.data_ref.points:
             new_point.draw()
+
+    def draw_points(self):
+        # Drawing points
+        for point in self.data_ref.points:
+            point.draw()
 
     def draw(self):
 
@@ -64,9 +80,7 @@ class Axis:
         # Threshold
         self.data_ref.threshold.draw()
 
-        # Drawing points
-        for point in self.data_ref.points:
-            point.draw()
+        self.draw_points()
 
     def check_axis_limits(self):
         return dpg.get_mouse_pos()[0] >= self.start and dpg.get_mouse_pos()[0] <= self.end
@@ -125,8 +139,9 @@ class Axis:
                     max_value=800,
                     step=1,
                     default_value=item.get_position()[0],
-                    callback=lambda sender, app_data, user_data: item.update_point_position(app_data)
-                )
+                    callback=lambda sender, app_data, user_data:
+                        item.update_point_position(app_data)
+                    )
 
             elif isinstance(item, Threshold):
                 dpg.add_input_float(

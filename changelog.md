@@ -1,10 +1,16 @@
 ## ROC'n'ROLL
 
-### Version 0.16.1
+### Version 0.17.1
     Creating "live" version of updating the metrics to assure the changes are correctly marked
 
-### Version 0.16.0
+### Version 0.17.0
     Updating metrics when point is moved
+
+### Version 0.16.0
+    Added generate random points button
+
+### Version 0.15.0
+    Reverting value of all points at once
 
 ### Version 0.14.0
     Adding single points
