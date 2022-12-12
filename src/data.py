@@ -160,9 +160,6 @@ class Data:
         for point in self.points:
             point.value = not point.value
 
-    def point_moved(self):
-        pass
-
     def delete_point(self, point, update=True):
         self.points.remove(point)
         if update:
@@ -237,10 +234,10 @@ class Data:
         return self._precision
 
     def __update_precision(self):
-        old_precision = self.__precision
+        self._old_precision = self.__precision
         cur_precision = self.metrics.calculate_precision(self.y_pred,
                                                          self.__true_pos)
-        self._precision = [old_precision[1], cur_precision]
+        self._precision = [self._old_precision[1], cur_precision]
 
     def __update_precision_live(self):
 
@@ -272,10 +269,10 @@ class Data:
             self._recall = [self._old_recall[1], cur_recall]
 
     def __update_recall(self):
-        old_recall = self.__recall
+        self._old_recall = self.__recall
         cur_recall = self.metrics.calculate_recall(self.y_true,
                                                    self.__true_pos)
-        self._recall = [old_recall[1], cur_recall]
+        self._recall = [self._old_recall[1], cur_recall]
 
     @property
     def __specificity(self):
@@ -295,10 +292,10 @@ class Data:
             self._specificity = [self._old_specificity[1], cur_specificity]
 
     def __update_specificity(self):
-        old_specificity = self.__specificity
+        self._old_specificity = self.__specificity
         cur_specificity = self.metrics.calculate_specificity(self.y_true,
                                                              self.__true_neg)
-        self._specificity = [old_specificity[1], cur_specificity]
+        self._specificity = [self._old_specificity[1], cur_specificity]
 
     @property
     def __balanced_accuracy(self):
@@ -445,17 +442,18 @@ class Data:
         return self._roc_curve
 
     def __update_roc_curve(self):
-        old_roc = self.__roc_curve
+        self._old_roc_curve = self.__roc_curve
         fpr, tpr = self.metrics.calculate_roc(self.y_true, self.y_vals)
         cur_roc = {"fpr": fpr, "tpr": tpr}
-        self._roc_curve = [old_roc[1], cur_roc]
+        self._roc_curve = [self._old_roc_curve[1], cur_roc]
 
     def __update_roc_curve_live(self):
+        fpr, tpr = self.metrics.calculate_roc(self.y_true, self.y_vals)
+        cur_roc = {"fpr": fpr, "tpr": tpr}
         if self._old_roc_curve == None:
-            self._roc_curve = self.__roc_curve
+            self._roc_curve = [{"fpr": np.array([]), "tpr": np.array([])},
+                               cur_roc]
         else:
-            fpr, tpr = self.metrics.calculate_roc(self.y_true, self.y_vals)
-            cur_roc = {"fpr": fpr, "tpr": tpr}
             self._roc_curve = [self._old_roc_curve[1], cur_roc]
 
 
@@ -468,10 +466,10 @@ class Data:
         return self._auc_score
 
     def __update_auc_score(self):
-        old_auc = self.__auc_score
+        self._old_auc_score = self.__auc_score
         cur_auc = self.metrics.calculate_auc(self.__roc_curve[1]["fpr"],
                                              self.__roc_curve[1]["tpr"])
-        self._auc = [old_auc[1], cur_auc]
+        self._auc = [self._old_auc_score[1], cur_auc]
 
     def __update_auc_score_live(self):
         if self._old_auc_score == None:
