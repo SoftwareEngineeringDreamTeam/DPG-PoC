@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.16.0
+    Added generate random points button
+
 ### Version 0.15.0
     Reverting value of all points at once
 

@@ -4,6 +4,8 @@
 # pylint: disable=import-error
 # pylint: disable=W
 
+import copy
+
 from math import sqrt
 
 from src.__init__ import dpg
@@ -20,8 +22,14 @@ class Axis:
         self.end = 800
 
     def setup_axis(self):
-        self.data_ref.init_axis_data(self.start, self.end)
+        self.data_ref.init_axis_data()
         self.draw()
+
+    def generate_random_points(self):
+        old_points = copy.deepcopy(self.data_ref.points)
+        self.data_ref.generate_random_points(self.start, self.end)
+        self.override_points(old_points)
+        self.data_ref.update()
 
     def add_point(self, mouse_x_position):
         self.data_ref.add_point(mouse_x_position, self.choosen_value)
@@ -46,6 +54,11 @@ class Axis:
         for new_point in self.data_ref.points:
             new_point.draw()
 
+    def draw_points(self):
+        # Drawing points
+        for point in self.data_ref.points:
+            point.draw()
+
     def draw(self):
 
         # Custom 1D graph
@@ -59,9 +72,7 @@ class Axis:
         # Threshold
         self.data_ref.threshold.draw()
 
-        # Drawing points
-        for point in self.data_ref.points:
-            point.draw()
+        self.draw_points()
 
     def check_axis_limits(self):
         return dpg.get_mouse_pos()[0] >= self.start and dpg.get_mouse_pos()[0] <= self.end
