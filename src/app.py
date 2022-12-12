@@ -71,6 +71,14 @@ class App:
                 dpg.add_file_extension(".csv", color=(255, 255, 0, 255))
 
             dpg.add_button(
+                label="Generate random points",
+                pos=[640, 10],
+                callback=lambda: self.axis.generate_random_points(),
+                height=50,
+                width=200
+            )
+
+            dpg.add_button(
                 label="Select file",
                 callback=lambda: dpg.show_item("file_dialog_id"),
                 height=50,

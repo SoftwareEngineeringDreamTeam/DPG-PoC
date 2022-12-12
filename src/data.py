@@ -43,8 +43,7 @@ class Data:
         self.metrics_panel = metrics_panel
         self.curve = curve
 
-    def init_axis_data(self, min, max):
-        self.__init_random_points(min, max)
+    def init_axis_data(self):
         self.__init__threshold()
 
     def load_points(self, source_file_name):
@@ -119,7 +118,7 @@ class Data:
         if update:
             self.update()
 
-    def __init_random_points(self, min, max):
+    def generate_random_points(self, min, max):
         self.points = generate_example_points((min, max), Point)
 
     def __init__threshold(self):
