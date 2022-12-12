@@ -95,7 +95,7 @@ class App:
             self.metrics_panel.draw()
 
             dpg.add_button(
-                label="Swap",
+                label="Invert all",
                 pos=[670, 530],
                 callback=lambda: self.axis.invert_all_points(),
                 height=30,
