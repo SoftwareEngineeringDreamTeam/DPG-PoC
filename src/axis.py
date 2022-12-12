@@ -35,7 +35,10 @@ class Axis:
         self.data_ref.delete_point(point)
 
     def invert_all_points(self):
-        self.data_ref.switch_points_values()
+        for point in self.data_ref.points:
+            point.flip_class()
+
+        self.data_ref.update()
 
     def override_points(self, old_points):
         for old_point in old_points:
@@ -111,8 +114,9 @@ class Axis:
                     max_value=800,
                     step=1,
                     default_value=item.get_position()[0],
-                    callback=lambda sender, app_data, user_data: item.update_point_position(app_data)
-                )
+                    callback=lambda sender, app_data, user_data:
+                        item.update_point_position(app_data)
+                    )
 
             elif isinstance(item, Threshold):
                 dpg.add_input_float(

@@ -60,7 +60,6 @@ class Data:
                         val = False
                     else:
                         val = True
-                    # val = bool(int(row[1]))
                     self.add_point(x_pos, val)
 
         return old_points
