@@ -38,10 +38,6 @@ class Axis:
         point.update_dragged_point()
         self.data_ref.update_point_moved()
 
-    def update_point(self, point):
-        point.update_dragged_point()
-        self.data_ref.update_point_moved()
-
     def render_new_point(self):
         self.data_ref.points[-1].draw()
 
@@ -108,10 +104,6 @@ class Axis:
             for point in self.data_ref.points:
                 if point.bounds_check():
                     self.__show_popup_for(point)
-
-        elif not dpg.is_mouse_button_down(0) and self.holding != False:
-            
-            self.holding = False
 
         else:
             self.holding = False
