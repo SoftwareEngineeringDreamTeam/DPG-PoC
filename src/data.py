@@ -450,7 +450,7 @@ class Data:
     def __update_roc_curve_live(self):
         fpr, tpr = self.metrics.calculate_roc(self.y_true, self.y_vals)
         cur_roc = {"fpr": fpr, "tpr": tpr}
-        if self._old_roc_curve == None:
+        if self._old_roc_curve is None:
             self._roc_curve = [{"fpr": np.array([]), "tpr": np.array([])},
                                cur_roc]
         else:
