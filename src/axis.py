@@ -30,6 +30,10 @@ class Axis:
         point.update_dragged_point()
         self.data_ref.update_point_moved()
 
+    def update_point(self, point):
+        point.update_dragged_point()
+        self.data_ref.update_point_moved()
+
     def render_new_point(self):
         self.data_ref.points[-1].draw()
 
@@ -73,8 +77,10 @@ class Axis:
             if threshhold.bounds_check() and not self.holding:
                 self.holding = threshhold
                 threshhold.update_dragged_threshhold()
+                self.data_ref.update()
             elif self.holding == threshhold:
                 threshhold.update_dragged_threshhold()
+                self.data_ref.update()
             else:
                 for point in self.data_ref.points:
                     if point.bounds_check() and not self.holding:

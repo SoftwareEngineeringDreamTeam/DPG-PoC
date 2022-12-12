@@ -163,3 +163,11 @@ class MetricsPanel:
                 score = round(score, 3)
             value.set_value(score)
             value.update()
+
+    def update_live(self, vals):
+        for i, value in enumerate(self.metrics.values()):
+            score = vals[i]
+            if score != "NaN":
+                score = round(score, 3)
+            value.set_value_live(score)
+            value.update()

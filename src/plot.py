@@ -37,6 +37,23 @@ class PlotCurve(Plot):
                                 parent='y_axis',
                                 tag="roc_tag")
 
+    def update_live(self, roc):
+        self.roc = roc
+        dpg.set_value(
+            'roc_tag',
+            [
+                self.roc["fpr"],
+                self.roc["tpr"]
+            ]
+        )
+        dpg.set_value(
+            'prev_roc_tag',
+            [
+                self.prev_roc["fpr"],
+                self.prev_roc["tpr"]
+            ]
+        )
+
     def update(self, roc):
         self.prev_roc = self.roc
         self.roc = roc
@@ -86,6 +103,12 @@ class PlotMatrix(Plot):
                         else:
                             self.vals[i][j-1].draw()
 
+    def update_live(self, matrix):
+        for i in range(0, 2):
+            for j in range(0, 2):
+                self.vals[i][j].set_value_live(matrix[i, j])
+                self.vals[i][j].update()
+
     def update(self, matrix):
         for i in range(0, 2):
             for j in range(0, 2):
@@ -108,6 +131,11 @@ class Value:
                 dpg.add_text(self.name + ":")
             self.ui_elem = dpg.add_text(self.value, color=self.color)
             dpg.add_spacer(width=10)
+
+    def set_value_live(self, value):
+        self.value = value
+        if self.prev_value != self.value:
+            self.set_color([255, 0, 0])
 
     def set_value(self, value):
         self.prev_value = self.value

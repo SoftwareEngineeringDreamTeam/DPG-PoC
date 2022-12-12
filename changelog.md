@@ -1,5 +1,11 @@
 ## ROC'n'ROLL
 
+### Version 0.16.1
+    Creating "live" version of updating the metrics to assure the changes are correctly marked
+
+### Version 0.16.0
+    Updating metrics when point is moved
+
 ### Version 0.14.0
     Adding single points
 
