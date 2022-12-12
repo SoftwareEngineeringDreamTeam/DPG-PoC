@@ -65,6 +65,27 @@ class Data:
 
         return old_points
 
+    def update_point_moved(self):
+        # preparations
+        self._get_points_as_arrays()
+        self.__update_true_pos()
+        self.__update_true_neg()
+        self.__update_false_pos()
+        self.__update_false_neg()
+        # metrics
+        self.__update_precision()
+        self.__update_recall()
+        self.__update_specificity()
+        self.__update_balanced_accuracy()
+        self.__update_f1_score()
+        self.__update_accuracy_score()
+        self.__update_confusion_matrix()
+        self.__update_mcc_score()
+        self.__update_roc_curve()
+        self.__update_auc_score()
+        self.__update_metrics_panel()
+        self.__update_plot_matrix()
+
     def update(self):
         # preparations
         self._get_points_as_arrays()

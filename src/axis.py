@@ -26,6 +26,10 @@ class Axis:
     def add_point(self, mouse_x_position):
         self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
+    def update_point(self, point):
+        point.update_dragged_point()
+        self.data_ref.update_point_moved()
+
     def render_new_point(self):
         self.data_ref.points[-1].draw()
 
@@ -75,14 +79,18 @@ class Axis:
                 for point in self.data_ref.points:
                     if point.bounds_check() and not self.holding:
                         self.holding = point
-                        point.update_dragged_point()
+                        self.update_point(point)
                     elif self.holding == point:
-                        point.update_dragged_point()
+                        self.update_point(point)
 
         elif dpg.is_mouse_button_down(1):  # Right button
             for point in self.data_ref.points:
                 if point.bounds_check():
                     self.__show_popup_for(point)
+
+        elif not dpg.is_mouse_button_down(0) and self.holding != False:
+            self.data_ref.update()
+            self.holding = False
 
         else:
             self.holding = False
