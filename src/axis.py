@@ -98,6 +98,7 @@ class Axis:
             else:
                 for point in self.data_ref.points:
                     if point.bounds_check() and not self.holding:
+                        self.data_ref.update()
                         self.holding = point
                         self.update_point(point)
                     elif self.holding == point:
@@ -109,7 +110,7 @@ class Axis:
                     self.__show_popup_for(point)
 
         elif not dpg.is_mouse_button_down(0) and self.holding != False:
-            self.data_ref.update()
+            
             self.holding = False
 
         else:
