@@ -226,6 +226,9 @@ class Point(Entity):
     def get_value(self):
         return self.value
 
+    def get_x_pos(self):
+        return self.x_pos
+
     def _circle_distance(self, point_a, point_b):
         return sqrt((point_a)**2 + (point_b)**2)
 
