@@ -69,21 +69,42 @@ class App:
                 directory_selector=False,
                 show=False,
                 callback=self._load_file,
-                tag="file_dialog_id"
+                width=600,
+                height=400,
+                tag="file_loader_id"
             ):
                 dpg.add_file_extension(".csv", color=(255, 255, 0, 255))
+
+            with dpg.file_dialog(
+                directory_selector=False,
+                show=False,
+                callback=self._save_file,
+                default_filename='res',
+                width=600,
+                height=400,
+                tag="file_saver_id"
+            ):
+                dpg.add_file_extension(".csv", color=(255, 255, 0, 255))
+
+            with dpg.group(horizontal=True):
+                dpg.add_button(
+                    label="Select file",
+                    callback=lambda: dpg.show_item("file_loader_id"),
+                    height=50,
+                    width=200
+                )
+
+                dpg.add_button(
+                    label="Save to file",
+                    callback=lambda: dpg.show_item("file_saver_id"),
+                    height=50,
+                    width=200
+                )
 
             dpg.add_button(
                 label="Generate random points",
                 pos=[640, 10],
                 callback=lambda: self.axis.generate_random_points(),
-                height=50,
-                width=200
-            )
-
-            dpg.add_button(
-                label="Select file",
-                callback=lambda: dpg.show_item("file_dialog_id"),
                 height=50,
                 width=200
             )
