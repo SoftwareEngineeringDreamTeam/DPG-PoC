@@ -43,7 +43,6 @@ class Data:
     _old_roc_curve = None
 
     def __init__(self, metrics_panel, matrix, curve):
-        self.save_file = "res.csv"
         self.points = []
         self.threshold = None
         self.y_true = np.array([])
@@ -481,5 +480,10 @@ class Data:
             )
             self._auc_scoree = [self._old_auc_score[1], cur_auc]
 
-    def save(self):
-        pass
+    def save(self, full_file_path: str):
+        with open(full_file_path, 'w') as file:
+            writer = csv.writer(file)
+
+            writer.writerow(('x_pos', 'val'))
+            for point in self.points:
+                writer.writerow((point.get_x_pos(), int(point.get_value())))

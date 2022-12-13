@@ -22,6 +22,9 @@ class App:
     def _load_file(self, sender, app_data):
         old_points = self.data.load_points(app_data['file_path_name'])
         self.axis.override_points(old_points)
+    
+    def _save_file(self, sender, app_data):
+        self.data.save(app_data['file_path_name'])
 
     def _add_new_point(self, x_pos, value, popup):
         self.data.add_point(x_pos, value)
