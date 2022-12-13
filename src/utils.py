@@ -6,6 +6,7 @@
 
 from random import choices, randint
 
+
 def generate_example_points(
         x_range: tuple,
         point_class,
