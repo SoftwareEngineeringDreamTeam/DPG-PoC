@@ -63,8 +63,8 @@ class Data:
         if '.csv' in source_file_name:
             with open(source_file_name, 'r') as file:
                 reader = csv.reader(file)
-                # skip first row  
-                for row in list(reader)[1:]:                  
+                # skip first row
+                for row in list(reader)[1:]:
                     if len(row) == 2:
                         # check if float
                         if row[0].replace('.', '', 1).isdigit():
@@ -76,7 +76,7 @@ class Data:
                             # if it is not a number move to next iteration
                             continue
                         if row[1].lstrip('-').isdigit(): # lstrip to handle -1 case
-                            val = not (int(row[1]) == 0 or int(row[1]) == -1)                           
+                            val = not (int(row[1]) == 0 or int(row[1]) == -1)
                         elif row[1].lower() == 'true':
                             val = True
                         elif row[1].lower() == 'false':
