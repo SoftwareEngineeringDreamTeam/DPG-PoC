@@ -255,7 +255,7 @@ class Data:
     def __update_precision_live(self):
 
         if self._old_precision is None:
-            self._precision =  self.__precision
+            self._precision = self.__precision
         else:
             cur_precision = self.metrics.calculate_precision(
                 self.y_pred,
@@ -408,7 +408,8 @@ class Data:
                     [self.__false_neg, self.__true_neg]
                 ]
             )
-            self._confusion_matrix = [self._old_confusion_matrix[1], cur_matrix]
+            self._confusion_matrix = [self._old_confusion_matrix[1],
+                                      cur_matrix]
 
     def __update_confusion_matrix(self):
         self._old_confusion_matrix = self.__confusion_matrix
@@ -469,7 +470,6 @@ class Data:
         else:
             self._roc_curve = [self._old_roc_curve[1], cur_roc]
 
-
     @property
     def __auc_score(self):
         if self._auc_score is None:
@@ -482,7 +482,7 @@ class Data:
         self._old_auc_score = self.__auc_score
         cur_auc = self.metrics.calculate_auc(self.__roc_curve[1]["fpr"],
                                              self.__roc_curve[1]["tpr"])
-        self._auc = [self._old_auc_score[1], cur_auc]
+        self._auc_score = [self._old_auc_score[1], cur_auc]
 
     def __update_auc_score_live(self):
         if self._old_auc_score is None:
@@ -492,7 +492,7 @@ class Data:
                 self.__roc_curve[1]["fpr"],
                 self.__roc_curve[1]["tpr"]
             )
-            self._auc_scoree = [self._old_auc_score[1], cur_auc]
+            self._auc_score = [self._old_auc_score[1], cur_auc]
 
     def save(self, full_file_path: str):
         with open(full_file_path, 'w') as file:
