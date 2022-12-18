@@ -63,13 +63,27 @@ class Data:
         if '.csv' in source_file_name:
             with open(source_file_name, 'r') as file:
                 reader = csv.reader(file)
-                for row in list(reader)[1:]:  # skip first row
-                    x_pos = int(row[0])
-                    if int(row[1]) == 0 or int(row[1]) == -1:
-                        val = False
-                    else:
-                        val = True
-                    self.add_point(x_pos, val)
+                # skip first row
+                for row in list(reader)[1:]:
+                    if len(row) == 2:
+                        # check if float
+                        if row[0].replace('.', '', 1).isdigit():
+                            x_pos = int(float(row[0]))
+                        # check if int
+                        elif row[0].isdigit():
+                            x_pos = int(row[0])
+                        else:
+                            # if it is not a number move to next iteration
+                            continue
+                        if row[1].lstrip('-').isdigit(): # lstrip to handle -1 case
+                            val = not (int(row[1]) == 0 or int(row[1]) == -1)
+                        elif row[1].lower() == 'true':
+                            val = True
+                        elif row[1].lower() == 'false':
+                            val = False
+                        else:
+                            continue
+                        self.add_point(x_pos, val)
 
         return old_points
 
