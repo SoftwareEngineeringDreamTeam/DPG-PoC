@@ -47,10 +47,6 @@ class PlotCurve(Plot):
 
     def save_to_png(self):
         fig = graph_obj.Figure()
-        fig.add_trace(graph_obj.Scatter(x=self.prev_roc["fpr"],
-                      y=self.prev_roc["tpr"],
-                      name="Previous ROC Curve",
-                      mode='lines'))
         fig.add_trace(graph_obj.Scatter(x=self.roc["fpr"],
                       y=self.roc["tpr"],
                       name="ROC Curve",
