@@ -34,6 +34,10 @@ class Axis:
     def add_point(self, mouse_x_position):
         self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
+    def update_point(self, point):
+        point.update_dragged_point()
+        self.data_ref.update_point_moved()
+
     def render_new_point(self):
         self.data_ref.points[-1].draw()
 
@@ -83,15 +87,18 @@ class Axis:
             if threshhold.bounds_check() and not self.holding:
                 self.holding = threshhold
                 threshhold.update_dragged_threshhold()
+                self.data_ref.update()
             elif self.holding == threshhold:
                 threshhold.update_dragged_threshhold()
+                self.data_ref.update()
             else:
                 for point in self.data_ref.points:
                     if point.bounds_check() and not self.holding:
+                        self.data_ref.update()
                         self.holding = point
-                        point.update_dragged_point()
+                        self.update_point(point)
                     elif self.holding == point:
-                        point.update_dragged_point()
+                        self.update_point(point)
 
         elif dpg.is_mouse_button_down(1):  # Right button
             for point in self.data_ref.points:
@@ -218,6 +225,9 @@ class Point(Entity):
 
     def get_value(self):
         return self.value
+
+    def get_x_pos(self):
+        return self.x_pos
 
     def _circle_distance(self, point_a, point_b):
         return sqrt((point_a)**2 + (point_b)**2)

@@ -31,8 +31,18 @@ class Data:
     _roc_curve = None
     _auc_score = None
 
+    _old_precision = None
+    _old_balanced_accuracy = None
+    _old_recall = None
+    _old_specificity = None
+    _old_f1_score = None
+    _old_accuracy = None
+    _old_mcc_score = None
+    _old_auc_score = None
+    _old_confusion_matrix = None
+    _old_roc_curve = None
+
     def __init__(self, metrics_panel, matrix, curve):
-        self.save_file = "res.csv"
         self.points = []
         self.threshold = None
         self.y_true = np.array([])
@@ -53,15 +63,51 @@ class Data:
         if '.csv' in source_file_name:
             with open(source_file_name, 'r') as file:
                 reader = csv.reader(file)
-                for row in list(reader)[1:]:  # skip first row
-                    x_pos = int(row[0])
-                    if int(row[1]) == 0 or int(row[1]) == -1:
-                        val = False
-                    else:
-                        val = True
-                    self.add_point(x_pos, val)
+                # skip first row
+                for row in list(reader)[1:]:
+                    if len(row) == 2:
+                        # check if float
+                        if row[0].replace('.', '', 1).isdigit():
+                            x_pos = int(float(row[0]))
+                        # check if int
+                        elif row[0].isdigit():
+                            x_pos = int(row[0])
+                        else:
+                            # if it is not a number move to next iteration
+                            continue
+                        if row[1].lstrip('-').isdigit(): # lstrip to handle -1 case
+                            val = not (int(row[1]) == 0 or int(row[1]) == -1)
+                        elif row[1].lower() == 'true':
+                            val = True
+                        elif row[1].lower() == 'false':
+                            val = False
+                        else:
+                            continue
+                        self.add_point(x_pos, val)
 
         return old_points
+
+    def update_point_moved(self):
+        # preparations
+        self._get_points_as_arrays()
+        self.__update_true_pos()
+        self.__update_true_neg()
+        self.__update_false_pos()
+        self.__update_false_neg()
+        # metrics
+        self.__update_precision_live()
+        self.__update_recall_live()
+        self.__update_specificity_live()
+        self.__update_balanced_accuracy_live()
+        self.__update_f1_score_live()
+        self.__update_accuracy_score_live()
+        self.__update_confusion_matrix_live()
+        self.__update_mcc_score_live()
+        self.__update_roc_curve_live()
+        self.__update_auc_score_live()
+        self.__update_metrics_panel_live()
+        self.__update_plot_matrix_live()
+        self.__update_curve_live()
 
     def update(self):
         # preparations
@@ -88,8 +134,14 @@ class Data:
     def __update_curve(self):
         self.curve.update(self.__roc_curve[1])
 
+    def __update_curve_live(self):
+        self.curve.update_live(self.__roc_curve[1])
+
     def __update_plot_matrix(self):
         self.matrix.update(self.__confusion_matrix[1])
+
+    def __update_plot_matrix_live(self):
+        self.matrix.update_live(self.__confusion_matrix[1])
 
     def __update_metrics_panel(self):
         vals = [self.__f1_score[1],
@@ -102,6 +154,17 @@ class Data:
                 self.__mcc_score[1]]
         self.metrics_panel.update(vals)
 
+    def __update_metrics_panel_live(self):
+        vals = [self.__f1_score[1],
+                self.__auc_score[1],
+                self.__accuracy[1],
+                self.__specificity[1],
+                self.__recall[1],
+                self.__precision[1],
+                self.__balanced_accuracy[1],
+                self.__mcc_score[1]]
+        self.metrics_panel.update_live(vals)
+
     def add_point(self, x_position, value, update=True):
         self.points.append(Point(x_position, value))
         self.update()
@@ -109,9 +172,6 @@ class Data:
     def switch_points_values(self, update=True):
         for point in self.points:
             point.value = not point.value
-
-    def point_moved(self):
-        pass
 
     def delete_point(self, point, update=True):
         self.points.remove(point)
@@ -187,10 +247,21 @@ class Data:
         return self._precision
 
     def __update_precision(self):
-        old_precision = self.__precision
+        self._old_precision = self.__precision
         cur_precision = self.metrics.calculate_precision(self.y_pred,
                                                          self.__true_pos)
-        self._precision = [old_precision[1], cur_precision]
+        self._precision = [self._old_precision[1], cur_precision]
+
+    def __update_precision_live(self):
+
+        if self._old_precision is None:
+            self._precision = self.__precision
+        else:
+            cur_precision = self.metrics.calculate_precision(
+                self.y_pred,
+                self.__true_pos
+            )
+            self._precision = [self._old_precision[1], cur_precision]
 
     @property
     def __recall(self):
@@ -200,11 +271,21 @@ class Data:
             self._recall = [0, recall]
         return self._recall
 
+    def __update_recall_live(self):
+        if self._old_recall is None:
+            self._recall = self.__recall
+        else:
+            cur_recall = self.metrics.calculate_recall(
+                self.y_true,
+                self.__true_pos
+            )
+            self._recall = [self._old_recall[1], cur_recall]
+
     def __update_recall(self):
-        old_recall = self.__recall
+        self._old_recall = self.__recall
         cur_recall = self.metrics.calculate_recall(self.y_true,
                                                    self.__true_pos)
-        self._recall = [old_recall[1], cur_recall]
+        self._recall = [self._old_recall[1], cur_recall]
 
     @property
     def __specificity(self):
@@ -214,11 +295,20 @@ class Data:
             self._specificity = [0, specificity]
         return self._specificity
 
+    def __update_specificity_live(self):
+        if self._old_specificity is None:
+            self._specificity = self.__specificity
+        else:
+            cur_specificity = self.metrics.calculate_specificity(
+                self.y_true,
+                self.__true_neg)
+            self._specificity = [self._old_specificity[1], cur_specificity]
+
     def __update_specificity(self):
-        old_specificity = self.__specificity
+        self._old_specificity = self.__specificity
         cur_specificity = self.metrics.calculate_specificity(self.y_true,
                                                              self.__true_neg)
-        self._specificity = [old_specificity[1], cur_specificity]
+        self._specificity = [self._old_specificity[1], cur_specificity]
 
     @property
     def __balanced_accuracy(self):
@@ -230,13 +320,24 @@ class Data:
             self._balanced_accuracy = [0, bal_acc]
         return self._balanced_accuracy
 
+    def __update_balanced_accuracy_live(self):
+        if self._old_balanced_accuracy is None:
+            self._balanced_accuracy = self.__balanced_accuracy
+        else:
+            if self.__recall[1] == "NaN" or self.__specificity[1] == "NaN":
+                cur_bal_acc = "NaN"
+            else:
+                cur_bal_acc = (self.__recall[1] + self.__specificity[1])/2
+
+            self._balanced_accuracy = [self._old_balanced_accuracy[1], cur_bal_acc]
+
     def __update_balanced_accuracy(self):
-        old_bal_acc = self.__balanced_accuracy
+        self._old_balanced_accuracy = self.__balanced_accuracy
         if self.__recall[1] == "NaN" or self.__specificity[1] == "NaN":
             cur_bal_acc = "NaN"
         else:
             cur_bal_acc = (self.__recall[1] + self.__specificity[1])/2
-        self._balanced_accuracy = [old_bal_acc[1], cur_bal_acc]
+        self._balanced_accuracy = [self._old_balanced_accuracy[1], cur_bal_acc]
 
     @property
     def __f1_score(self):
@@ -246,11 +347,21 @@ class Data:
             self._f1_score = [0, f1_score]
         return self._f1_score
 
+    def __update_f1_score_live(self):
+        if self._old_f1_score is None:
+            self._f1_score = self.__f1_score
+        else:
+            cur_f1 = self.metrics.calculate_f1_score(
+                self.__precision[1],
+                self.__recall[1]
+            )
+            self._f1_score = [self._old_f1_score[1], cur_f1]
+
     def __update_f1_score(self):
-        old_f1 = self.__f1_score
+        self._old_f1_score = self.__f1_score
         cur_f1 = self.metrics.calculate_f1_score(self.__precision[1],
                                                  self.__recall[1])
-        self._f1_score = [old_f1[1], cur_f1]
+        self._f1_score = [self._old_f1_score[1], cur_f1]
 
     @property
     def __accuracy(self):
@@ -261,12 +372,23 @@ class Data:
             self._accuracy = [0, accuracy]
         return self._accuracy
 
+    def __update_accuracy_score_live(self):
+        if self._old_accuracy is None:
+            self._accuracy = self.__accuracy
+        else:
+            cur_acc = self.metrics.calculate_accuracy(
+                self.__true_pos,
+                self.__true_neg,
+                self.y_true
+            )
+            self._accuracy = [self._old_accuracy[1], cur_acc]
+
     def __update_accuracy_score(self):
-        old_acc = self.__accuracy
+        self._old_accuracy = self.__accuracy
         cur_acc = self.metrics.calculate_accuracy(self.__true_pos,
                                                   self.__true_neg,
                                                   self.y_true)
-        self._accuracy = [old_acc[1], cur_acc]
+        self._accuracy = [self._old_accuracy[1], cur_acc]
 
     @property
     def __confusion_matrix(self):
@@ -276,11 +398,24 @@ class Data:
             self._confusion_matrix = [np.zeros((2, 2)), confusion_matrix]
         return self._confusion_matrix
 
+    def __update_confusion_matrix_live(self):
+        if self._old_confusion_matrix is None:
+            self._confusion_matrix = self.__confusion_matrix
+        else:
+            cur_matrix = np.array(
+                [
+                    [self.__true_pos, self.__false_pos],
+                    [self.__false_neg, self.__true_neg]
+                ]
+            )
+            self._confusion_matrix = [self._old_confusion_matrix[1],
+                                      cur_matrix]
+
     def __update_confusion_matrix(self):
-        old_matrix = self.__confusion_matrix
+        self._old_confusion_matrix = self.__confusion_matrix
         cur_matrix = np.array([[self.__true_pos, self.__false_pos],
                               [self.__false_neg, self.__true_neg]])
-        self._confusion_matrix = [old_matrix[1], cur_matrix]
+        self._confusion_matrix = [self._old_confusion_matrix[1], cur_matrix]
 
     @property
     def __mcc_score(self):
@@ -291,13 +426,25 @@ class Data:
             self._mcc_score = [0, mcc_score]
         return self._mcc_score
 
+    def __update_mcc_score_live(self):
+
+        if self._old_mcc_score is None:
+            self._mcc_score = self.__mcc_score
+        else:
+            cur_mcc = self.metrics.calculate_mcc(
+                self.__confusion_matrix[1],
+                self.y_true,
+                self.y_pred
+            )
+            self._mcc_score = [self._old_mcc_score[1], cur_mcc]
+
     def __update_mcc_score(self):
-        old_mcc = self.__mcc_score
+        self._old_mcc_score = self.__mcc_score
         cur_mcc = self.metrics.calculate_mcc(self.__confusion_matrix[1],
                                              self.y_true,
                                              self.y_pred)
 
-        self._mcc_score = [old_mcc[1], cur_mcc]
+        self._mcc_score = [self._old_mcc_score[1], cur_mcc]
 
     @property
     def __roc_curve(self):
@@ -309,10 +456,19 @@ class Data:
         return self._roc_curve
 
     def __update_roc_curve(self):
-        old_roc = self.__roc_curve
+        self._old_roc_curve = self.__roc_curve
         fpr, tpr = self.metrics.calculate_roc(self.y_true, self.y_vals)
         cur_roc = {"fpr": fpr, "tpr": tpr}
-        self._roc_curve = [old_roc[1], cur_roc]
+        self._roc_curve = [self._old_roc_curve[1], cur_roc]
+
+    def __update_roc_curve_live(self):
+        fpr, tpr = self.metrics.calculate_roc(self.y_true, self.y_vals)
+        cur_roc = {"fpr": fpr, "tpr": tpr}
+        if self._old_roc_curve is None:
+            self._roc_curve = [{"fpr": np.array([]), "tpr": np.array([])},
+                               cur_roc]
+        else:
+            self._roc_curve = [self._old_roc_curve[1], cur_roc]
 
     @property
     def __auc_score(self):
@@ -323,10 +479,25 @@ class Data:
         return self._auc_score
 
     def __update_auc_score(self):
-        old_auc = self.__auc_score
+        self._old_auc_score = self.__auc_score
         cur_auc = self.metrics.calculate_auc(self.__roc_curve[1]["fpr"],
                                              self.__roc_curve[1]["tpr"])
-        self._auc = [old_auc[1], cur_auc]
+        self._auc_score = [self._old_auc_score[1], cur_auc]
 
-    def save(self):
-        pass
+    def __update_auc_score_live(self):
+        if self._old_auc_score is None:
+            self._auc_score = self.__auc_score
+        else:
+            cur_auc = self.metrics.calculate_auc(
+                self.__roc_curve[1]["fpr"],
+                self.__roc_curve[1]["tpr"]
+            )
+            self._auc_score = [self._old_auc_score[1], cur_auc]
+
+    def save(self, full_file_path: str):
+        with open(full_file_path, 'w') as file:
+            writer = csv.writer(file)
+
+            writer.writerow(('x_pos', 'val'))
+            for point in self.points:
+                writer.writerow((point.get_x_pos(), int(point.get_value())))

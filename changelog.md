@@ -1,5 +1,14 @@
 ## ROC'n'ROLL
 
+### Version 0.18.0
+    Added ability to save points to a file
+
+### Version 0.17.1
+    Creating "live" version of updating the metrics to assure the changes are correctly marked
+
+### Version 0.17.0
+    Updating metrics when point is moved
+
 ### Version 0.16.0
     Added generate random points button
 
