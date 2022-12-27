@@ -22,6 +22,8 @@ class Axis:
         self.choosen_value = True
         self.start = 50
         self.end = 800
+        self.min = 0
+        self.max = 100
 
     def setup_axis(self):
         self.data_ref.init_axis_data()
@@ -29,12 +31,9 @@ class Axis:
 
     def generate_random_points(self):
         old_points = copy.deepcopy(self.data_ref.points)
-        self.data_ref.generate_random_points(self.start, self.end)
+        self.data_ref.generate_random_points(self.min, self.max)
         self.override_points(old_points)
         self.data_ref.update()
-
-    def add_point(self, mouse_x_position):
-        self.data_ref.add_point(mouse_x_position, self.choosen_value)
 
     def update_point(self, point):
         point.update_dragged_point()
@@ -125,23 +124,29 @@ class Axis:
                     )
                     dpg.add_checkbox(
                         label="Class",
-                        default_value=item.get_value(),
+                        default_value=item.get_label(),
                         callback=lambda sender, app_data, user_data: item.flip_class()
                     )
 
                 dpg.add_input_float(
-                    min_value=50,
-                    max_value=800,
+                    min_value=0,
+                    max_value=100,
+                    min_clamped=True,
+                    max_clamped=True,
                     step=1,
-                    default_value=item.get_position()[0],
+                    default_value=item.get_value(),
                     callback=lambda sender, app_data, user_data:
-                        item.update_point_position(app_data)
+                        item.update_point_value(app_data)
                     )
 
             elif isinstance(item, Threshold):
                 dpg.add_input_float(
                     min_value=0,
-                    max_value=1
+                    max_value=100,
+                    min_clamped=True,
+                    max_clamped=True,
+                    step=1,
+                    default_value=item.get_value(),
                 )
 
 
@@ -178,12 +183,15 @@ class Entity:
 class Point(Entity):
     radius = 10
 
-    def __init__(self, x_pos, val):
-        if val:
+    def __init__(self, value, label):
+        self.value = value
+        x_pos = remap(value, 0, 100, 50, 800)
+
+        if label:
             super().__init__(x_pos, self._green, self.radius)
         else:
             super().__init__(x_pos, self._red, self.radius)
-        self.value = val
+        self.label = label
         self.point = None
 
     def draw(self):
@@ -204,17 +212,21 @@ class Point(Entity):
             center=(self.x_pos - self.radius, self.y_pos)
         )
 
-    def update_point_position(self, x_pos):
-        self.set_position(x_pos, self.y_pos)
+        self.value = remap(self.x_pos, 50, 800, 0, 100)
+
+    def update_point_value(self, value):
+        self.value = value
+        self.x_pos = remap(value, 0, 100, 50, 800)
+        self.set_position(self.x_pos, self.y_pos)
         dpg.configure_item(
             self.point,
             center=(self.x_pos - self.radius, self.y_pos)
         )
 
     def flip_class(self):
-        self.value = not self.value
+        self.label = not self.label
 
-        if self.value:
+        if self.label:
             self.color = self._green
         else:
             self.color = self._red
@@ -225,11 +237,14 @@ class Point(Entity):
             fill=self.color
         )
 
-    def get_value(self):
-        return self.value
+    def get_label(self):
+        return self.label
 
     def get_x_pos(self):
         return self.x_pos
+
+    def get_value(self):
+        return self.value
 
     def _circle_distance(self, point_a, point_b):
         return sqrt((point_a)**2 + (point_b)**2)
@@ -250,7 +265,9 @@ class Point(Entity):
 
 class Threshold(Entity):
 
-    def __init__(self, x_pos):
+    def __init__(self, value):
+        self.value = value
+        x_pos = remap(value, 0, 100, 50, 800)
         super().__init__(x_pos, (230, 230, 230), 10)
         self.thickness = 6
         self.line = None
@@ -282,3 +299,21 @@ class Threshold(Entity):
             p1=[self.x_pos - self.thickness * 3 / 2, self.y_pos - self.half_length],
             p2=[self.x_pos - self.thickness * 3 / 2, self.y_pos + self.half_length]
         )
+
+        self.value = remap(self.x_pos, 50, 800, 0, 100)
+
+    def update_threshold_value(self, value):
+        self.value = value
+        self.x_pos = remap(value, 0, 100, 50, 800)
+        self.set_position(self.x_pos, self.y_pos)
+        dpg.configure_item(
+            item=self.line,
+            p1=[self.x_pos - self.thickness * 3 / 2, self.y_pos - self.half_length],
+            p2=[self.x_pos - self.thickness * 3 / 2, self.y_pos + self.half_length]
+        )
+
+    def get_x_pos(self):
+        return self.x_pos
+
+    def get_value(self):
+        return self.value
