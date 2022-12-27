@@ -196,7 +196,7 @@ class Point(Entity):
 
     def draw(self):
         self.point = dpg.draw_circle(
-            (self.x_pos, self.y_pos),
+            (self.x_pos - self.radius, self.y_pos),
             radius=self.radius,
             color=self.color,
             fill=self.color,
