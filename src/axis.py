@@ -3,6 +3,7 @@
 # pylint: disable=unused-import
 # pylint: disable=import-error
 # pylint: disable=W
+# pylint: disable=duplicate-code
 
 import copy
 
