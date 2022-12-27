@@ -10,7 +10,7 @@ setup(
     name="ROC'n'ROLL",
     packages=['src'],
     author='SoftwareEngineeringDreamTeam',
-    version='0.18.0',
+    version='0.19.0',
     install_requires=[
         'numpy',
         'dearpygui',
