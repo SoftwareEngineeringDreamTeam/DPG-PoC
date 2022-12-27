@@ -24,8 +24,8 @@ def generate_example_points(
     ]
 
 def remap(number, old_min, old_max, new_min, new_max):
-    old_range = (old_max - old_min)  
-    new_range = (new_max - new_min)  
+    old_range = (old_max - old_min)
+    new_range = (new_max - new_min)
     new_number = (((number - old_min) * new_range) / old_range) + new_min
 
     return new_number
