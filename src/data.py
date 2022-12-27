@@ -68,7 +68,7 @@ class Data:
                     if len(row) == 2:
                         # check if float
                         if row[0].replace('.', '', 1).isdigit():
-                            value = int(float(row[0]))
+                            value = float(row[0])
                         # check if int
                         elif row[0].isdigit():
                             value = int(row[0])
