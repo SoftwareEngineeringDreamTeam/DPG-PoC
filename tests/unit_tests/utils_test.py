@@ -8,7 +8,7 @@ def test_utils_value_range():
     max_val = 100
     generated_points = generate_example_points((min_val, max_val), Point)
     for point in generated_points:
-        assert point.x_pos >= 0 and point.x_pos <= 100
+        assert point.value >= 0 and point.value <= 100
 
 def test_utils_point_class():
     min_val = 0
