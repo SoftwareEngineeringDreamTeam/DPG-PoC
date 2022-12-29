@@ -249,7 +249,7 @@ class Point(Entity):
 class Threshold(Entity):
 
     def __init__(self, x_pos):
-        super().__init__(x_pos, (230, 230, 230), 10)
+        super().__init__(x_pos, (230, 230, 230), 20)
         self.thickness = 6
         self.line = None
 
