@@ -174,25 +174,17 @@ class MetricsPanel:
         }
 
     def draw(self):
-        with dpg.group(horizontal=True):
+        with dpg.group(horizontal=True,pos=(0, 600)):
             dpg.add_spacer(width=75)
             with dpg.group():
                 self.metrics["f1_score"].draw()
                 self.metrics["auc"].draw()
-
-            dpg.add_spacer(width=150)
-            with dpg.group():
-                self.metrics["accuracy"].draw()
-                self.metrics["specificity"].draw()
-
-        with dpg.group(horizontal=True):
-            dpg.add_spacer(width=75)
-            with dpg.group():
                 self.metrics["recall"].draw()
                 self.metrics["precision"].draw()
 
-            dpg.add_spacer(width=144)
-            with dpg.group():
+            with dpg.group(pos=[400, 600]):
+                self.metrics["accuracy"].draw()
+                self.metrics["specificity"].draw()
                 self.metrics["balanced_acc"].draw()
                 self.metrics["mcc"].draw()
 
