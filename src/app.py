@@ -174,27 +174,18 @@ class MetricsPanel:
         }
 
     def draw(self):
-        with dpg.group(horizontal=True):
-            dpg.add_spacer(width=75)
-            with dpg.group():
-                self.metrics["f1_score"].draw()
-                self.metrics["auc"].draw()
+        # hard coded positions to stop layout from moving based on metrics values
+        with dpg.group(pos=[75, 600]):
+            self.metrics["f1_score"].draw()
+            self.metrics["auc"].draw()
+            self.metrics["recall"].draw()
+            self.metrics["precision"].draw()
 
-            dpg.add_spacer(width=150)
-            with dpg.group():
-                self.metrics["accuracy"].draw()
-                self.metrics["specificity"].draw()
-
-        with dpg.group(horizontal=True):
-            dpg.add_spacer(width=75)
-            with dpg.group():
-                self.metrics["recall"].draw()
-                self.metrics["precision"].draw()
-
-            dpg.add_spacer(width=144)
-            with dpg.group():
-                self.metrics["balanced_acc"].draw()
-                self.metrics["mcc"].draw()
+        with dpg.group(pos=[400, 600]):
+            self.metrics["accuracy"].draw()
+            self.metrics["specificity"].draw()
+            self.metrics["balanced_acc"].draw()
+            self.metrics["mcc"].draw()
 
     def update(self, vals):
         for i, value in enumerate(self.metrics.values()):

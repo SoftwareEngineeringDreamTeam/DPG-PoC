@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.18.1
+    Fixed metrics layout
+
 ### Version 0.18.0
     Added ability to save points to a file
 
