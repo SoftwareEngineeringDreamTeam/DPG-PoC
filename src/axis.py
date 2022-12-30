@@ -252,8 +252,8 @@ class Point(Entity):
 
     def bounds_check(self):
         dist = self._circle_distance(
-            (abs(dpg.get_mouse_pos()[0] - self.x_pos)),
-            (abs(dpg.get_mouse_pos()[1] - self.y_pos + self.radius)),
+            (dpg.get_mouse_pos()[0] - self.x_pos),
+            (dpg.get_mouse_pos()[1] - self.y_pos + self.radius),
         )
         if dist <= self.radius:
             return True
