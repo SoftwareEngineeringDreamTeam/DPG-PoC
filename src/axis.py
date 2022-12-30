@@ -250,12 +250,12 @@ class Point(Entity):
     def _circle_distance(self, point_a, point_b):
         return sqrt((point_a)**2 + (point_b)**2)
 
-    def bounds_check(self, max_distance=20):
+    def bounds_check(self):
         dist = self._circle_distance(
-            (dpg.get_mouse_pos()[0] - self.x_pos - self.radius/2),
-            (dpg.get_mouse_pos()[1] - self.y_pos)
+            (abs(dpg.get_mouse_pos()[0] - self.x_pos)),
+            (abs(dpg.get_mouse_pos()[1] - self.y_pos + self.radius)),
         )
-        if dist < max_distance:
+        if dist <= self.radius:
             return True
 
         return False
