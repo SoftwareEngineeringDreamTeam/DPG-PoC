@@ -1,5 +1,8 @@
 ## ROC'n'ROLL
 
+### Version 0.19.2
+    Fixed calculation of distance between a mouse and a point 
+
 ### Version 0.19.1
     Code style and unit test fixes
 
