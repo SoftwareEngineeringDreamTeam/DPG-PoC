@@ -92,7 +92,7 @@ class Axis:
                 self.data_ref.update()
             elif self.holding == threshhold:
                 threshhold.update_dragged_threshhold()
-                self.data_ref.update()
+                self.data_ref.update_point_moved()
             else:
                 for point in self.data_ref.points:
                     if point.bounds_check() and not self.holding:
