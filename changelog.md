@@ -1,5 +1,14 @@
 ## ROC'n'ROLL
 
+### Version 0.19.2
+    Fixed calculation of distance between a mouse and a point 
+
+### Version 0.19.1
+    Code style and unit test fixes
+
+### Version 0.19.0
+    The point values now have a range of 0 to 100 instead of 50 to 800
+  
 ### Version 0.18.1
     Fixed metrics layout
 

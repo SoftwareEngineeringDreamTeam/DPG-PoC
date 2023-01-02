@@ -26,8 +26,8 @@ class App:
     def _save_file(self, sender, app_data):
         self.data.save(app_data['file_path_name'])
 
-    def _add_new_point(self, x_pos, value, popup):
-        self.data.add_point(x_pos, value)
+    def _add_new_point(self, value, label, popup):
+        self.data.add_point(value, label)
         self.axis.render_new_point()
         dpg.delete_item(popup)
 
@@ -39,14 +39,16 @@ class App:
                 on_close=lambda: dpg.delete_item(popup)
                 ) as popup:
             dpg.add_input_float(
-                tag="new_point_x_pos",
-                min_value=50,
-                max_value=800,
+                tag="new_point_value",
+                min_value=0,
+                max_value=100,
+                min_clamped=True,
+                max_clamped=True,
                 step=1,
                 default_value=0
             )
             dpg.add_checkbox(
-                tag="new_point_value",
+                tag="new_point_label",
                 label="Class",
                 default_value=False,
             )
@@ -55,8 +57,8 @@ class App:
                 label="Add",
                 width=150,
                 callback=lambda sender, app_data, user_data: self._add_new_point(
-                    x_pos=dpg.get_value("new_point_x_pos"),
                     value=dpg.get_value("new_point_value"),
+                    label=dpg.get_value("new_point_label"),
                     popup=popup
                 )
             )

@@ -68,22 +68,22 @@ class Data:
                     if len(row) == 2:
                         # check if float
                         if row[0].replace('.', '', 1).isdigit():
-                            x_pos = int(float(row[0]))
+                            value = float(row[0])
                         # check if int
                         elif row[0].isdigit():
-                            x_pos = int(row[0])
+                            value = int(row[0])
                         else:
                             # if it is not a number move to next iteration
                             continue
                         if row[1].lstrip('-').isdigit(): # lstrip to handle -1 case
-                            val = not (int(row[1]) == 0 or int(row[1]) == -1)
+                            label = not (int(row[1]) == 0 or int(row[1]) == -1)
                         elif row[1].lower() == 'true':
-                            val = True
+                            label = True
                         elif row[1].lower() == 'false':
-                            val = False
+                            label = False
                         else:
                             continue
-                        self.add_point(x_pos, val)
+                        self.add_point(value, label)
 
         return old_points
 
@@ -165,13 +165,13 @@ class Data:
                 self.__mcc_score[1]]
         self.metrics_panel.update_live(vals)
 
-    def add_point(self, x_position, value, update=True):
-        self.points.append(Point(x_position, value))
+    def add_point(self, value, label, update=True):
+        self.points.append(Point(value, label))
         self.update()
 
     def switch_points_values(self, update=True):
         for point in self.points:
-            point.value = not point.value
+            point.label = not point.label
 
     def delete_point(self, point, update=True):
         self.points.remove(point)
@@ -182,16 +182,16 @@ class Data:
         self.points = generate_example_points((min, max), Point)
 
     def __init__threshold(self):
-        self.threshold = Threshold(400)
+        self.threshold = Threshold(50)
 
     def _get_points_as_arrays(self):
         y_true = np.zeros(len(self.points))
         self.y_vals = np.zeros(len(self.points))
         for i, point in enumerate(self.points):
-            self.y_vals[i] = point.x_pos
-            y_true[i] = point.get_value()
+            self.y_vals[i] = point.get_value()
+            y_true[i] = point.get_label()
         self.y_pred = self.metrics.convert_to_binary(self.y_vals,
-                                                     self.threshold.x_pos)
+                                                     self.threshold.get_value())
         self.y_true = y_true.astype(int)
 
     @property
@@ -255,7 +255,7 @@ class Data:
     def __update_precision_live(self):
 
         if self._old_precision is None:
-            self._precision =  self.__precision
+            self._precision = self.__precision
         else:
             cur_precision = self.metrics.calculate_precision(
                 self.y_pred,
@@ -408,7 +408,8 @@ class Data:
                     [self.__false_neg, self.__true_neg]
                 ]
             )
-            self._confusion_matrix = [self._old_confusion_matrix[1], cur_matrix]
+            self._confusion_matrix = [self._old_confusion_matrix[1],
+                                      cur_matrix]
 
     def __update_confusion_matrix(self):
         self._old_confusion_matrix = self.__confusion_matrix
@@ -469,7 +470,6 @@ class Data:
         else:
             self._roc_curve = [self._old_roc_curve[1], cur_roc]
 
-
     @property
     def __auc_score(self):
         if self._auc_score is None:
@@ -482,7 +482,7 @@ class Data:
         self._old_auc_score = self.__auc_score
         cur_auc = self.metrics.calculate_auc(self.__roc_curve[1]["fpr"],
                                              self.__roc_curve[1]["tpr"])
-        self._auc = [self._old_auc_score[1], cur_auc]
+        self._auc_score = [self._old_auc_score[1], cur_auc]
 
     def __update_auc_score_live(self):
         if self._old_auc_score is None:
@@ -492,12 +492,12 @@ class Data:
                 self.__roc_curve[1]["fpr"],
                 self.__roc_curve[1]["tpr"]
             )
-            self._auc_scoree = [self._old_auc_score[1], cur_auc]
+            self._auc_score = [self._old_auc_score[1], cur_auc]
 
     def save(self, full_file_path: str):
         with open(full_file_path, 'w') as file:
             writer = csv.writer(file)
 
-            writer.writerow(('x_pos', 'val'))
+            writer.writerow(('value', 'label'))
             for point in self.points:
-                writer.writerow((point.get_x_pos(), int(point.get_value())))
+                writer.writerow((point.get_value(), int(point.get_label())))
