@@ -8,6 +8,9 @@
 
 ### Version 0.19.0
     The point values now have a range of 0 to 100 instead of 50 to 800
+  
+### Version 0.18.1
+    Fixed metrics layout
 
 ### Version 0.18.0
     Added ability to save points to a file
