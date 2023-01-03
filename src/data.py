@@ -58,32 +58,35 @@ class Data:
 
     def load_points(self, source_file_name):
         old_points = copy.deepcopy(self.points)  # need to remove them in axis
-        # override current points
-        self.points = []
         if '.csv' in source_file_name:
-            with open(source_file_name, 'r') as file:
-                reader = csv.reader(file)
-                # skip first row
-                for row in list(reader)[1:]:
-                    if len(row) == 2:
-                        # check if float
-                        if row[0].replace('.', '', 1).isdigit():
-                            x_pos = int(float(row[0]))
-                        # check if int
-                        elif row[0].isdigit():
-                            x_pos = int(row[0])
-                        else:
-                            # if it is not a number move to next iteration
-                            continue
-                        if row[1].lstrip('-').isdigit(): # lstrip to handle -1 case
-                            val = not (int(row[1]) == 0 or int(row[1]) == -1)
-                        elif row[1].lower() == 'true':
-                            val = True
-                        elif row[1].lower() == 'false':
-                            val = False
-                        else:
-                            continue
-                        self.add_point(x_pos, val)
+            try:
+                with open(source_file_name, 'r') as file:
+                    # override current points
+                    self.points = []
+                    reader = csv.reader(file)
+                    # skip first row
+                    for row in list(reader)[1:]:
+                        if len(row) == 2:
+                            # check if float
+                            if row[0].replace('.', '', 1).isdigit():
+                                value = float(row[0])
+                            # check if int
+                            elif row[0].isdigit():
+                                value = int(row[0])
+                            else:
+                                # if it is not a number move to next iteration
+                                continue
+                            if row[1].lstrip('-').isdigit(): # lstrip to handle -1 case
+                                label = not (int(row[1]) == 0 or int(row[1]) == -1)
+                            elif row[1].lower() == 'true':
+                                label = True
+                            elif row[1].lower() == 'false':
+                                label = False
+                            else:
+                                continue
+                            self.add_point(value, label)
+            except FileNotFoundError:
+                print('File not found error')
 
         return old_points
 
