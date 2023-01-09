@@ -70,3 +70,19 @@ All unit tests are included in **tests/unit_tests**. To run them use the command
     
     python -m pytest .\tests\unit_tests\utils_test.py
     
+## Credits
+The team working on the project consisted of the following people:  
+
+*Filip Tomeczek - Team Leader  
+Anna Mrukwa - Analyst, Programmer  
+Olaf Jaskuła - QA Manager, Tester  
+Dominik Zagórnik - Software Architect  
+Artur Oleksiński - Lead Developer, Programmer  
+Błażej Kołodziej - Technical Writer  
+Patryk Piwowarczyk - Administrator  
+Piotr Vassev - Programmer, Tester  
+Marcel Król - Programmer, Tester*
+
+## License
+The project has been created under the MIT License.
+    
